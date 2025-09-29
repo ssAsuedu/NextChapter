@@ -1,0 +1,102 @@
+/* General Styles */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #f4f4f4; /* Light gray background */
+  color: #333;
+}
+
+.landing-page {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+/* Hero Section */
+.hero {
+  width: 100vw; /* Full width of the viewport */
+  height: 70vh; /* Full height of the viewport */
+  background: url("../../assets/books.jpg") no-repeat center center;
+  background-size: cover; /* Ensures the image covers the entire section */
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; /* Align text to the left */
+  padding-left: 50px; /* Add padding to move text away from the edge */
+  color: white;
+}
+
+.hero-content h1 {
+  font-size: 4rem; /* Enlarged text */
+  margin-bottom: 1rem;
+}
+
+.hero-content p {
+  font-size: 2rem; /* Enlarged text */
+}
+
+/* Section Styles */
+section {
+  width: 100%; /* Full width */
+  padding: 60px 20px;
+  text-align: center; /* Center content horizontally */
+}
+
+.about, .features, .community {
+  background-color: transparent; /* Invisible div with the same background color */
+  margin: 20px auto;
+  border-radius: 8px;
+  max-width: 800px; /* Limit the width of the sections */
+  color: #333; /* Dark text for contrast */
+}
+
+section h2 {
+  font-size: 2.5rem; /* Enlarged section headings */
+  margin-bottom: 1rem;
+}
+
+section p {
+  font-size: 1.5rem; /* Enlarged section text */
+  line-height: 1.8;
+  margin-bottom: 20px; /* Add spacing below the paragraph */
+}
+
+/* Button Styles */
+section button {
+  background-color: black;
+  color: white;
+  border: 2px solid black;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition for hover effect */
+}
+
+section button:hover {
+  background-color: white; /* Inverse background color */
+  color: black; /* Inverse text color */
+  border: 2px solid black; /* Keep the border color */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content h1 {
+    font-size: 3rem; /* Adjusted for smaller screens */
+  }
+
+  .hero-content p {
+    font-size: 1.5rem; /* Adjusted for smaller screens */
+  }
+
+  section h2 {
+    font-size: 2rem;
+  }
+
+  section p {
+    font-size: 1.2rem;
+  }
+
+  section button {
+    font-size: 0.9rem; /* Adjust button size for smaller screens */
+    padding: 8px 16px;
+  }
+}

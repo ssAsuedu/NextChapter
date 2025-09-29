@@ -1,0 +1,35 @@
+.login-page {
+  display: flex;
+  height: 100vh; /* Full height of the viewport */
+  width: 100vw; /* Full width of the viewport */
+}
+
+.login-form {
+  flex: 1; /* Takes up half the width */
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Centers content vertically */
+  align-items: center; /* Centers content horizontally */
+  background-color: #f4f4f4; /* Light gray background */
+  padding: 20px;
+}
+
+.login-form h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.login-form form {
+  width: 80%; /* Makes the form narrower */
+  max-width: 400px; /* Limits the form width */
+}
+
+.login-form form div {
+  margin-bottom: 15px;
+}
+
+.login-image {
+  flex: 1; /* Takes up the other half of the width */
+  background: url("../../assets/loginImage.jpg") no-repeat center center;
+  background-size: cover; /* Ensures the image covers the entire div */
+}

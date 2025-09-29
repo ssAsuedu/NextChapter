@@ -1,0 +1,44 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Logs
+logs
+*.log
+*.gz
+
+# Environment variables
+.env
+
+# Build output
+dist/
+build/
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# MacOS system files
+.DS_Store
+
+# Coverage reports
+coverage/
+
+# Temporary files
+*.tmp
+*.temp
+*.bak
+
+# Public folder (if not needed for version control)
+public/vite.svg
+
+# Ignore specific files in client
+client/src/assets/*.svg
+client/src/assets/*.jpg
+
+# Ignore specific files in server
+server/*.log
