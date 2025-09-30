@@ -5,7 +5,7 @@ const Contact = () => {
   return (
     <div style={{ marginLeft: "220px", padding: "20px" }}>
       <h1>Contact Us</h1>
-      <p>This is the contact page of your application.</p>
+      <p>This is the contact page.</p>
     </div>
   );
 };
