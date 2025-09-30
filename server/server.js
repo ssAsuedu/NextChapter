@@ -1,8 +1,9 @@
 import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import { CognitoUserPool, CognitoUser, AuthenticationDetails } from "amazon-cognito-identity-js";
 import dotenv from "dotenv";
+import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from "amazon-cognito-identity-js";
+import User from "./models/User.js"; // Import the User model
 
 dotenv.config();
 
@@ -30,26 +31,30 @@ app.post("/api/signup", (req, res) => {
   const { email, password, name } = req.body;
 
   const attributeList = [
-    {
-      Name: "email",
-      Value: email,
-    },
-    {
-      Name: "name",
-      Value: name,
-    },
+    new CognitoUserAttribute({ Name: "email", Value: email }),
+    new CognitoUserAttribute({ Name: "name", Value: name }),
   ];
 
-  userPool.signUp(email, password, attributeList, null, (err, result) => {
+  userPool.signUp(email, password, attributeList, null, async (err, result) => {
     if (err) {
       return res.status(400).json({ error: err.message });
     }
-    res.json({ message: "Sign-up successful", user: result.user });
+
+    try {
+      // Add the user to MongoDB
+      const newUser = new User({ name, email });
+      await newUser.save();
+
+      res.json({ message: "Sign-up successful and user added to database", user: result.user });
+    } catch (dbError) {
+      console.error("Error saving user to database:", dbError);
+      res.status(500).json({ error: "Failed to save user to database" });
+    }
   });
 });
 
 // Login Route
-app.post("/api/login", (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
   const user = new CognitoUser({
@@ -63,14 +68,44 @@ app.post("/api/login", (req, res) => {
   });
 
   user.authenticateUser(authDetails, {
-    onSuccess: (result) => {
+    onSuccess: async (result) => {
       const accessToken = result.getAccessToken().getJwtToken();
-      res.json({ message: "Login successful", token: accessToken });
+
+      // Optional: Fetch user info from MongoDB
+      let userInfo = null;
+      try {
+        userInfo = await User.findOne({ email });
+      } catch (dbError) {
+        console.error("Error retrieving user from database:", dbError);
+      }
+
+      res.json({
+        message: "Login successful",
+        token: accessToken,
+        user: userInfo, // This can be null if not found
+      });
     },
     onFailure: (err) => {
-      console.error("Login error:", err); // Log the error for debugging
+      console.error("Login error:", err);
       res.status(401).json({ error: err.message || "Login failed" });
     },
+  });
+});
+
+// Confirm Registration Route
+app.post("/api/confirm", (req, res) => {
+  const { email, code } = req.body;
+
+  const user = new CognitoUser({
+    Username: email,
+    Pool: userPool,
+  });
+
+  user.confirmRegistration(code, true, (err, result) => {
+    if (err) {
+      return res.status(400).json({ error: err.message });
+    }
+    res.json({ message: "Email confirmed successfully!", result });
   });
 });
 

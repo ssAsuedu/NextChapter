@@ -4,11 +4,14 @@ import "../../styles/LandingPage/Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const userName = localStorage.getItem("userName");
+  const userInitial = userName ? userName.charAt(0).toUpperCase() : null;
 
   // Handle Sign Out
   const handleSignOut = () => {
     localStorage.removeItem("token"); // Remove the token from localStorage
-    alert("You have been signed out.");
+    localStorage.removeItem("userName"); // Remove the userName from localStorage
+ 
     navigate("/"); // Redirect to the home page
   };
 
@@ -21,7 +24,14 @@ const Navbar = () => {
       </ul>
       <div className="auth-buttons">
         {localStorage.getItem("token") ? (
-          <button onClick={handleSignOut}>Sign Out</button>
+          <>
+            {userInitial && (
+              <div className="user-initial" title={userName}>
+                {userInitial}
+              </div>
+            )}
+            <button onClick={handleSignOut}>Sign Out</button>
+          </>
         ) : (
           <>
             <Link to="/login">

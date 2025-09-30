@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { login } from "../api";
 import "../styles/LoginPage/Login.css";
 import { TextField, Button } from "@mui/material";
 
@@ -12,12 +12,15 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5050/api/login", { email, password });
-      alert("Login successful!");
-      localStorage.setItem("token", response.data.token); // Store token in localStorage
-      navigate("/profile"); // Redirect to profile page
+      const response = await login({ email, password });
+      localStorage.setItem("token", response.data.token);
+      if (response.data.user?.name) {
+        localStorage.setItem("userName", response.data.user.name);
+      }
+     
+      navigate("/profile");
     } catch (err) {
-      alert("Login failed: " + err.response.data.error);
+      alert("Login failed: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
