@@ -1,0 +1,26 @@
+/* src/styles/variables.css */
+:root {
+    /* Primary colors */
+    --color-primary-lightest: #b8e3e9;
+    --color-primary-light: #e0e9ea;
+    --color-primary-main: #4f7c82;
+    --color-primary-dark: #0b2e33;
+    
+    /* Semantic colors - light theme with teal accents */
+    --color-background: #ffffff;        /* Clean white background */
+    --color-background-alt: #f8f9fa;    /* Light gray for sections */
+    --color-accent: #4f7c82;            /* Teal for accents */
+    --color-text: #2c3e50;              /* Dark gray for text */
+    --color-text-light: #6c757d;        /* Medium gray for secondary text */
+    
+    /* Button colors */
+    --color-button-primary: #4f7c82;
+    --color-button-primary-hover: #0b2e33;
+    --color-button-text: #ffffff;
+    
+    /* Neutrals */
+    --color-white: #ffffff;
+    --color-light-gray: #f8f9fa;
+    --color-gray: #fafcff;
+    --color-dark: #0b2e33;
+  }
