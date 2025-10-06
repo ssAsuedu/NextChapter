@@ -2,8 +2,14 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from "amazon-cognito-identity-js";
-import User from "./models/User.js"; // Import the User model
+import {
+  CognitoUserPool,
+  CognitoUser,
+  AuthenticationDetails,
+  CognitoUserAttribute,
+} from "amazon-cognito-identity-js";
+import User from "./models/User.js";
+import booksRoute from "./routes/bookSearch.js";
 
 dotenv.config();
 
@@ -15,14 +21,15 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose
+  .connect(process.env.MONGO_URI /*, { useNewUrlParser: true, useUnifiedTopology: true }*/ )
   .then(() => console.log("Connected to MongoDB Atlas"))
   .catch((err) => console.error("MongoDB connection error:", err));
 
 // Cognito Configuration
 const poolData = {
-  UserPoolId: process.env.COGNITO_USER_POOL_ID, // Replace with your User Pool ID
-  ClientId: process.env.COGNITO_APP_CLIENT_ID,  // Replace with your App Client ID
+  UserPoolId: process.env.COGNITO_USER_POOL_ID,
+  ClientId: process.env.COGNITO_APP_CLIENT_ID,
 };
 const userPool = new CognitoUserPool(poolData);
 
@@ -41,11 +48,12 @@ app.post("/api/signup", (req, res) => {
     }
 
     try {
-      // Add the user to MongoDB
       const newUser = new User({ name, email });
       await newUser.save();
-
-      res.json({ message: "Sign-up successful and user added to database", user: result.user });
+      res.json({
+        message: "Sign-up successful and user added to database",
+        user: result.user,
+      });
     } catch (dbError) {
       console.error("Error saving user to database:", dbError);
       res.status(500).json({ error: "Failed to save user to database" });
@@ -71,7 +79,6 @@ app.post("/api/login", async (req, res) => {
     onSuccess: async (result) => {
       const accessToken = result.getAccessToken().getJwtToken();
 
-      // Optional: Fetch user info from MongoDB
       let userInfo = null;
       try {
         userInfo = await User.findOne({ email });
@@ -82,7 +89,7 @@ app.post("/api/login", async (req, res) => {
       res.json({
         message: "Login successful",
         token: accessToken,
-        user: userInfo, // This can be null if not found
+        user: userInfo, // can be null if not found
       });
     },
     onFailure: (err) => {
@@ -107,6 +114,19 @@ app.post("/api/confirm", (req, res) => {
     }
     res.json({ message: "Email confirmed successfully!", result });
   });
+});
+
+// Other routes
+app.use("/api", booksRoute);
+
+// Health check
+app.get("/api/health", (req, res) => {
+  res.json({ status: "ok", message: "Server is running" });
+});
+
+// Catch-all API 404
+app.use("/api", (req, res) => {
+  res.status(404).json({ error: "API route not found" });
 });
 
 // Start Server
