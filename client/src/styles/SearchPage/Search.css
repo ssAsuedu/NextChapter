@@ -1,0 +1,132 @@
+body {
+  background: #f4f4f4;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top */
+  min-height: 100vh;
+  margin: 0;
+}
+
+.search-page {
+  max-width: 1000px;
+  width: 100%;
+  margin-top: 80px; /* Only top margin needed */
+  padding: 24px;
+  background: #f4f4f4;
+  border-radius: 12px;
+  min-height: 80vh;
+  box-sizing: border-box;
+}
+
+.search-page h1 {
+  text-align: center;
+  margin-bottom: 32px;
+  font-size: 2.2rem;
+  font-family: "Sen", sans-serif;
+  color: #222222; /* Dark gray */
+}
+
+.search-form {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.search-input {
+  width: 350px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  border: 2px solid #888888; /* Darker gray border */
+  border-radius: 6px;
+  outline: none;
+  background: #f4f4f4;
+  color: #333333; /* Dark gray text */
+  transition: border-color 0.2s;
+}
+
+.search-input:focus {
+  border-color: #007bff;
+}
+
+.search-button {
+  background-color: #ab7ce7;
+  color: white;
+  border: 2px solid #ab7ce7;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.search-button:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+  border: 2px solid #bbb;
+}
+
+.search-button:hover:not(:disabled) {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 2px solid #8561b4;
+}
+
+.results-section {
+  margin-top: 24px;
+}
+
+.books-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  justify-content: center;
+}
+
+.book-card {
+  width: 180px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.book-image {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+  margin-bottom: 12px;
+  background: #eee;
+}
+
+.book-details {
+  text-align: center;
+}
+
+.book-title {
+  font-size: 1.05rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #222;
+}
+
+.book-authors {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 4px;
+}
+
+.book-date {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.no-results {
+  text-align: center;
+  color: #888;
+  margin-top: 32px;
+}
