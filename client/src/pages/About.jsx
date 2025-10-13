@@ -13,6 +13,7 @@ const About = () => {
   };
 
   const headerStyle = {
+    marginTop: "80px",
     marginBottom: "40px",
     textAlign: "center",
     paddingBottom: "20px",
@@ -212,7 +213,7 @@ const About = () => {
             <h2 style={h2Style}>Our Mission</h2>
             <p style={paragraphStyle}>
               In today's fast-paced world, finding time, motivation, and focus for reading can feel impossible. 
-              **Next Chapter** was created to change that. We believe that reading should be engaging, accessible, 
+              Next Chapter was created to change that. We believe that reading should be engaging, accessible, 
               and supported by a community of fellow book lovers.
             </p>
             <p style={paragraphStyle}>
@@ -304,7 +305,7 @@ const About = () => {
         
         {/* Team Grid with Emojis */}
         <div style={teamGridStyle}>
-          {['👩🏾‍💻', '👩🏽‍💻', '👩🏻‍💻', '👩🏿‍💻', '👩🏼‍🦱'].map((emoji, index) => (
+          {['👩🏾‍💻', '👩🏽‍💻', '👩🏻‍💻', '👩🏿‍💻', '👩🏽‍💻'].map((emoji, index) => (
             <div key={index} style={teamMemberStyle}>
               <div 
                 style={teamAvatarStyle}
