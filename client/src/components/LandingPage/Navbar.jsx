@@ -15,6 +15,13 @@ const Navbar = () => {
     navigate("/"); // Redirect to the home page
   };
 
+  // Secure navigation to profile
+  const handleProfileClick = () => {
+    if (localStorage.getItem("token")) {
+      navigate("/profile");
+    }
+  };
+
   return (
     <nav>
       <ul>
@@ -27,7 +34,18 @@ const Navbar = () => {
         {localStorage.getItem("token") ? (
           <>
             {userInitial && (
-              <div className="user-initial" title={userName}>
+              <div
+                className="user-initial"
+                title={userName}
+                onClick={handleProfileClick}
+                style={{ cursor: "pointer" }}
+                tabIndex={0}
+                role="button"
+                aria-label="Go to profile"
+                onKeyDown={e => {
+                  if (e.key === "Enter" || e.key === " ") handleProfileClick();
+                }}
+              >
                 {userInitial}
               </div>
             )}

@@ -109,6 +109,33 @@ app.post("/api/confirm", (req, res) => {
   });
 });
 
+// Add book to user's bookshelf
+app.post("/api/bookshelf/add", async (req, res) => {
+  const { email, volumeId } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    if (!user.bookshelf.includes(volumeId)) {
+      user.bookshelf.push(volumeId);
+      await user.save();
+    }
+    res.json({ message: "Book added to bookshelf", bookshelf: user.bookshelf });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to add book" });
+  }
+});
+
+// Get user's bookshelf
+app.get("/api/bookshelf/:email", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({ bookshelf: user.bookshelf });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get bookshelf" });
+  }
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
