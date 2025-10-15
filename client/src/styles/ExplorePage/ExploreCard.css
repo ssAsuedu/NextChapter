@@ -1,0 +1,91 @@
+.book-card {
+  width: 120px;
+  height: 180px;
+  background: transparent;
+  border-radius: 8px;
+  box-shadow: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.book-image {
+  width: 120px;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #eee;
+  transition: box-shadow 0.2s, border 0.2s;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 2px solid transparent;
+}
+
+.book-card:hover,
+.book-card:focus {
+  transform: scale(1.07);
+}
+
+.book-card:hover .book-image,
+.book-card:focus .book-image {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  border: 2px solid #ab7ce7; /* Purple accent */
+}
+
+.book-popup {
+  position: absolute;
+  top: -110px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  padding: 16px 12px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  pointer-events: auto;
+}
+
+.book-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #222;
+  text-align: center;
+}
+
+.book-authors {
+  font-size: 0.95rem;
+  color: #555;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.save-book-btn {
+  background-color: #ab7ce7;
+  color: white;
+  border: 2px solid #ab7ce7;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.save-book-btn:disabled {
+  background: #bbb;
+  border: 2px solid #bbb;
+  cursor: not-allowed;
+}
+
+.save-book-btn:hover:not(:disabled) {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 2px solid #8561b4;
+}

@@ -13,3 +13,11 @@ export const login = async ({ email, password }) => {
 export const confirmEmail = async ({ email, code }) => {
   return axios.post(`${API_BASE_URL}/confirm`, { email, code });
 };
+
+export const addBookToBookshelf = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/bookshelf/add`, { email, volumeId });
+};
+
+export const getBookshelf = async (email) => {
+  return axios.get(`${API_BASE_URL}/bookshelf/${email}`);
+};

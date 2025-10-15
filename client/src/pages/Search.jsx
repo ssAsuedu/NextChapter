@@ -45,7 +45,7 @@ const Search = () => {
         {books.length > 0 ? (
           <div className="books-grid">
             {books.map((book) => (
-              <BookCard key={book.id} info={book.volumeInfo} />
+              <BookCard key={book.id} info={book.volumeInfo} volumeId={book.id} />
             ))}
           </div>
         ) : (

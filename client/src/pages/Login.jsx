@@ -17,7 +17,8 @@ const Login = () => {
       if (response.data.user?.name) {
         localStorage.setItem("userName", response.data.user.name);
       }
-     
+      localStorage.setItem("userEmail", response.data.user.email);
+
       navigate("/profile");
     } catch (err) {
       alert("Login failed: " + (err.response?.data?.error || "Unknown error"));
