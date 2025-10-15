@@ -22,6 +22,21 @@ const Home = () => {
         <button onClick={() => navigate("/about")}>Learn More</button>
       </section>
 
+      {/* Trending Books Section */}
+      <section className="trending-books">
+        <h2>Books Everyone's Talking About</h2>
+        <p>Explore trending books that readers can't put down!</p>
+      </section>
+
+      {/*Recommended Books Section (will be different for when the user is logged in)*/}
+      <section className="recommended-books">
+        <h2>Books We Think You Might Love</h2>
+        {/* <p>We've gathered a selection of books we think you'll enjoy, inspired by your recent favorites. Discover more from the authors
+          and genres you love!  
+        </p> */} {/* Will use this paragraph text for when the user is logged in */}
+        <p>Please <a href="/login">login</a> to see a collection of books we've selected that we think you'll enjoy!</p>
+      </section>
+
       {/* Features Section */}
       <section className="features">
         <h2>Track Your Reading</h2>
