@@ -40,7 +40,7 @@ section {
   text-align: center; /* Center content horizontally */
 }
 
-.about, .features, .community {
+.about, .features, .community, .trending-books, .recommended-books {
   background-color: transparent; /* Invisible div with the same background color */
   margin: 20px auto;
   border-radius: 8px;
@@ -77,6 +77,13 @@ section button:hover {
   border: 2px solid black; /* Keep the border color */
 }
 
+.recommended-books a {
+  color: #ab7ce7; 
+}
+
+.recommended-books a:hover {
+  color: #73559b;
+}
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-content h1 {
