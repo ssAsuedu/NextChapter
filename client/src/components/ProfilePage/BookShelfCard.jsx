@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { addBookToBookshelf } from "../../api";
-import "../../styles/SearchPage/BookCard.css";
+import "../../styles/ProfilePage/BookShelfCard.css";
 
 const BookCard = ({ info, volumeId }) => {
   const [saved, setSaved] = useState(false);
