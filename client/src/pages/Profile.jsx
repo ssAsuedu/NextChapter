@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { getBookshelf } from "../api";
 import axios from "axios";
 import BookCard from "../components/ProfilePage/BookShelfCard";
-import "../styles/ProfilePage/Profile.css"; // Create this CSS file for styling
-import { Link } from "react-router-dom";
+import "../styles/ProfilePage/Profile.css";
+import ProfileNavbar from "../components/ProfilePage/ProfileNavbar"; // Import the new navbar
+
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 const Profile = () => {
@@ -35,15 +36,7 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <nav className="profile-vertical-navbar">
-        <ul>
-          <li>Bookshelf</li>
-          <li><Link to="/progress">Progress</Link></li>
-          <li>Reviews</li>
-          <li>Friends</li>
-          <li>Account</li>
-        </ul>
-      </nav>
+      <ProfileNavbar />
       <div className="profile-content">
         <h1>Welcome{userName ? `, ${userName}!` : " to Your Profile"}</h1>
         <p>This is your profile page.</p>
