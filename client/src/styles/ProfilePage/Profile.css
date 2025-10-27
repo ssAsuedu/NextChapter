@@ -41,6 +41,7 @@
 
 .profile-content {
   flex: 1;
+  font-family: "Sen", sans-serif;
   padding: 100px 32px 32px 32px; /* Top padding for horizontal navbar */
   width: 100%;
 }

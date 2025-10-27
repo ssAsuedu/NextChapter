@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "../../styles/ProfilePage/Profile.css";
+import "../../styles/ProfilePage/ProfileNavbar.css";
 
 const ProfileNavbar = () => {
   return (

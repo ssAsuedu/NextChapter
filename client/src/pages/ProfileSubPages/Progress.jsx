@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getBookshelf, getProgress, updateProgress } from "../../api";
 import axios from "axios";
 import "../../styles/ProfilePage/Progress.css";
-
+import ProfileNavbar from "../../components/ProfilePage/ProfileNavbar";
+import TextField from "@mui/material/TextField";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -74,6 +75,9 @@ const Progress = () => {
   };
 
   return (
+    <div>
+         <ProfileNavbar />
+   
     <div className="progress-page">
       <h1>Your Book Progress</h1>
       <div className="progress-list">
@@ -107,13 +111,24 @@ const Progress = () => {
                       <>
                         <label>
                           Page:
-                          <input
+                          <TextField
                             type="number"
-                            min={0}
-                            max={totalPages}
+                            variant="outlined"
+                            size="small"
                             value={editPage}
                             onChange={e => setEditPage(e.target.value)}
-                            style={{ width: 60, marginLeft: 8 }}
+                            inputProps={{
+                              min: 0,
+                              max: totalPages,
+                              style: { background: "#f4f4f4" } // Light gray background
+                            }}
+                            sx={{
+                              width: 70,
+                              marginLeft: 1,
+                              "& .MuiOutlinedInput-root": {
+                                background: "#f4f4f4"
+                              }
+                            }}
                           />
                           / {totalPages || "?"}
                         </label>
@@ -155,6 +170,7 @@ const Progress = () => {
         )}
       </div>
     </div>
+     </div>
   );
 };
 

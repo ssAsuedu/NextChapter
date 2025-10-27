@@ -2,13 +2,25 @@
   padding: 100px 32px 32px 32px;
   background: #f4f4f4;
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center children horizontally */
+}
+
+.progress-page h1 {
+  text-align: center;
+  font-family: "Sen", sans-serif;
+  color: #222;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  width: 100%;
 }
 
 .progress-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Two columns */
   gap: 32px;
-  max-width: 700px;
+  max-width: 900px;
   margin: 0 auto;
 }
 
@@ -20,6 +32,10 @@
   box-shadow: 0 2px 8px rgba(0,0,0,0.06);
   padding: 24px;
   align-items: center;
+  width: 100%;
+  min-width: 0;
+  max-width: 700px;      /* Add this line */
+  box-sizing: border-box;
 }
 
 .progress-book-image {
@@ -31,7 +47,8 @@
 }
 
 .progress-book-info {
-  flex: 1;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .progress-bar-container {
@@ -55,6 +72,30 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  flex-wrap: nowrap;
+  min-width: 0;
+}
+
+.progress-inputs label,
+.progress-inputs input,
+.progress-inputs button {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.progress-inputs input[type="number"] {
+  background: #f4f4f4;      /* Light gray background */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  color: #222;
+  padding: 4px 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.progress-inputs input[type="number"]:focus {
+  border-color: #ab7ce7;
 }
 
 .progress-edit-btn,
