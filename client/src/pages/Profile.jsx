@@ -3,7 +3,7 @@ import { getBookshelf } from "../api";
 import axios from "axios";
 import BookCard from "../components/ProfilePage/BookShelfCard";
 import "../styles/ProfilePage/Profile.css"; // Create this CSS file for styling
-
+import { Link } from "react-router-dom";
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 const Profile = () => {
@@ -38,7 +38,7 @@ const Profile = () => {
       <nav className="profile-vertical-navbar">
         <ul>
           <li>Bookshelf</li>
-          <li>Progress</li>
+          <li><Link to="/progress">Progress</Link></li>
           <li>Reviews</li>
           <li>Friends</li>
           <li>Account</li>

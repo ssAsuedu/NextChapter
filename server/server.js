@@ -136,6 +136,30 @@ app.get("/api/bookshelf/:email", async (req, res) => {
   }
 });
 
+// Get progress for all books
+app.get("/api/progress/:email", async (req, res) => {
+  const user = await User.findOne({ email: req.params.email });
+  if (!user) return res.status(404).json({ error: "User not found" });
+  res.json({ progress: user.progress || [] });
+});
+
+// Update progress for a book
+app.post("/api/progress/update", async (req, res) => {
+  const { email, volumeId, currentPage, totalPages } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  const idx = user.progress.findIndex((p) => p.volumeId === volumeId);
+  if (idx > -1) {
+    user.progress[idx].currentPage = currentPage;
+    user.progress[idx].totalPages = totalPages;
+  } else {
+    user.progress.push({ volumeId, currentPage, totalPages });
+  }
+  await user.save();
+  res.json({ message: "Progress updated", progress: user.progress });
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

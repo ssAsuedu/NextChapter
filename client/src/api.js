@@ -21,3 +21,11 @@ export const addBookToBookshelf = async ({ email, volumeId }) => {
 export const getBookshelf = async (email) => {
   return axios.get(`${API_BASE_URL}/bookshelf/${email}`);
 };
+
+export const getProgress = async (email) => {
+  return axios.get(`${API_BASE_URL}/progress/${email}`);
+};
+
+export const updateProgress = async ({ email, volumeId, currentPage, totalPages }) => {
+  return axios.post(`${API_BASE_URL}/progress/update`, { email, volumeId, currentPage, totalPages });
+};

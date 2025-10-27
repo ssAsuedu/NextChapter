@@ -1,0 +1,96 @@
+.progress-page {
+  padding: 100px 32px 32px 32px;
+  background: #f4f4f4;
+  min-height: 100vh;
+}
+
+.progress-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.progress-book-card {
+  display: flex;
+  gap: 24px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 24px;
+  align-items: center;
+}
+
+.progress-book-image {
+  width: 90px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 6px;
+  background: #eee;
+}
+
+.progress-book-info {
+  flex: 1;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  margin: 12px 0;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  background: #ab7ce7;
+  border-radius: 6px 0 0 6px;
+  transition: width 0.3s;
+}
+
+.progress-inputs {
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-edit-btn,
+.progress-save-btn,
+.progress-cancel-btn {
+  background-color: #ab7ce7;
+  color: white;
+  border: 2px solid #ab7ce7;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.progress-edit-btn:hover,
+.progress-save-btn:hover {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 2px solid #8561b4;
+}
+
+.progress-cancel-btn {
+  background: #bbb;
+  border: 2px solid #bbb;
+  color: #fff;
+}
+
+.progress-cancel-btn:hover {
+  background: #e0e0e0;
+  color: #333;
+  border: 2px solid #888;
+}
+
+.progress-percent {
+  font-size: 0.95rem;
+  color: #8561b4;
+  font-weight: 600;
+}
