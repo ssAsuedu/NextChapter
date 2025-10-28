@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import Explore from "./pages/Explore";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Progress from "./pages/ProfileSubPages/Progress";
 import Reviews from "./pages/ProfileSubPages/Reviews";
 
@@ -23,6 +24,7 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/explore" element={<Explore />} />
+        <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
         <Route path="/progress" element={<Progress />} />
         <Route path="/reviews" element={<Reviews />} />
       </Routes>
