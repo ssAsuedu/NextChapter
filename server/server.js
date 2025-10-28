@@ -160,6 +160,30 @@ app.post("/api/progress/update", async (req, res) => {
   res.json({ message: "Progress updated", progress: user.progress });
 });
 
+app.get("/api/reviews/:email", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({ reviews: user.reviews });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get reviews" });
+  }
+});
+
+app.post("/api/reviews/add", async (req, res) => {
+  const { email, volumeId, rating, reviewText } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    user.reviews.push({ volumeId, rating, reviewText });
+    await user.save();
+
+    res.json({ message: "Review added", reviews: user.reviews });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to add review" });
+  }
+});
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

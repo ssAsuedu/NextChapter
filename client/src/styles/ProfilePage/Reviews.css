@@ -1,0 +1,257 @@
+.reviews-page {
+  display: flex;
+  min-height: 100vh;
+  background: #f4f4f4;
+  padding-top: 60px; /* Height of your horizontal navbar */
+  box-sizing: border-box;
+}
+
+.reviews-content {
+  flex: 1;
+  min-height: calc(100vh - 60px);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0 32px 0;
+  position: relative;
+  box-sizing: border-box;
+  margin-left: 180px; /* Add this: width of your vertical navbar */
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+  /* max-width: 900px; */
+  margin-bottom: 32px;
+  position: relative;
+}
+
+.reviews-header h1 {
+  flex: 1;
+  text-align: center;
+  font-family: "Sen", sans-serif;
+  color: #222;
+  font-size: 2rem;
+  margin: 0;
+}
+
+.add-review-btn {
+  position: fixed !important;
+  top: 70px; /* below the horizontal navbar */
+  right: 20px; /* 40px from the right edge */
+  z-index: 100;
+  background: #ab7ce7 !important;
+  color: #fff !important;
+  font-weight: 600;
+  font-family: "Sen", sans-serif;
+  border-radius: 6px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  transition: background 0.2s;
+}
+
+.add-review-btn:hover {
+  background: #8561b4 !important;
+}
+
+@media (max-width: 600px) {
+  .add-review-btn {
+    right: 10px;
+    top: 70px;
+    min-width: 100px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+  }
+}
+
+.reviews-list {
+  width: 90%;
+  max-width: 900px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+.review-card {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  padding: 24px;
+  width: 100%;
+  min-width: 350px;
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.review-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.review-rating {
+  margin-bottom: 8px;
+}
+
+.star {
+  color: #bbb;
+  font-size: 1.3rem;
+}
+
+.star.filled {
+  color: #ab7ce7;
+}
+
+.review-text {
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.review-date {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #f4f4f4;           /* Light gray background */
+  border-radius: 10px;
+  padding: 32px 24px;
+  min-width: 400px;
+  max-width: 500px;
+  width: 90vw;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  color: #222;                   /* Dark text */
+}
+
+.modal-content h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: "Sen", sans-serif;
+  color: #222;
+}
+
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  align-items: center; /* Center form content horizontally */
+}
+
+.modal-content label,
+.modal-content select,
+.modal-content textarea,
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.star-rating,
+.book-dropdown,
+.review-box,
+.modal-actions {
+  width: 100%; /* Ensure all fields and actions take full width */
+  box-sizing: border-box;
+  text-align: left;
+}
+
+.star-rating,
+.book-dropdown,
+.review-box {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  justify-content: center; /* Center stars horizontally */
+}
+
+.star {
+  color: #bbb;
+  font-size: 2rem;
+  transition: color 0.2s;
+}
+.book-dropdown select {
+  background: #f4f4f4;
+  color: #222;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+  min-width: 280px;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.review-box textarea {
+  background: #f4f4f4;
+  color: #222;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 1rem;
+  width: 100%;
+  min-width: 280px;
+  max-width: 100%;
+  box-sizing: border-box;
+  resize: vertical;
+}
+.star.filled {
+  color: #8561b4;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.submit-btn {
+  background: #ab7ce7;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 600;
+}
+
+.submit-btn:hover {
+  background: #8561b4;
+  color: #fff;
+}
+
+.cancel-btn {
+  background: #eaeaea;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 18px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-weight: 600;
+}
+
+.cancel-btn:hover {
+  background: #ccc;
+  color: #222;
+}

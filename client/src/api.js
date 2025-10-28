@@ -29,3 +29,11 @@ export const getProgress = async (email) => {
 export const updateProgress = async ({ email, volumeId, currentPage, totalPages }) => {
   return axios.post(`${API_BASE_URL}/progress/update`, { email, volumeId, currentPage, totalPages });
 };
+
+export const getReviews = async (email) => {
+  return axios.get(`${API_BASE_URL}/reviews/${email}`);
+};
+
+export const addReview = async ({ email, volumeId, rating, reviewText }) => {
+  return axios.post(`${API_BASE_URL}/reviews/add`, { email, volumeId, rating, reviewText });
+};

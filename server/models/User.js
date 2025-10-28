@@ -12,6 +12,14 @@ const userSchema = new mongoose.Schema({
       totalPages: Number,
     },
   ],
+  reviews: [
+    {
+      volumeId: String,
+      rating: Number,
+      reviewText: String,
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);
