@@ -1,0 +1,36 @@
+.profile-vertical-navbar {
+  width: 180px;
+  background: #f4f4f4;
+  border-right: 1px solid #e0e0e0;
+  padding-top: 20px;
+  position: fixed;
+  left: 0;
+  top: 60px; /* Height of your horizontal navbar */
+  height: calc(100vh - 60px); /* Subtract horizontal navbar height */
+  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+  z-index: 10;
+}
+
+.profile-vertical-navbar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start; /* Align items to the top */
+  height: 100%;
+}
+
+.profile-vertical-navbar li {
+  padding: 24px 32px;
+  font-size: 1.1rem;
+  color: #8561b4;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.profile-vertical-navbar li:hover {
+  background: #f4f4f4;
+  color: #333;
+}

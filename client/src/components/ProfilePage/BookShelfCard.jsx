@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { addBookToBookshelf } from "../../api";
-import "../../styles/SearchPage/BookCard.css";
+import "../../styles/ProfilePage/BookShelfCard.css";
 
 const BookCard = ({ info, volumeId }) => {
   const [saved, setSaved] = useState(false);
@@ -28,9 +28,9 @@ const BookCard = ({ info, volumeId }) => {
       />
       <div className="book-details">
         <h3 className="book-title">{info.title}</h3>
-        <p className="book-authors">
+        {/* <p className="book-authors">
           {info.authors ? info.authors.join(", ") : "Unknown Author"}
-        </p>
+        </p> */}
         <p className="book-date">{info.publishedDate}</p>
       
       </div>
