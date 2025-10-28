@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { getBookshelf } from "../api";
 import axios from "axios";
 import BookCard from "../components/ProfilePage/BookShelfCard";
-import "../styles/ProfilePage/Profile.css"; // Create this CSS file for styling
+import "../styles/ProfilePage/Profile.css";
+import ProfileNavbar from "../components/ProfilePage/ProfileNavbar"; // Import the new navbar
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -35,20 +36,10 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <nav className="profile-vertical-navbar">
-        <ul>
-          <li>Bookshelf</li>
-          <li>Progress</li>
-          <li>Reviews</li>
-          <li>Friends</li>
-          <li>Account</li>
-        </ul>
-      </nav>
+      <ProfileNavbar />
       <div className="profile-content">
-        <h1>Welcome{userName ? `, ${userName}!` : " to Your Profile"}</h1>
-        <p>This is your profile page.</p>
-        <h2>Your Bookshelf</h2>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>
+        <h1>Your Bookshelf</h1>
+        <div className="bookshelf-grid">
           {books.length > 0 ? (
             books.map(book => (
               <BookCard key={book.id} info={book.volumeInfo} volumeId={book.id} />

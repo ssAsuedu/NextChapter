@@ -4,7 +4,22 @@ const userSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   createdAt: { type: Date, default: Date.now },
-  bookshelf: [{ type: String }], // Array of Google Books volume IDs
+  bookshelf: [{ type: String }],
+  progress: [
+    {
+      volumeId: String,
+      currentPage: Number,
+      totalPages: Number,
+    },
+  ],
+  reviews: [
+    {
+      volumeId: String,
+      rating: Number,
+      reviewText: String,
+      createdAt: { type: Date, default: Date.now },
+    },
+  ],
 });
 
 const User = mongoose.model("User", userSchema);
