@@ -93,9 +93,7 @@ const Review = () => {
         >
           Add Review
         </Button>
-        <div className="reviews-header">
-          <h1>My Reviews</h1>
-        </div>
+        <h1 className="reviews-title">My Reviews</h1>
         <div className="reviews-list">
           {loading ? (
             <p>Loading...</p>

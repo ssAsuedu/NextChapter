@@ -4,6 +4,9 @@ import axios from "axios";
 import "../../styles/ProfilePage/Progress.css";
 import ProfileNavbar from "../../components/ProfilePage/ProfileNavbar";
 import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -120,7 +123,7 @@ const Progress = () => {
                             inputProps={{
                               min: 0,
                               max: totalPages,
-                              style: { background: "#f4f4f4" } // Light gray background
+                              style: { background: "#f4f4f4" }
                             }}
                             sx={{
                               width: 70,
@@ -132,20 +135,33 @@ const Progress = () => {
                           />
                           / {totalPages || "?"}
                         </label>
-                        <button
-                          className="progress-save-btn"
-                          onClick={() => handleSave(idx, volumeId, totalPages)}
-                          style={{ marginLeft: 12 }}
-                        >
-                          Save
-                        </button>
-                        <button
+                         <IconButton
                           className="progress-cancel-btn"
                           onClick={() => setEditIdx(null)}
-                          style={{ marginLeft: 8 }}
+                          size="small"
+                          sx={{
+                            marginLeft: 1,
+                            background: "#bbb",
+                            color: "#fff",
+                            "&:hover": { background: "#888" }
+                          }}
                         >
-                          Cancel
-                        </button>
+                          <CloseIcon />
+                        </IconButton>
+                        <IconButton
+                          className="progress-save-btn"
+                          onClick={() => handleSave(idx, volumeId, totalPages)}
+                          size="small"
+                          sx={{
+                            marginLeft: 1,
+                            background: "#ab7ce7",
+                            color: "#fff",
+                            "&:hover": { background: "#8561b4" }
+                          }}
+                        >
+                          <CheckIcon />
+                        </IconButton>
+                      
                       </>
                     ) : (
                       <>

@@ -13,10 +13,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 40px 0 32px 0;
+  padding: 100px 0 32px 0; /* Match Progress page top padding */
   position: relative;
   box-sizing: border-box;
   margin-left: 180px; /* Add this: width of your vertical navbar */
+}
+
+.reviews-title {
+  text-align: center;
+  font-family: "Sen", sans-serif;
+  color: #222;
+  font-size: 2.2rem;
+  margin-bottom: 40px;
+  width: 100%;
 }
 
 .reviews-header {
@@ -68,12 +77,13 @@
 }
 
 .reviews-list {
-  width: 90%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 reviews per row */
+  gap: 32px;
   max-width: 900px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  align-items: center;
+  margin: 0 auto;
+  width: 100%;
+  justify-items: center;
 }
 
 .review-card {
