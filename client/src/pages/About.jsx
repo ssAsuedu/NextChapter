@@ -138,6 +138,21 @@ const About = () => {
         <p className="footer-text">
           Built with React, Node.js, Express, and MongoDB
         </p>
+
+        {/* 🌟 NEW: Privacy Policy Link 
+            Using a standard anchor tag. If you use React Router, 
+            replace <a> with <Link to="/privacy-policy">
+        */}
+        <p className="footer-text">
+            <a 
+                href="/PrivacyPolicy" 
+                className="footer-link"
+                title="View our Privacy Policy"
+            >
+                View our Privacy Policy
+            </a>
+        </p>
+
       </footer>
     </div>
   );
