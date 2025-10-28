@@ -38,10 +38,8 @@ const Profile = () => {
     <div className="profile-page">
       <ProfileNavbar />
       <div className="profile-content">
-        <h1>Welcome{userName ? `, ${userName}!` : " to Your Profile"}</h1>
-        <p>This is your profile page.</p>
-        <h2>Your Bookshelf</h2>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: "24px" }}>
+        <h1>Your Bookshelf</h1>
+        <div className="bookshelf-grid">
           {books.length > 0 ? (
             books.map(book => (
               <BookCard key={book.id} info={book.volumeInfo} volumeId={book.id} />
