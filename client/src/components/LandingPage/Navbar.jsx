@@ -6,6 +6,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
   const userInitial = userName ? userName.charAt(0).toUpperCase() : null;
+  const location = window.location;
 
   // Handle Sign Out
   const handleSignOut = () => {
@@ -15,6 +16,11 @@ const Navbar = () => {
     navigate("/"); // Redirect to the home page
   };
 
+  //Hide the navigation bar on signup and login
+  if (location.pathname === "/login" || location.pathname === "/signup") {
+    return null;
+  }
+  
   // Secure navigation to profile
   const handleProfileClick = () => {
     if (localStorage.getItem("token")) {
