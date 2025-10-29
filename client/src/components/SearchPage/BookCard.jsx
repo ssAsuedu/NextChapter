@@ -1,15 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { addBookToBookshelf } from "../../api";
 import "../../styles/SearchPage/BookCard.css";
 
-const BookCard = ({ info, volumeId, bookshelf = [] }) => {
-  const email = localStorage.getItem("userEmail");
+const BookCard = ({ info, volumeId }) => {
   const [saved, setSaved] = useState(false);
-
-  // Set initial saved state based on bookshelf prop
-  useEffect(() => {
-    setSaved(bookshelf.includes(volumeId));
-  }, [bookshelf, volumeId]);
+  const email = localStorage.getItem("userEmail");
 
   const handleSave = async () => {
     if (!email) {
@@ -25,20 +20,20 @@ const BookCard = ({ info, volumeId, bookshelf = [] }) => {
   };
 
   return (
-    <div className="book-card">
+    <div className="search-book-card">
       <img
         src={info.imageLinks?.thumbnail || "/default-book.png"}
         alt={info.title}
-        className="book-image"
+        className="search-book-image"
       />
-      <div className="book-details">
-        <h3 className="book-title">{info.title}</h3>
-        <p className="book-authors">
+      <div className="search-book-details">
+        <h3 className="search-book-title">{info.title}</h3>
+        <p className="search-book-authors">
           {info.authors ? info.authors.join(", ") : "Unknown Author"}
         </p>
-        <p className="book-date">{info.publishedDate}</p>
+        <p className="search-book-date">{info.publishedDate}</p>
         <button
-          className="save-book-btn"
+          className="search-save-btn"
           onClick={handleSave}
           disabled={saved}
         >
