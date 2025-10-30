@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 /* --- Root Container --- */
 .about-container {
     padding: 30px 60px;
@@ -53,10 +54,99 @@
     color: #444;
     margin-bottom: 16px;
   }
+=======
+/* Import Roboto font from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+/*
+ * About Page CSS - Minimalist Black/White/Light Gray Aesthetic
+ * Font: Roboto
+ * Matches Figma Design System
+ */
+
+/* --- Root Container --- */
+.about-container {
+    display: flex;
+    padding: 80px 80px 80px 64px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 32px; /* Reduced from 48px to 32px */
+    min-height: 100vh;
+    background-color: #FFFFFF;
+    font-family: 'Roboto', sans-serif;
+    color: #000000;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+    max-width: 1400px;
+}
+  
+/* --- Header Section --- */
+.header-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center header content */
+    gap: 16px;
+    width: 100%;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #F5F5F5;
+    text-align: center; /* Center text */
+}
+  
+.h1-title {
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 120%;
+    margin: 0;
+}
+  
+.tagline {
+    color: #666666;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 150%;
+    margin: 0;
+}
+  
+/* --- General Section Styles --- */
+.section-block {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    align-items: center; /* Center for h2, but children can override */
+}
+  
+.h2-heading {
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 120%;
+    margin: 0;
+    padding-bottom: 8px;
+    text-align: center; /* Centered */
+    width: 100%; /* Full width for centering */
+}
+  
+.paragraph-text {
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+    margin: 0;
+    text-align: left; /* Left align */
+}
+>>>>>>> Stashed changes
   
   /* --- Mission Section Specific --- */
   .mission-content {
     display: flex;
+<<<<<<< Updated upstream
     align-items: center;
     gap: 60px;
   }
@@ -64,15 +154,41 @@
   .text-block {
     flex: 2;
   }
+=======
+    align-items: flex-start;
+    gap: 32px; /* Reduced from 48px */
+    width: 100%;
+    align-self: flex-start; /* Override parent centering */
+}
+  
+.text-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    flex: 2;
+    align-items: flex-start; /* Left align */
+    text-align: left; /* Left align text */
+}
+>>>>>>> Stashed changes
   
   .image-container {
     flex: 1;
+<<<<<<< Updated upstream
     min-width: 300px;
   }
+=======
+    min-width: 180px; /* Reduced from 250px */
+    max-width: 250px; /* Reduced from 400px */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+>>>>>>> Stashed changes
   
   .about-image {
     width: 100%;
     height: auto;
+<<<<<<< Updated upstream
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
     transform: rotateY(-2deg);
@@ -82,12 +198,28 @@
   .about-image:hover {
     transform: rotateY(0deg); /* Hover effect implemented in CSS */
   }
+=======
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: box-shadow 0.3s ease;
+}
+  
+.about-image:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image-container svg {
+    width: 100%;
+    height: auto;
+}
+>>>>>>> Stashed changes
   
   /* --- Features Grid Section --- */
   .features-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 24px;
+<<<<<<< Updated upstream
     margin-top: 30px;
     width: 100%;
   }
@@ -99,8 +231,18 @@
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
     border-left: 5px solid #464854;
     transition: transform 0.3s ease;
+=======
+    width: 100%;
+    margin-top: 16px;
+    align-self: center; /* Keep centered */
+}
+  
+.feature-card {
+>>>>>>> Stashed changes
     display: flex;
+    padding: 32px;
     flex-direction: column;
+<<<<<<< Updated upstream
     align-items: center;
     justify-content: center;
     text-align: center;
@@ -162,9 +304,98 @@
     cursor: pointer;
     font-weight: 600;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+=======
+    align-items: center; /* Center icons and content */
+    gap: 12px;
+    background-color: #FFFFFF;
+    border: 1px solid #E0E0E0;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    min-height: 160px;
+    text-align: center; /* Center text */
+}
+  
+.feature-card:hover {
+    background-color: #F5F5F5;
+    border-color: #000000;
+}
+
+.feature-icon {
+    width: 32px;
+    height: 32px;
+    color: #000000;
+    margin-bottom: 8px;
+}
+  
+.card-title {
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 130%;
+    margin: 0;
+}
+  
+.card-paragraph {
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    margin: 0;
+}
+  
+/* --- Call to Action (CTA) Section --- */
+.cta-section {
+    display: flex;
+    padding: 64px 48px;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+    width: 100%;
+    background-color: #F5F5F5;
+    border-radius: 4px;
+    text-align: center;
+    box-sizing: border-box;
+}
+  
+.cta-heading {
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 120%;
+    margin: 0;
+}
+  
+.cta-paragraph {
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 150%;
+    margin: 0;
+    max-width: 600px;
+}
+  
+.cta-button {
+    display: flex;
+    padding: 16px 48px;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 4px;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+>>>>>>> Stashed changes
     transition: all 0.3s ease;
   }
   
+<<<<<<< Updated upstream
   .cta-button:hover {
     background-color: #0056b3; /* Hover effect implemented in CSS */
   }
@@ -182,11 +413,36 @@
     width: 180px;
     text-align: center;
   }
+=======
+.cta-button:hover {
+    background-color: #333333;
+    transform: translateY(-2px);
+}
+  
+/* --- Team Section Styles --- */
+.team-grid {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 32px;
+    width: 100%;
+}
+  
+.team-member {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 140px;
+}
+>>>>>>> Stashed changes
   
   .team-avatar {
     width: 120px;
     height: 120px;
     border-radius: 50%;
+<<<<<<< Updated upstream
     background: linear-gradient(135deg, #e9ecef 0%, #f8f9fa 100%);
     margin: 0 auto 15px;
     display: flex;
@@ -228,3 +484,114 @@
     text-align: center;
     margin: 0;
   }
+=======
+    background-color: #F5F5F5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 2px solid #E0E0E0;
+    transition: all 0.3s ease;
+}
+
+.team-avatar svg {
+    width: 48px;
+    height: 48px;
+    color: #000000;
+}
+  
+.team-avatar:hover {
+    border-color: #000000;
+    transform: scale(1.05);
+}
+  
+.team-name {
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 150%;
+    margin: 0;
+    text-align: center;
+}
+  
+.team-role {
+    color: #666666;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    margin: 0;
+    text-align: center;
+}
+  
+/* --- Footer --- */
+.page-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding-top: 32px;
+    border-top: 1px solid #F5F5F5;
+}
+  
+.footer-text {
+    color: #666666;
+    font-family: 'Roboto', sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 150%;
+    text-align: center;
+    margin: 0;
+}
+
+.footer-link {
+    color: #000000;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+    color: #666666;
+}
+
+/* --- Media Queries for Responsiveness --- */
+@media (max-width: 1200px) {
+    .about-container {
+        padding: 60px 48px;
+    }
+}
+
+@media (max-width: 800px) {
+    .about-container {
+        padding: 40px 24px;
+        gap: 48px;
+    }
+    
+    .mission-content {
+        flex-direction: column;
+        gap: 32px;
+    }
+    
+    .image-container {
+        width: 100%;
+        order: -1;
+    }
+    
+    .h1-title {
+        font-size: 36px;
+    }
+    
+    .h2-heading {
+        font-size: 24px;
+    }
+    
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .cta-section {
+        padding: 48px 24px;
+    }
+}
+>>>>>>> Stashed changes
