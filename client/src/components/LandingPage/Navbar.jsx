@@ -6,6 +6,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
   const userInitial = userName ? userName.charAt(0).toUpperCase() : null;
+  const location = window.location;
 
   // Handle Sign Out
   const handleSignOut = () => {
@@ -15,18 +16,42 @@ const Navbar = () => {
     navigate("/"); // Redirect to the home page
   };
 
+  //Hide the navigation bar on signup and login
+  if (location.pathname === "/login" || location.pathname === "/signup") {
+    return null;
+  }
+  
+  // Secure navigation to profile
+  const handleProfileClick = () => {
+    if (localStorage.getItem("token")) {
+      navigate("/profile");
+    }
+  };
+
   return (
     <nav>
       <ul>
         <li><Link to="/">Home</Link></li>
         <li><Link to="/about">About</Link></li>
         <li><Link to="/search">Search</Link></li>
+        <li><Link to="/explore">Explore</Link></li>
       </ul>
       <div className="auth-buttons">
         {localStorage.getItem("token") ? (
           <>
             {userInitial && (
-              <div className="user-initial" title={userName}>
+              <div
+                className="user-initial"
+                title={userName}
+                onClick={handleProfileClick}
+                style={{ cursor: "pointer" }}
+                tabIndex={0}
+                role="button"
+                aria-label="Go to profile"
+                onKeyDown={e => {
+                  if (e.key === "Enter" || e.key === " ") handleProfileClick();
+                }}
+              >
                 {userInitial}
               </div>
             )}

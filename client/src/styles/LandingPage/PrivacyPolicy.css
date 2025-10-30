@@ -1,0 +1,128 @@
+/*
+ * Privacy Policy Page CSS
+ * Aesthetic: Clean, Editorial, High-Readability (Inter Font)
+ * Color Palette: Consistent with About Page
+ */
+
+/* Import Inter font (needed if this is a separate file from About.css) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+/* --- Root Container --- */
+.policy-container {
+    padding: 50px 80px;
+    max-width: 900px; /* Narrower width for better long-form reading experience */
+    margin: 0 auto;
+    margin-left: 0; /* Align to left side */
+    min-height: 100vh;
+    background-color: #F9FAFB; /* Off-white main background */
+    font-family: 'Inter', sans-serif;
+    color: #374151; /* Charcoal/Dark Gray for body copy */
+}
+
+/* --- Header Section --- */
+.policy-header {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E5E7EB; /* Muted Blue-Gray border */
+}
+
+.h1-policy-title {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #1F2937; /* Charcoal/Dark Gray */
+    font-weight: 800;
+}
+
+.last-updated {
+    font-size: 0.95rem;
+    color: #6B7280; /* Neutral gray */
+    font-weight: 400;
+}
+
+/* --- Section and Heading Styles --- */
+.policy-section {
+    margin-bottom: 50px;
+}
+
+/* Main Section Headings (e.g., "1. Information We Collect") */
+.h2-policy-heading {
+    font-size: 1.6rem;
+    color: #1F2937; /* Charcoal/Dark Gray */
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid #CBD5E1; /* Subtle divider */
+    display: inline-block;
+}
+
+/* Sub-Headings (e.g., types of data) */
+.h3-policy-subheading {
+    font-size: 1.15rem;
+    color: #1F2937;
+    font-weight: 600;
+    margin-top: 25px;
+    margin-bottom: 10px;
+}
+
+/* Body Text and Lists */
+.policy-paragraph {
+    font-size: 1.05rem;
+    line-height: 1.8;
+    margin-bottom: 15px;
+}
+
+.policy-list {
+    list-style-type: disc;
+    margin-left: 25px;
+    padding-left: 0;
+    margin-bottom: 25px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+}
+
+.policy-list li {
+    margin-bottom: 8px;
+}
+
+/* Bold labels within list items */
+.policy-list li strong {
+    font-weight: 700;
+    color: #1F2937;
+}
+
+/* Key Callout/Disclaimer Block */
+.disclaimer-box {
+    padding: 20px;
+    background-color: #F3F4F6; /* Neutral Beige/Warm Gray background */
+    border-left: 5px solid #3B82F6; /* Soft Blue accent for important notice */
+    border-radius: 4px;
+    margin: 30px 0;
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #1F2937;
+}
+
+.disclaimer-box strong {
+    color: #2563EB; /* Darker Soft Blue for emphasis */
+}
+
+/* Contact Information Styling */
+.contact-info {
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+/* --- Media Queries --- */
+@media (max-width: 800px) {
+    .policy-container {
+        padding: 30px 20px;
+        margin-left: auto; /* Center on mobile */
+    }
+    .h1-policy-title {
+        font-size: 2rem;
+    }
+    .h2-policy-heading {
+        font-size: 1.4rem;
+    }
+}
