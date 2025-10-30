@@ -35,6 +35,7 @@ const Navbar = () => {
         <li><Link to="/about">About</Link></li>
         <li><Link to="/search">Search</Link></li>
         <li><Link to="/explore">Explore</Link></li>
+        <li><Link to="/privacyPolicy">Privacy Policy</Link></li>
       </ul>
       <div className="auth-buttons">
         {localStorage.getItem("token") ? (

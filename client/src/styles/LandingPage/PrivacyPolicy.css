@@ -1,128 +1,153 @@
 /*
  * Privacy Policy Page CSS
- * Aesthetic: Clean, Editorial, High-Readability (Inter Font)
- * Color Palette: Consistent with About Page
+ * Aesthetic: Minimalist Black/White/Light Gray (Figma Design)
+ * Font: Roboto
  */
 
-/* Import Inter font (needed if this is a separate file from About.css) */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+/* Import Roboto font */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
 
 /* --- Root Container --- */
 .policy-container {
-    padding: 50px 80px;
-    max-width: 900px; /* Narrower width for better long-form reading experience */
-    margin: 0 auto;
-    margin-left: 0; /* Align to left side */
+    display: flex;
+    padding: 80px 80px 80px 64px; /* Added top and bottom padding */
+    flex-direction: column;
+    align-items: flex-start; /* Left align all content */
+    gap: 32px;
     min-height: 100vh;
-    background-color: #F9FAFB; /* Off-white main background */
-    font-family: 'Inter', sans-serif;
-    color: #374151; /* Charcoal/Dark Gray for body copy */
+    background-color: #FFFFFF; /* Pure white background */
+    font-family: 'Roboto', sans-serif;
+    color: #000000; /* Pure black text */
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%; /* 24px */
+    max-width: 1200px; /* Max width for readability */
 }
 
 /* --- Header Section --- */
 .policy-header {
-    margin-bottom: 40px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #E5E7EB; /* Muted Blue-Gray border */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Left align header content */
+    gap: 16px;
+    width: 100%; /* Full width */
+    padding-bottom: 32px;
+    border-bottom: 1px solid #F5F5F5; /* Very light gray border */
 }
 
 .h1-policy-title {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: #1F2937; /* Charcoal/Dark Gray */
-    font-weight: 800;
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 120%;
+    margin: 0;
 }
 
 .last-updated {
-    font-size: 0.95rem;
-    color: #6B7280; /* Neutral gray */
+    color: #666666; /* Medium gray for metadata */
+    font-size: 14px;
     font-weight: 400;
+    line-height: 150%;
+    margin: 0;
 }
 
-/* --- Section and Heading Styles --- */
+/* --- Section Styles --- */
 .policy-section {
-    margin-bottom: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Left align section content */
+    gap: 16px;
+    width: 100%; /* Full width */
+    padding: 24px 0;
 }
 
-/* Main Section Headings (e.g., "1. Information We Collect") */
+/* Main Section Headings */
 .h2-policy-heading {
-    font-size: 1.6rem;
-    color: #1F2937; /* Charcoal/Dark Gray */
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 32px;
     font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 15px;
-    padding-bottom: 5px;
-    border-bottom: 2px solid #CBD5E1; /* Subtle divider */
-    display: inline-block;
+    line-height: 120%;
+    margin: 0;
+    padding-bottom: 8px;
 }
 
-/* Sub-Headings (e.g., types of data) */
-.h3-policy-subheading {
-    font-size: 1.15rem;
-    color: #1F2937;
-    font-weight: 600;
-    margin-top: 25px;
-    margin-bottom: 10px;
-}
-
-/* Body Text and Lists */
+/* Body Text */
 .policy-paragraph {
-    font-size: 1.05rem;
-    line-height: 1.8;
-    margin-bottom: 15px;
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
+    margin: 0;
+    width: 100%; /* Ensure full width */
+    text-align: left; /* Explicitly left align */
 }
 
+/* Lists */
 .policy-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding-left: 24px;
     list-style-type: disc;
-    margin-left: 25px;
-    padding-left: 0;
-    margin-bottom: 25px;
-    font-size: 1.05rem;
-    line-height: 1.8;
+    width: 100%; /* Full width */
+    align-items: flex-start; /* Left align list items */
 }
 
 .policy-list li {
-    margin-bottom: 8px;
-}
-
-/* Bold labels within list items */
-.policy-list li strong {
-    font-weight: 700;
-    color: #1F2937;
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
 }
 
 /* Key Callout/Disclaimer Block */
 .disclaimer-box {
-    padding: 20px;
-    background-color: #F3F4F6; /* Neutral Beige/Warm Gray background */
-    border-left: 5px solid #3B82F6; /* Soft Blue accent for important notice */
-    border-radius: 4px;
-    margin: 30px 0;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: #1F2937;
+    display: flex;
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start; /* Left align content */
+    gap: 8px;
+    width: 100%; /* Full width */
+    background-color: #F5F5F5; /* Light gray background */
+    border-left: 4px solid #000000; /* Black accent border */
+    margin: 32px 0;
+    box-sizing: border-box; /* Include padding in width */
 }
 
 .disclaimer-box strong {
-    color: #2563EB; /* Darker Soft Blue for emphasis */
+    color: #000000;
+    font-weight: 700;
 }
 
-/* Contact Information Styling */
+/* Contact Information */
 .contact-info {
-    font-size: 1rem;
-    line-height: 1.8;
+    color: #000000;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 150%;
 }
 
 /* --- Media Queries --- */
 @media (max-width: 800px) {
     .policy-container {
-        padding: 30px 20px;
-        margin-left: auto; /* Center on mobile */
+        padding: 40px 24px; /* Reduced but still has top padding */
     }
+    
     .h1-policy-title {
-        font-size: 2rem;
+        font-size: 36px;
     }
+    
     .h2-policy-heading {
-        font-size: 1.4rem;
+        font-size: 24px;
+    }
+    
+    .policy-list {
+        padding-left: 20px; /* Slightly less padding on mobile */
     }
 }
