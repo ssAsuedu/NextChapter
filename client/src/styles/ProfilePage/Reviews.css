@@ -1,7 +1,7 @@
 .reviews-page {
   display: flex;
   min-height: 100vh;
-  background: #f4f4f4;
+  background: #ffffff;
   padding-top: 60px; /* Height of your horizontal navbar */
   box-sizing: border-box;
 }

@@ -1,5 +1,5 @@
 body {
-  background: #f4f4f4;
+  background:#ffffff;
   display: flex;
   justify-content: center;
   align-items: flex-start; /* Align to top */
@@ -12,7 +12,7 @@ body {
   width: 100%;
   margin-top: 80px; /* Only top margin needed */
   padding: 24px;
-  background: #f4f4f4;
+  background: #ffffff;
   border-radius: 12px;
   min-height: 80vh;
   box-sizing: border-box;

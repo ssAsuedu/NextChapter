@@ -1,6 +1,7 @@
 import React from "react";
 import "../styles/LandingPage/Home.css";
 import { useNavigate } from "react-router-dom";
+import ProfileSVG from "../assets/profile.svg";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -9,21 +10,26 @@ const Home = () => {
     <div className="landing-page">
       {/* Hero Section */}
       <section className="hero">
-        <div className="hero-content"> { /* Flex container for left and right sides */}
-          <div className="left-side-hero d-flex flex-column justify-content-center gap-3"> {/* Left side with text and buttons */}
-            <h1>Discover worlds between the pages</h1>
-            <p>Explore thousands of books tailored to your taste. Every story
+        <div className="hero-content">
+          <div className="left-side-hero">
+            <h1>Discover Worlds Between Pages</h1>
+            <p>
+              Explore thousands of books tailored to your taste. Every story
               is a journey waiting to unfold.
             </p>
-            <div class="group-buttons d-flex align-items-center gap-3"> {/* Button group */}
+            <div className="group-buttons">
               <button className="browse-button" onClick={() => navigate("/explore")}>Browse Books</button>
               <button className="signup-button" onClick={() => navigate("/signup")}>Get Started</button>
             </div>
           </div>
-          <div className="right-side-hero d-flex align-items-center justify-content-center"> {/* Right side with image */}
-            <div className="image-container">
-              <img className="hero-image" src="/src/assets/hero image.png" alt="Books and Reading" />
-            </div> 
+          <div className="right-side-hero">
+            <div className="hero-profile-image-container">
+              <img
+                src={ProfileSVG}
+                alt="Profile Illustration"
+                className="hero-profile-image"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -41,13 +47,12 @@ const Home = () => {
         <p>Explore trending books that readers can't put down!</p>
       </section>
 
-      {/*Recommended Books Section (will be different for when the user is logged in)*/}
+      {/* Recommended Books Section */}
       <section className="recommended-books">
         <h2>Books We Think You Might Love</h2>
-        {/* <p>We've gathered a selection of books we think you'll enjoy, inspired by your recent favorites. Discover more from the authors
-          and genres you love!  
-        </p> */} {/* Will use this paragraph text for when the user is logged in */}
-        <p>Please <a href="/login">login</a> to see a collection of books we've selected that we think you'll enjoy!</p>
+        <p>
+          Please <a href="/login">login</a> to see a collection of books we've selected that we think you'll enjoy!
+        </p>
       </section>
 
       {/* Features Section */}
@@ -57,12 +62,7 @@ const Home = () => {
         <button onClick={() => navigate("/login")}>Explore Features</button>
       </section>
 
-      {/* Community Section */}
-      <section className="community">
-        <h2>Join the Community</h2>
-        <p>Connect with fellow book lovers and share your thoughts.</p>
-        <button onClick={() => navigate("/signup")}>Join Now</button>
-      </section>
+     
     </div>
   );
 };
