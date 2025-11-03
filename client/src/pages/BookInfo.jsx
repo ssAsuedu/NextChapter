@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/BookInfoPage/BookInfo.css";
+import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -11,11 +12,19 @@ const BookInfo = () => {
 
   useEffect(() => {
     const fetchBook = async () => {
+      // Check cache first
+      const cached = getBookFromCache(volumeId);
+      if (cached) {
+        setBook(cached);
+        return;
+      }
+      // If not cached, fetch from API
       try {
         const res = await fetch(
           `https://www.googleapis.com/books/v1/volumes/${volumeId}?key=${GOOGLE_BOOKS_API_KEY}`
         );
         const data = await res.json();
+        setBookInCache(volumeId, data);
         setBook(data);
       } catch (err) {
         setBook(null);
