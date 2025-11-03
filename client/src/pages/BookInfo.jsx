@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import "../styles/BookInfoPage/BookInfo.css";
 import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
+import { getBookReviews } from "../api"; // <-- Import here
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -9,16 +12,15 @@ const BookInfo = () => {
   const { volumeId } = useParams();
   const [book, setBook] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     const fetchBook = async () => {
-      // Check cache first
       const cached = getBookFromCache(volumeId);
       if (cached) {
         setBook(cached);
         return;
       }
-      // If not cached, fetch from API
       try {
         const res = await fetch(
           `https://www.googleapis.com/books/v1/volumes/${volumeId}?key=${GOOGLE_BOOKS_API_KEY}`
@@ -31,6 +33,19 @@ const BookInfo = () => {
       }
     };
     fetchBook();
+  }, [volumeId]);
+
+  // Fetch all reviews for this volumeId
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const res = await getBookReviews(volumeId);
+        setReviews(res.data.reviews || []);
+      } catch {
+        setReviews([]);
+      }
+    };
+    fetchReviews();
   }, [volumeId]);
 
   if (!book) {
@@ -51,7 +66,10 @@ const BookInfo = () => {
           />
         </div>
         <div className="bookinfo-details-section">
-          <h1 className="bookinfo-title">{info.title}</h1>
+          <div className="bookinfo-title-row">
+            <h1 className="bookinfo-title">{info.title}</h1>
+            <button className="bookinfo-add-btn">Add to Bookshelf</button>
+          </div>
           <p className="bookinfo-author">
             <strong>Author:</strong> {info.authors ? info.authors.join(", ") : "Unknown"}
           </p>
@@ -74,7 +92,7 @@ const BookInfo = () => {
               onClick={() => setExpanded(true)}
               aria-label="Expand summary"
             >
-              <span className="down-arrow">&#x25BC;</span>
+              <ArrowDropDownIcon fontSize="large"/>
             </button>
           )}
           {expanded && (
@@ -83,16 +101,27 @@ const BookInfo = () => {
               onClick={() => setExpanded(false)}
               aria-label="Collapse summary"
             >
-              Close Summary
+              <ArrowDropUpIcon fontSize="large" />
             </button>
           )}
-          <button className="bookinfo-add-btn">Add to Bookshelf</button>
         </div>
       </div>
       <div className="bookinfo-reviews-section">
         <h2>Reviews</h2>
         <div className="bookinfo-reviews-list">
-          <p>No reviews for this book</p>
+          {reviews.length === 0 ? (
+            <p>No reviews for this book</p>
+          ) : (
+            reviews.map((r, idx) => (
+              <div key={idx} className="bookinfo-review">
+                <div>
+                  <strong>{r.email}</strong> &middot; {r.rating} / 5
+                </div>
+                <div>{r.reviewText}</div>
+                <div className="bookinfo-review-date">{new Date(r.createdAt).toLocaleString()}</div>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </div>

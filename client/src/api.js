@@ -37,3 +37,7 @@ export const getReviews = async (email) => {
 export const addReview = async ({ email, volumeId, rating, reviewText }) => {
   return axios.post(`${API_BASE_URL}/reviews/add`, { email, volumeId, rating, reviewText });
 };
+
+export const getBookReviews = async (volumeId) => {
+  return axios.get(`${API_BASE_URL}/reviews/book/${volumeId}`);
+};

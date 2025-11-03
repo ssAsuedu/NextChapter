@@ -49,11 +49,21 @@
   padding-top: 8px;
 }
 
+.bookinfo-title-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
 .bookinfo-title {
+  margin: 0;
   font-size: 2.2rem;
   font-weight: 700;
-  margin: 0 0 8px 0;
   color: #6c3fc5;
+  flex: 1;
 }
 
 .bookinfo-author,
@@ -110,7 +120,7 @@
 }
 
 .bookinfo-add-btn {
-  margin-top: 16px;
+  margin-top: 0;
   padding: 10px 28px;
   background: #ab7ce7;
   color: #fff;
