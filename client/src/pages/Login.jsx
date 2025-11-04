@@ -3,14 +3,34 @@ import { useNavigate } from "react-router-dom";
 import { login } from "../api";
 import "../styles/LoginPage/Login.css";
 import { TextField, Button } from "@mui/material";
-
+import readingBook from "../assets/login_right.svg";
+import readingLeft from "../assets/login_left.svg";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [errors, setErrors] = useState({email: "", password: ""});
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setErrors({email: "", password: ""});
+    
+    let hasError = false;
+    const newErrors = {email: "", password: ""};
+
+    if(!email.includes("@")) {
+      newErrors.email = "Please enter a valid email address.";
+      hasError = true;
+    }
+    if(!password.trim()) {
+      newErrors.password = "Password cannot be empty.";
+      hasError = true;
+    }
+    if(hasError) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       const response = await login({ email, password });
       localStorage.setItem("token", response.data.token);
@@ -21,7 +41,10 @@ const Login = () => {
 
       navigate("/profile");
     } catch (err) {
-      alert("Login failed: " + (err.response?.data?.error || "Unknown error"));
+      const errorMessage = err.response?.data?.error || "Email and password do not match.";
+        setErrors(prev => ({...prev, password: errorMessage}));
+      
+      // alert("Login failed: " + (err.response?.data?.error || "Unknown error"));
     }
   };
 
@@ -30,8 +53,10 @@ const Login = () => {
       {/* Left Half with Login Form */}
       <div className="login-form">
         <div className="login-form-content">
+          <img src={readingLeft} className="login-left"></img>
+          <img src={readingBook} alt="Leaf Icon" className="login-svg"></img>
           <h1>Welcome Back!</h1>
-        <form onSubmit={handleLogin}>
+        <form onSubmit={handleLogin} noValidate>
           <div>
             <TextField
               label="Email"
@@ -43,6 +68,8 @@ const Login = () => {
               required
               margin="normal"
               placeholder="e.g. johndoe123@gmail.com" //Placholder text inside the email to let users know the format
+              error = {!!errors.email}
+              helperText = {errors.email}
               slotProps={{
               inputLabel: {
                 sx: {
@@ -77,7 +104,13 @@ const Login = () => {
           },
         }}
         sx={{
-        //border when hovered
+          //autofill textfield/text color
+          "& input:-webkit-autofill": {
+            WebkitBoxShadow: "0 0 0 1000px white inset !important",
+            WebkitTextFillColor: "#2D1B3D",
+            caretColor: "#2D1B3D",
+          },
+          //border when hovered
           "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
             borderWidth: "2px",
             borderColor: "#6B3F69",
@@ -106,6 +139,8 @@ const Login = () => {
               onChange={(e) => setPassword(e.target.value)}
               required
               margin="normal"
+              error = {!!errors.password}
+              helperText = {errors.password}
               slotProps={{
               inputLabel: {
                 sx: {
