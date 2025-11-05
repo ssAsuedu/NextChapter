@@ -4,7 +4,7 @@ import "../styles/BookInfoPage/BookInfo.css";
 import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import { getBookReviews } from "../api"; // <-- Import here
+import { getBookReviews, getBookshelf, addBookToBookshelf } from "../api";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -13,6 +13,8 @@ const BookInfo = () => {
   const [book, setBook] = useState(null);
   const [expanded, setExpanded] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [bookshelf, setBookshelf] = useState([]);
+  const email = localStorage.getItem("userEmail");
 
   useEffect(() => {
     const fetchBook = async () => {
@@ -35,7 +37,6 @@ const BookInfo = () => {
     fetchBook();
   }, [volumeId]);
 
-  // Fetch all reviews for this volumeId
   useEffect(() => {
     const fetchReviews = async () => {
       try {
@@ -47,6 +48,55 @@ const BookInfo = () => {
     };
     fetchReviews();
   }, [volumeId]);
+
+  useEffect(() => {
+    const fetchShelf = async () => {
+      if (!email) return;
+      try {
+        const res = await getBookshelf(email);
+        setBookshelf(res.data.bookshelf || []);
+      } catch {
+        setBookshelf([]);
+      }
+    };
+    fetchShelf();
+  }, [email]);
+
+  const isBookInShelf = bookshelf.includes(volumeId);
+
+  const handleAddToBookshelf = async () => {
+    if (!email) {
+      alert("Please log in to add books.");
+      return;
+    }
+    try {
+      await addBookToBookshelf({ email, volumeId });
+      setBookshelf(prev => [...prev, volumeId]);
+      // Optionally cache the book here if needed
+      if (book) setBookInCache(volumeId, book);
+    } catch {
+      alert("Failed to add book.");
+    }
+  };
+
+  const renderStars = (rating) => {
+    const stars = [];
+    for (let i = 1; i <= 5; i++) {
+      stars.push(
+        <span
+          key={i}
+          style={{
+            color: i <= rating ? "var(--primary-color)" : "#e0d6f7",
+            fontSize: "1.3rem",
+            marginRight: "2px",
+          }}
+        >
+          ★
+        </span>
+      );
+    }
+    return stars;
+  };
 
   if (!book) {
     return <div className="bookinfo-loading">Loading...</div>;
@@ -68,7 +118,18 @@ const BookInfo = () => {
         <div className="bookinfo-details-section">
           <div className="bookinfo-title-row">
             <h1 className="bookinfo-title">{info.title}</h1>
-            <button className="bookinfo-add-btn">Add to Bookshelf</button>
+            <button
+              className="bookinfo-add-btn"
+              disabled={isBookInShelf}
+              style={{
+                background: isBookInShelf ? "#e0e0e0" : "var(--primary-color)",
+                color: isBookInShelf ? "#888" : "#fff",
+                cursor: isBookInShelf ? "not-allowed" : "pointer"
+              }}
+              onClick={isBookInShelf ? undefined : handleAddToBookshelf}
+            >
+              {isBookInShelf ? "Added to Bookshelf" : "Add to Bookshelf"}
+            </button>
           </div>
           <p className="bookinfo-author">
             <strong>Author:</strong> {info.authors ? info.authors.join(", ") : "Unknown"}
@@ -114,11 +175,19 @@ const BookInfo = () => {
           ) : (
             reviews.map((r, idx) => (
               <div key={idx} className="bookinfo-review">
-                <div>
-                  <strong>{r.email}</strong> &middot; {r.rating} / 5
+                <div className="bookinfo-review-content">
+                  <strong>{r.email}</strong> -  {new Date(r.createdAt).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit"
+                  })}
                 </div>
-                <div>{r.reviewText}</div>
-                <div className="bookinfo-review-date">{new Date(r.createdAt).toLocaleString()}</div>
+                <div className="bookinfo-review-content">
+                  {renderStars(r.rating)}
+                </div>
+                
+                <div className="bookinfo-review-content">{r.reviewText}</div>
+               
               </div>
             ))
           )}

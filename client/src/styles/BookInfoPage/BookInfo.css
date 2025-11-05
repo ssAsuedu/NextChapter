@@ -162,6 +162,9 @@
   color: #666;
   font-size: 1.1rem;
 }
+.bookinfo-review-content{
+    margin: 0px 0px 8px 0;
+}
 
 .bookinfo-loading {
   padding: 80px;
