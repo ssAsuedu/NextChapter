@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "react-router-dom";
 import { addBookToBookshelf } from "../../api";
 import "../../styles/ExplorePage/ExploreCard.css";
 
@@ -16,6 +17,7 @@ const BookCard = ({
   const [hovered, setHovered] = useState(false);
   const [coords, setCoords] = useState({ top: 0, left: 0 });
   const closeTimeout = useRef();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setSaved(bookshelf.includes(volumeId));
@@ -58,6 +60,10 @@ const BookCard = ({
     closeTimeout.current = setTimeout(() => setHovered(false), 100);
   };
 
+  const handleClick = () => {
+    navigate(`/book/${volumeId}`);
+  };
+
   return (
     <>
       <div
@@ -66,6 +72,8 @@ const BookCard = ({
         onMouseLeave={onMouseLeave}
         tabIndex={0}
         style={{ position: "relative" }}
+        onClick={handleClick}
+        role="button"
       >
         <img
           src={info.imageLinks?.thumbnail || "/default-book.png"}
