@@ -125,6 +125,20 @@ app.post("/api/bookshelf/add", async (req, res) => {
   }
 });
 
+// Delete book from user's bookshelf
+app.post("/api/bookshelf/delete", async (req, res) => {
+  const { email, volumeId } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    user.bookshelf = user.bookshelf.filter(id => id !== volumeId);
+    await user.save();
+    res.json({ message: "Book removed from bookshelf", bookshelf: user.bookshelf });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to remove book" });
+  }
+});
+
 // Get user's bookshelf
 app.get("/api/bookshelf/:email", async (req, res) => {
   try {
