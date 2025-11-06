@@ -37,7 +37,7 @@ coverage/
 public/vite.svg
 
 # Ignore specific files in client
-client/src/assets/*.svg
+# client/src/assets/*.svg
 client/src/assets/*.jpg
 
 # Ignore specific files in server
