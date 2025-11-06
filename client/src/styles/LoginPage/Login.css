@@ -13,6 +13,7 @@
   align-items: center;
   background-color: #f4f4f4; 
   padding: 20px;
+  position: relative;
 }
 .login-form-content {
   width: 100%;
@@ -61,7 +62,27 @@
   background: url("../../assets/login.png") no-repeat center center;
   background-size: cover; /* Ensures the image covers the entire div */
 }
+.login-svg {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 180px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+  margin-right: 20px;
+}
 
+.login-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-left: 25px;
+  width: 180px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+}
 .MuiFormLabel-asterisk, .required {
   color: red !important;
 }
