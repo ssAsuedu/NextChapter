@@ -4,7 +4,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from "amazon-cognito-identity-js";
 import User from "./models/User.js"; // Import the User model
-
+import Review from "./models/Review.js";
 dotenv.config();
 
 const app = express();
@@ -125,6 +125,20 @@ app.post("/api/bookshelf/add", async (req, res) => {
   }
 });
 
+// Delete book from user's bookshelf
+app.post("/api/bookshelf/delete", async (req, res) => {
+  const { email, volumeId } = req.body;
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    user.bookshelf = user.bookshelf.filter(id => id !== volumeId);
+    await user.save();
+    res.json({ message: "Book removed from bookshelf", bookshelf: user.bookshelf });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to remove book" });
+  }
+});
+
 // Get user's bookshelf
 app.get("/api/bookshelf/:email", async (req, res) => {
   try {
@@ -182,6 +196,22 @@ app.post("/api/reviews/add", async (req, res) => {
     res.json({ message: "Review added", reviews: user.reviews });
   } catch (err) {
     res.status(500).json({ error: "Failed to add review" });
+  }
+   try {
+    const review = new Review({ email, volumeId, rating, reviewText });
+    await review.save();
+    res.json({ message: "Review added", review });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to add review" });
+  }
+});
+
+app.get("/api/reviews/book/:volumeId", async (req, res) => {
+  try {
+    const reviews = await Review.find({ volumeId: req.params.volumeId }).sort({ createdAt: -1 });
+    res.json({ reviews });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get reviews" });
   }
 });
 // Start Server

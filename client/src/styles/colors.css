@@ -1,0 +1,8 @@
+:root {
+  --primary-color: #ab7ce7;
+  --secondary-color: #666;
+  --background-color: #ffffff;
+  --navbar-hover-bg: rgba(171, 124, 231, 0.12);
+  --profile-border: #ab7ce7;
+  /* Add more variables as needed */
+}

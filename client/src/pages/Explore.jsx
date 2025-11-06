@@ -4,6 +4,7 @@ import BookCard from "../components/ExplorePage/ExploreCard";
 import "../styles/ExplorePage/Explore.css";
 import { getBookshelf, addBookToBookshelf } from "../api"; // Import bookshelf API
 import { createPortal } from "react-dom";
+import { getSearchFromCache, setSearchInCache } from "../../utils/apiCache";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -46,6 +47,19 @@ const Explore = () => {
   useEffect(() => {
     categories.forEach(async (cat) => {
       setLoading((prev) => ({ ...prev, [cat.label]: true }));
+
+      // Check cache first
+      const cached = getSearchFromCache(cat.query);
+      if (cached) {
+        setBooksByCategory((prev) => ({
+          ...prev,
+          [cat.label]: cached,
+        }));
+        setLoading((prev) => ({ ...prev, [cat.label]: false }));
+        return;
+      }
+
+      // If not cached, fetch from API
       try {
         const response = await axios.get(
           `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
@@ -56,6 +70,7 @@ const Explore = () => {
           ...prev,
           [cat.label]: response.data.items || [],
         }));
+        setSearchInCache(cat.query, response.data.items || []);
       } catch {
         setBooksByCategory((prev) => ({
           ...prev,

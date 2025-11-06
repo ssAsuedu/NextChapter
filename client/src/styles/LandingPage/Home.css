@@ -1,151 +1,348 @@
+@import url('../../styles/colors.css');
+
 /* General Styles */
 body {
   margin: 0;
-  font-family: 'Arial', sans-serif;
-  background-color: #f4f4f4; /* Light gray background */
+  font-family:  'Sen', Arial, Helvetica, sans-serif;
+  background-color: #f4f4f4;
   color: #333;
 }
 
 .landing-page {
   width: 100%;
   overflow-x: hidden;
+  font-family:  'Sen', Arial, Helvetica, sans-serif;
 }
 
 /* Hero Section */
 .hero {
-  width: 100%; 
+  width: 100vw;
+  min-width: 100vw;
   height: 90vh;
-  /* background: url("../../assets/books.jpg") no-repeat center center;
-  background-size: cover;  */
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align text to the left */
+  justify-content: flex-start;
   color: black;
-  margin: 0 auto;
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: inherit;
 }
 
 .hero-content {
-  margin: 0 auto;
-  text-align: left; 
-  width: 100%;
+  width: 100vw;
   height: 100%;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
   display: flex;
-  border-radius: 10px;
+  text-align: left;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(128, 0, 128, 0.2);
+  font-family: inherit;
 }
 
-.left-side-hero, .right-side-hero { /* Both the left and right are taking up 50% of the container*/
+.left-side-hero, .right-side-hero {
   background-color: white;
   width: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-family: inherit;
 }
 
 .left-side-hero {
   padding-left: 30px;
+  gap: 1.5rem;
 }
 
-.image-container {
-  width: 100%;         
-  height: 100%; 
-  overflow: hidden;
-}
-
-.hero-image {
-  object-fit: cover;   
-  display: block; 
-  height: 100%;
-  width: 100%;
+.left-side-hero h1 {
+  font-family: inherit;
+  font-size: 3.2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
 }
 
 .left-side-hero p {
-  font-size: 16px;
+  font-family: inherit;
+  font-size: 1.2rem;
+  color: #444;
 }
 
-.browse-button, .signup-button {
-  background-color: #6B3F69;
-  border : 2px solid #6B3F69;
-  border-radius: 10px;
-}
-.browse-button:hover {
-  transform: scale(1.07);
-  border: 2px solid #6B3F69;
-}
-.signup-button:hover {
-  transform: scale(1.07);
-  border: 2px solid #6B3F69;
-}
-/* Section Styles */
-section {
-  width: 100%; /* Full width */
-  padding: 60px 20px;
-  text-align: center; /* Center content horizontally */
+.group-buttons {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }
 
-.about, .features, .community, .trending-books, .recommended-books {
-  background-color: transparent; /* Invisible div with the same background color */
-  margin: 20px auto;
-  border-radius: 8px;
-  max-width: 800px; /* Limit the width of the sections */
-  color: #333; /* Dark text for contrast */
+.hero-profile-image-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 460px;
+  height: 460px;
+  margin: 0 auto;
 }
 
-section h2 {
-  font-size: 2.5rem; /* Enlarged section headings */
-  margin-bottom: 1rem;
+.hero-profile-image {
+  width: 560px;
+  height: 560px;
+  object-fit: cover;
+  border-radius: 24px; /* Square but with oval corners */
+  background: #ffff;
+  
+  display: block;
 }
 
-section p {
-  font-size: 1.5rem; /* Enlarged section text */
-  line-height: 1.8;
-  margin-bottom: 20px; /* Add spacing below the paragraph */
-}
-
-/* Button Styles */
-section button {
-  background-color: black;
-  color: white;
-  border: 2px solid black;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 4px;
+/* Buttons */
+.browse-button, .signup-button, section button {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 999px; /* More oval */
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease; /* Smooth transition for hover effect */
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  margin-right: 8px;
+  outline: none;
+}
+
+.signup-button {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  color: var(--secondary-color);
+}
+
+.browse-button:hover, .signup-button:hover, section button:hover {
+  background-color: #6c3fc5;
+  color: #fff;
+  transform: scale(1.07);
+}
+
+section button {
+  margin-top: 12px;
+  background-color: var(--primary-color);
+  color: #fff;
+  border-radius: 999px;
+  border: none;
+  font-family: inherit;
 }
 
 section button:hover {
-  background-color: white; /* Inverse background color */
-  color: black; /* Inverse text color */
-  border: 2px solid black; /* Keep the border color */
+  background-color: #6c3fc5;
+  color: #fff;
+}
+
+/* Section Styles */
+section {
+  width: 100%;
+  padding: 60px 20px;
+  text-align: center;
+  font-family: inherit;
+}
+.about{
+  display:flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.about, .features, .community, .trending-books, .recommended-books {
+  background-color: transparent;
+  margin: 20px auto;
+  border-radius: 8px;
+  max-width: 800px;
+  color: #333;
+  font-family: inherit;
+}
+
+section h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-family: inherit;
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+section p {
+  font-size: 1.2rem;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  font-family: inherit;
+  color: #444;
 }
 
 .recommended-books a {
-  color: #ab7ce7; 
+  color: var(--primary-color);
+  font-family: inherit;
 }
 
 .recommended-books a:hover {
   color: #73559b;
 }
+
+/* About Button Styles */
+.about-button {
+  width: 250px;
+  height: 250px;
+  background: #fff;
+  color: #888;
+  border: 1px solid var(--primary-color);
+  border-radius: 16px;
+  margin: 6px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  box-shadow: 0 2px 8px rgba(171, 124, 231, 0.06);
+  cursor: pointer;
+  transition: 
+    background 0.3s,
+    color 0.3s,
+    transform 0.2s;
+  position: relative;
+  font-size: 1.5rem;
+  outline: none;
+}
+
+.about-icon {
+  color: var(--primary-color);
+  font-size: 2.2rem !important;
+  transition: color 0.3s;
+}
+
+.about-button:hover {
+  background: var(--primary-color);
+  color: #fff;
+  transform: scale(1.08);
+}
+
+.about-button:hover .about-icon {
+  color: #fff;
+}
+
+/* Trending Books Section */
+.trending-books {
+  width: 100vw;
+  min-width: 100vw;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.trending-books-content {
+  width: 100vw;
+  height: 460px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+.trending-books-left {
+  width: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.trending-community-image {
+  width: 450px;
+  height: 450px;
+  object-fit: contain;
+  display: block;
+}
+
+.trending-books-right {
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-left: 40px;
+  box-sizing: border-box;
+}
+
+.trending-books-right h2 {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.trending-books-right p {
+  font-size: 1.2rem;
+  color: #444;
+  margin-bottom: 24px;
+  max-width: 500px;
+}
+
+.trending-books-button {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 12px 32px;
+  font-size: 1.1rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  outline: none;
+}
+
+.trending-books-button:hover {
+  background-color: #6c3fc5;
+  color: #fff;
+  transform: scale(1.07);
+}
+.values-title{
+  text-align: center;
+  width: 100%;
+  margin: 0px 0 0 0;
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  font-weight: 700;
+  display: block;
+}
+  
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .hero-content h1 {
-    font-size: 3rem; /* Adjusted for smaller screens */
-  }
-
-  .hero-content p {
-    font-size: 1.5rem; /* Adjusted for smaller screens */
-  }
-
-  section h2 {
     font-size: 2rem;
   }
 
+  .hero-content p {
+    font-size: 1rem;
+  }
+
+  section h2 {
+    font-size: 1.5rem;
+  }
+
   section p {
-    font-size: 1.2rem;
+    font-size: 1rem;
   }
 
   section button {
-    font-size: 0.9rem; /* Adjust button size for smaller screens */
+    font-size: 0.95rem;
     padding: 8px 16px;
+  }
+
+  .hero-content {
+    flex-direction: column;
+  }
+
+  .left-side-hero, .right-side-hero {
+    width: 100%;
   }
 }

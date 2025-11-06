@@ -1,7 +1,12 @@
 import React from "react";
 import "../styles/LandingPage/Home.css";
 import { useNavigate } from "react-router-dom";
-
+import ProfileSVG from "../assets/profile.svg";
+import Community from "../assets/community.svg";
+import Team from '@mui/icons-material/Groups';
+import Values from '@mui/icons-material/VolunteerActivism';
+import Book from '@mui/icons-material/AutoStories';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 const Home = () => {
   const navigate = useNavigate();
 
@@ -9,60 +14,83 @@ const Home = () => {
     <div className="landing-page">
       {/* Hero Section */}
       <section className="hero">
-        <div className="hero-content"> { /* Flex container for left and right sides */}
-          <div className="left-side-hero d-flex flex-column justify-content-center gap-3"> {/* Left side with text and buttons */}
-            <h1>Discover worlds between the pages</h1>
-            <p>Explore thousands of books tailored to your taste. Every story
-              is a journey waiting to unfold.
-            </p>
-            <div class="group-buttons d-flex align-items-center gap-3"> {/* Button group */}
+        <div className="hero-content">
+          <div className="left-side-hero">
+            <h1>Discover Worlds Between Pages</h1>
+            <h6><DoneAllIcon /> Explore New Books and Connect with Friends</h6>
+            <h6><DoneAllIcon /> Track Your Progress and Earn Badges</h6>
+            <h6><DoneAllIcon /> Leave Ratings and View Recommendations</h6>
+            <div className="group-buttons">
               <button className="browse-button" onClick={() => navigate("/explore")}>Browse Books</button>
               <button className="signup-button" onClick={() => navigate("/signup")}>Get Started</button>
             </div>
           </div>
-          <div className="right-side-hero d-flex align-items-center justify-content-center"> {/* Right side with image */}
-            <div className="image-container">
-              <img className="hero-image" src="/src/assets/hero image.png" alt="Books and Reading" />
-            </div> 
+          <div className="right-side-hero">
+            <div className="hero-profile-image-container">
+              <img
+                src={ProfileSVG}
+                alt="Profile Illustration"
+                className="hero-profile-image"
+              />
+            </div>
           </div>
         </div>
       </section>
 
       {/* About Section */}
+      <h2 className="values-title">Learn More Next Chapter's Mission</h2>
       <section className="about">
-        <h2>Discover New Books</h2>
-        <p>Explore a vast collection of books and find your next favorite read.</p>
-        <button onClick={() => navigate("/about")}>Learn More</button>
+        <button className="about-button">
+          <Book className="about-icon" />
+          Platform
+          <h6>Our application empowers users to achieve their reading goals.</h6>
+        </button>
+        <button className="about-button">
+          <Team className="about-icon" />
+          Team
+          <h6>Developed by a team of passionate readers who want to share their love for books.</h6>
+        </button>
+        <button className="about-button">
+          <Values className="about-icon" />
+          Values
+          <h6>Next Chapter is built on our core values of curiosity, connection, and self-improvement.</h6>
+        </button>
       </section>
 
       {/* Trending Books Section */}
       <section className="trending-books">
-        <h2>Books Everyone's Talking About</h2>
-        <p>Explore trending books that readers can't put down!</p>
+        <div className="trending-books-content">
+          <div className="trending-books-left">
+            <img
+              src={Community}
+              alt="Community"
+              className="trending-community-image"
+            />
+          </div>
+          <div className="trending-books-right">
+            <h2>Books Everyone's Talking About</h2>
+            <p>
+              Discover the most popular books in our community. See what other readers are enjoying and join the conversation!
+            </p>
+            <button
+              className="trending-books-button"
+              onClick={() => navigate("/explore")}
+            >
+              Explore Trending Books
+            </button>
+          </div>
+        </div>
       </section>
 
-      {/*Recommended Books Section (will be different for when the user is logged in)*/}
+      {/* Recommended Books Section */}
       <section className="recommended-books">
         <h2>Books We Think You Might Love</h2>
-        {/* <p>We've gathered a selection of books we think you'll enjoy, inspired by your recent favorites. Discover more from the authors
-          and genres you love!  
-        </p> */} {/* Will use this paragraph text for when the user is logged in */}
-        <p>Please <a href="/login">login</a> to see a collection of books we've selected that we think you'll enjoy!</p>
+        <p>
+          Please <a href="/login">login</a> to see a collection of books we've selected that we think you'll enjoy!
+        </p>
       </section>
 
-      {/* Features Section */}
-      <section className="features">
-        <h2>Track Your Reading</h2>
-        <p>Keep track of your reading progress and organize your library.</p>
-        <button onClick={() => navigate("/login")}>Explore Features</button>
-      </section>
 
-      {/* Community Section */}
-      <section className="community">
-        <h2>Join the Community</h2>
-        <p>Connect with fellow book lovers and share your thoughts.</p>
-        <button onClick={() => navigate("/signup")}>Join Now</button>
-      </section>
     </div>
   );
 };
