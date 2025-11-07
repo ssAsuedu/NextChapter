@@ -83,7 +83,11 @@ const SignUp = () => {
       alert(response.data.message);
       navigate("/login");
     } catch (err) {
-      alert("Confirmation failed: " + (err.response?.data?.error || "Unknown error"));
+      // alert("Confirmation failed: " + (err.response?.data?.error || "Unknown error"));
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        confirm: "Invalid confirmation code",
+      }));
     }
     setLoading(false);
   };
