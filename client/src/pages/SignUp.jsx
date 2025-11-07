@@ -13,7 +13,7 @@ const SignUp = () => {
   const [showConfirm, setShowConfirm] = useState(false);
   const [confirmCode, setConfirmCode] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({name: "", email: "", password: []});
+  const [errors, setErrors] = useState({name: "", email: "", password: [], confirm: ""});
   const navigate = useNavigate();
 
   const handleSignUp = async (e) => {
@@ -115,7 +115,9 @@ const SignUp = () => {
                     //font and size for label
                     fontFamily: "'Crimson Text', serif",
                     fontSize: "18px",
-
+                    "@media screen and (min-width:700px) and (max-width: 900px)": {
+                      fontSize: "20px",
+                    },
                   // asterisk color
                   "& .MuiFormLabel-asterisk": {
                   color: "red",
@@ -162,6 +164,11 @@ const SignUp = () => {
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#2D1B3D",
             },
+            "& .MuiFormHelperText-root.Mui-error": {
+              "@media screen and (min-width:700px) and (max-width: 900px)": {
+                fontSize: "15px",
+              },
+            }
           }}
           />
           </div>
@@ -184,6 +191,9 @@ const SignUp = () => {
                     //font and size for label
                     fontFamily: "'Crimson Text', serif",
                     fontSize: "18px",
+                    "@media screen and (min-width:700px) and (max-width: 900px)": {
+                      fontSize: "20px",
+                    },
 
                   // asterisk color
                   "& .MuiFormLabel-asterisk": {
@@ -226,7 +236,11 @@ const SignUp = () => {
               borderWidth: "2px",
               borderColor: "#6B3F69",
             },
-
+            "& .MuiFormHelperText-root.Mui-error": {
+              "@media screen and (min-width:700px) and (max-width: 900px)": {
+                fontSize: "15px",
+              },
+            },
             //change focus blue to dark purple
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#2D1B3D",
@@ -260,6 +274,9 @@ const SignUp = () => {
                   //font and size for label
                   fontFamily: "'Crimson Text', serif",
                   fontSize: "18px",
+                  "@media screen and (min-width:700px) and (max-width: 900px)": {
+                      fontSize: "20px",
+                    },
                   // asterisk color
                   "& .MuiFormLabel-asterisk": {
                     color: "red",
@@ -317,8 +334,19 @@ const SignUp = () => {
               borderRadius: "10px",
               fontFamily: "'Crimson Text', serif",
               fontSize: "16px",
+              fontSize: {
+                "@media screen and (min-width:700px) and (max-width: 900px)": {
+                  fontSize: "20px",
+                },
+                fontSize: "16px",
+              },
               fontWeight: "600",
-              padding: "10px",
+               padding: {
+                "@media screen and (min-width:700px) and (max-width: 900px)": {
+                  padding: "15px",
+                },
+                padding: "10px",
+              },
               "&:hover": {
                 backgroundColor: "#5a3358",
               },
@@ -330,7 +358,6 @@ const SignUp = () => {
           </>
         ) : (
           <>
-          
             <h1>Confirm Your Email</h1>
             <img src={confirmationImage} className="confirmation-svg"></img>
             <form onSubmit={handleConfirm} noValidate>
@@ -343,6 +370,63 @@ const SignUp = () => {
                   value={email}
                   disabled
                   margin="normal"
+                  slotProps={{
+                  inputLabel: {
+                  sx: {
+                    //font and size for label
+                    fontFamily: "'Crimson Text', serif",
+                    fontSize: "18px",
+                    "@media screen and (min-width:700px) and (max-width: 900px)": {
+                      fontSize: "20px",
+                    },
+                    // asterisk color
+                  "& .MuiFormLabel-asterisk": {
+                    color: "red",
+                  },
+                  // when the field is clicked
+                  "&.Mui-focused": {
+                    color: "#2D1B3D",
+                    fontWeight: 600,
+                  },
+                },
+              },
+              // style of the actual text inside field
+              input: {
+              sx: {
+                color: "#2D1B3D",
+                fontFamily: "'Crimson Text', serif",
+                fontSize: "16px",
+                "&::placeholder": {
+                  color: "#666666",
+                  opacity: 1,
+                },
+              },
+            },
+          }}
+        sx={{
+          //autofill textfield/text color
+          "& input:-webkit-autofill": {
+            WebkitBoxShadow: "0 0 0 1000px white inset !important",
+            WebkitTextFillColor: "#2D1B3D",
+            caretColor: "#2D1B3D",
+          },
+          //border when hovered
+          "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
+            borderWidth: "2px",
+            borderColor: "#6B3F69",
+          },
+
+          //border when clicked
+          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderWidth: "2px",
+            borderColor: "#6B3F69",
+            },
+
+            //change focus blue to dark purple
+            "& .MuiInputLabel-root.Mui-focused": {
+              color: "#2D1B3D",
+            },
+            }}
                 />
               </div>
               <div>
@@ -352,6 +436,8 @@ const SignUp = () => {
                   fullWidth
                   value={confirmCode}
                   onChange={(e) => setConfirmCode(e.target.value)}
+                  error = {!!errors.confirm}
+                  helperText={errors.confirm}
                   required
                   margin="normal"
                   slotProps={{

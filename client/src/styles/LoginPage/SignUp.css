@@ -90,3 +90,41 @@
   pointer-events: none;
   margin-right: 30px;
 }
+
+@media (max-width: 700px) {
+  .signup-image, .signup-svg {
+    display: none;
+  }
+
+  .signup-form form div {
+  margin-bottom: 8px;
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 960px) {
+  .signup-page {
+    flex-direction: column;
+  }
+  .signup-svg, .confirmation-svg {
+    display: none;
+  }
+  .signup-form {
+    flex: unset;
+    height: 75vh;
+  }
+  .signup-form h1 {
+    font-size: 3.2em;
+  }
+  .signup-form form {
+    max-width: 600px; /* Limits the form width */
+  }
+  .signup-form-content {
+    max-width: 500px;
+  }
+  .login {
+    font-size: 25px;
+  }
+  .password-error-list {
+    font-size: 15px;
+  }
+}
