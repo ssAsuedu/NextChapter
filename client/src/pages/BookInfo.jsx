@@ -12,6 +12,7 @@ const BookInfo = () => {
   const { volumeId } = useParams();
   const [book, setBook] = useState(null);
   const [expanded, setExpanded] = useState(false);
+  const [genresExpanded, setGenresExpanded] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [bookshelf, setBookshelf] = useState([]);
   const email = localStorage.getItem("userEmail");
@@ -119,25 +120,21 @@ const BookInfo = () => {
 
   return (
     <div className="bookinfo-container">
-      <div className="bookinfo-main">
-        <div className="bookinfo-image-section">
-          <img
-            src={img}
-            alt={info.title}
-            className="bookinfo-image"
-          />
-        </div>
+      <div className="bookinfo-main-wrapper">
+        <div className="bookinfo-main">
+          <div className="bookinfo-image-section">
+            <img
+              src={img}
+              alt={info.title}
+              className="bookinfo-image"
+            />
+          </div>
         <div className="bookinfo-details-section">
           <div className="bookinfo-title-row">
             <h1 className="bookinfo-title">{info.title}</h1>
             {isBookInShelf ? (
               <button
-                className="bookinfo-add-btn"
-                style={{
-                  background: "#e0e0e0",
-                  color: "#888",
-                  cursor: "pointer"
-                }}
+                className="bookinfo-add-btn bookinfo-in-shelf"
                 onClick={handleRemoveFromBookshelf}
               >
                 Remove from Bookshelf
@@ -145,23 +142,41 @@ const BookInfo = () => {
             ) : (
               <button
                 className="bookinfo-add-btn"
-                style={{
-                  background: "var(--primary-color)",
-                  color: "#fff",
-                  cursor: "pointer"
-                }}
                 onClick={handleAddToBookshelf}
               >
                 Add to Bookshelf
               </button>
             )}
           </div>
-          <p className="bookinfo-author">
-            <strong>Author:</strong> {info.authors ? info.authors.join(", ") : "Unknown"}
-          </p>
-          <p className="bookinfo-date">
-            <strong>Published:</strong> {info.publishedDate || "Unknown"}
-          </p>
+          <div className="bookinfo-details-text">
+            <p>
+              <strong>Author:</strong> {info.authors ? info.authors.join(", ") : "Unknown"}
+            </p>
+            <p>
+              <strong>Genre(s):</strong>{" "}
+              {info.categories ? (
+                <>
+                  {genresExpanded
+                    ? info.categories.join(", ") // show all genres
+                    : info.categories.slice(0, 2).join(", ") // show first 2
+                  }
+                  {info.categories.length > 2 && (
+                    <button
+                      onClick={() => setGenresExpanded(!genresExpanded)}
+                      className="genre-toggle"
+                    >
+                      {genresExpanded ? "Show less" : `+${info.categories.length - 2} more`}
+                    </button>
+                  )}
+                </>
+              ) : (
+                "Unknown"
+              )}
+            </p>
+            <p>
+              <strong>Published:</strong> {info.publishedDate || "Unknown"}
+            </p>
+          </div>
           <div className={`bookinfo-summary-expandable${expanded ? " expanded" : ""}`}>
             <strong>Summary:</strong>{" "}
             {info.description ? (
@@ -182,18 +197,38 @@ const BookInfo = () => {
             </button>
           )}
           {expanded && (
-            <button
-              className="bookinfo-summary-close"
-              onClick={() => setExpanded(false)}
-              aria-label="Collapse summary"
-            >
-              <ArrowDropUpIcon fontSize="large" />
-            </button>
-          )}
+              <button
+                className="bookinfo-summary-close"
+                onClick={() => setExpanded(false)}
+                aria-label="Collapse summary"
+              >
+                <ArrowDropUpIcon fontSize="large" />
+              </button>
+            )}
+          </div>
         </div>
       </div>
+      <h2
+        style={{
+          color: "#6c3fc5",
+          fontSize: "1.6rem",
+          fontWeight: "700",
+          marginBottom: "4px",
+          marginTop: "64px",
+        }}
+      >
+        Reviews
+      </h2>
+      <p
+      style={{
+        color: "#7e7e7e",
+        fontSize: "1rem",
+        margin: "0 0 18px 4px",
+      }}
+      >
+        Real reviews from passionate readers like you
+      </p>
       <div className="bookinfo-reviews-section">
-        <h2>Reviews</h2>
         <div className="bookinfo-reviews-list">
           {reviews.length === 0 ? (
             <p>No reviews for this book</p>
@@ -201,10 +236,11 @@ const BookInfo = () => {
             reviews.map((r, idx) => (
               <div key={idx} className="bookinfo-review">
                 <div className="bookinfo-review-content">
-                  <strong>{r.email}</strong> -  {new Date(r.createdAt).toLocaleDateString(undefined, {
+                  <strong>{r.name || r.email}</strong> -{" "}
+                  {new Date(r.createdAt).toLocaleDateString(undefined, {
                     year: "numeric",
                     month: "2-digit",
-                    day: "2-digit"
+                    day: "2-digit",
                   })}
                 </div>
                 <div className="bookinfo-review-content">
