@@ -2,31 +2,40 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 0;
   padding: 48px 0 0 0;
   min-height: 100vh;
   min-width: 100vh;
   background: #fff;
 }
 
+.bookinfo-main-wrapper {
+  width: 100%;
+  background-color: #faf8ff; /* lighter, softer purple */
+  padding: 80px 0 20px 0;    /* top/bottom spacing: less bottom */
+  margin-top: 0;   
+}
+
 .bookinfo-main {
   display: flex;
   width: 80%;
   max-width: 1800px;
-  margin-bottom: 48px;
+  margin: 0 auto; /* centers it inside wrapper */
   gap: 48px;
-  align-items: stretch;
-  min-height: 400px;
-  height: 100%;
+  align-items: flex-start;
+  background: none; /* remove purple background */
+  padding: 0; /* remove box padding */
+  border-radius: 0; /* ensure edges are square */
 }
 
 .bookinfo-image-section {
   flex: 0 0 260px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: flex-start;
   height: 100%;
   min-height: 400px;
+  margin-top: 0;
 }
 
 .bookinfo-image {
@@ -46,7 +55,7 @@
   justify-content: flex-start;
   align-items: flex-start;
   gap: 18px;
-  padding-top: 8px;
+  padding-top: 0;
 }
 
 .bookinfo-title-row {
@@ -66,11 +75,29 @@
   flex: 1;
 }
 
-.bookinfo-author,
-.bookinfo-date {
+.bookinfo-details-text p {
+  margin: 0;          
+  line-height: 1.2;   
   font-size: 1.1rem;
   color: #333;
-  margin: 0 0 8px 0;
+}
+
+.genre-toggle {
+  background: none;
+  border: none;
+  color: #ab7ce7;
+  font-size: 0.95rem;
+  cursor: pointer;
+  margin-left: 4px;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: "Sen", sans-serif;
+}
+
+.genre-toggle:hover {
+  color: #6c3fc5;
 }
 
 .bookinfo-summary-expandable {
@@ -120,29 +147,38 @@
 }
 
 .bookinfo-add-btn {
-  margin-top: 0;
-  padding: 10px 28px;
-  background: #ab7ce7;
+  background-color: var(--primary-color);
   color: #fff;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 999px;
+  padding: 8px 24px; 
+  font-size: 1rem;   
+  font-family: inherit;
+  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  outline: none;
 }
 
-.bookinfo-add-btn:hover {
-  background: #6c3fc5;
+.bookinfo-add-btn:hover,
+.bookinfo-in-shelf:hover {
+  background-color: #6c3fc5;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.bookinfo-in-shelf {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  color: var(--secondary-color);
+  padding: 8px 24px;   
+  font-size: 1rem;     
+  transform: none;     
 }
 
 .bookinfo-reviews-section {
   width: 80%;
   max-width: 1100px;
-  background: #faf8ff;
-  border-radius: 10px;
-  box-shadow: 0 2px 12px rgba(171, 124, 231, 0.07);
-  padding: 32px 40px;
   margin-bottom: 48px;
   display: flex;
   flex-direction: column;
@@ -150,20 +186,32 @@
 }
 
 .bookinfo-reviews-section h2 {
-  margin: 0 0 18px 0;
+  margin: 0 0 18px 4px;;
   color: #6c3fc5;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
 }
 
 .bookinfo-reviews-list {
   width: 100%;
-  min-height: 60px;
-  color: #666;
-  font-size: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
-.bookinfo-review-content{
-    margin: 0px 0px 8px 0;
+
+.bookinfo-review {
+  background: #faf8ff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(171, 124, 231, 0.12);
+  padding: 20px 24px;
+  width: 100%;
+  color: #444;
+  font-size: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bookinfo-review-content {
+  margin: 4px 0;
 }
 
 .bookinfo-loading {

@@ -185,7 +185,7 @@ app.get("/api/reviews/:email", async (req, res) => {
 });
 
 app.post("/api/reviews/add", async (req, res) => {
-  const { email, volumeId, rating, reviewText } = req.body;
+  const { email, name, volumeId, rating, reviewText } = req.body;
   try {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found" });
@@ -193,12 +193,7 @@ app.post("/api/reviews/add", async (req, res) => {
     user.reviews.push({ volumeId, rating, reviewText });
     await user.save();
 
-    res.json({ message: "Review added", reviews: user.reviews });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to add review" });
-  }
-   try {
-    const review = new Review({ email, volumeId, rating, reviewText });
+    const review = new Review({ email, name, volumeId, rating, reviewText });
     await review.save();
     res.json({ message: "Review added", review });
   } catch (err) {
