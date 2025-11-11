@@ -76,7 +76,9 @@ const Login = () => {
                 //font and size for label
                   fontFamily: "'Crimson Text', serif",
                   fontSize: "18px",
-
+                  "@media screen and (min-width:700px) and (max-width: 900px)": {
+                      fontSize: "20px",
+                    },
               // asterisk color
               "& .MuiFormLabel-asterisk": {
                 color: "red",
@@ -121,7 +123,11 @@ const Login = () => {
             borderWidth: "2px",
             borderColor: "#6B3F69",
             },
-
+            "& .MuiFormHelperText-root.Mui-error": {
+              "@media screen and (min-width:700px) and (max-width: 900px)": {
+                fontSize: "15px",
+              },
+            },
             //change focus blue to dark purple
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#2D1B3D",
@@ -147,7 +153,9 @@ const Login = () => {
                 //font and size for label
                   fontFamily: "'Crimson Text', serif",
                   fontSize: "18px",
-
+                  "@media screen and (min-width:700px) and (max-width: 900px)": {
+                      fontSize: "20px",
+                    },
               // asterisk color
               "& .MuiFormLabel-asterisk": {
                 color: "red",
@@ -175,6 +183,11 @@ const Login = () => {
           },
         }}
         sx={{
+          "& input:-webkit-autofill": {
+            WebkitBoxShadow: "0 0 0 1000px white inset !important",
+            WebkitTextFillColor: "#2D1B3D",
+            caretColor: "#2D1B3D",
+          },
         //border when hovered
           "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
             borderWidth: "2px",
@@ -186,7 +199,11 @@ const Login = () => {
             borderWidth: "2px",
             borderColor: "#6B3F69",
             },
-
+            "& .MuiFormHelperText-root.Mui-error": {
+              "@media screen and (min-width:700px) and (max-width: 900px)": {
+                fontSize: "15px",
+              },
+            },
             //change focus blue to dark purple
             "& .MuiInputLabel-root.Mui-focused": {
               color: "#2D1B3D",
@@ -205,8 +222,19 @@ const Login = () => {
               borderRadius: "10px",
               fontFamily: "'Crimson Text', serif",
               fontSize: "16px",
+              fontSize: {
+                "@media screen and (min-width:700px) and (max-width: 900px)": {
+                  fontSize: "20px",
+                },
+                fontSize: "16px",
+              },
               fontWeight: "600",
-              padding: "10px",
+              padding: {
+                "@media screen and (min-width:700px) and (max-width: 900px)": {
+                  padding: "15px",
+                },
+                padding: "10px",
+              },
               "&:hover": {
                 backgroundColor: "#5a3358",
               },

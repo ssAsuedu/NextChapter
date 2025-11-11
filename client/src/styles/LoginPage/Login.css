@@ -87,3 +87,49 @@
   color: red !important;
 }
 
+@media (max-width: 700px) {
+  .login-svg, .login-left, .login-image {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 960px) {
+  .login-page {
+    flex-direction: column;
+  }
+  .login-svg, .login-left {
+    display: none;
+  }
+  .login-form {
+    flex: unset;
+    height: 75vh;
+  }
+  .login-form h1 {
+    font-size: 3.2em;
+  }
+  .login-form form {
+    max-width: 600px;
+  }
+  .login-form-content {
+    max-width: 500px;
+  }
+  .account-creation {
+    font-size: 25px;
+  }
+}
+
+@media (width: 1024px) {
+  .login-svg, .login-left {
+    display: none;
+  }
+  .login-page {
+    flex-direction: column;
+  }
+  .login-form {
+    flex: unset;
+    height: 55vh;
+  }
+  .login-form h1 {
+    font-size: 60px;
+  }
+}
