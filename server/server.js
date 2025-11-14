@@ -1,175 +1,204 @@
-import express from "express";
-import cors from "cors";
-import mongoose from "mongoose";
-import dotenv from "dotenv";
-import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from "amazon-cognito-identity-js";
-import User from "./models/User.js"; // Import the User model
-import Review from "./models/Review.js";
-import FriendRequest from "./models/FriendRequest.js";
-import Progress from "./models/Progress.js";
+// server.js
+import express from 'express';
+import cors from 'cors';
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { CognitoIdentityProviderClient, AdminGetUserCommand } from "@aws-sdk/client-cognito-identity-provider";
+
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5050;
-
-// Middleware
 app.use(cors());
 app.use(express.json());
 
 // MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Connected to MongoDB Atlas"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => console.log('Connected to MongoDB Atlas'))
+.catch(err => console.error('MongoDB connection error:', err));
 
-// Cognito Configuration
-const poolData = {
-  UserPoolId: process.env.COGNITO_USER_POOL_ID, // Replace with your User Pool ID
-  ClientId: process.env.COGNITO_APP_CLIENT_ID,  // Replace with your App Client ID
+// Cognito Client Setup
+const cognitoClient = new CognitoIdentityProviderClient({
+  region: process.env.AWS_REGION || 'us-east-1',
+});
+
+// ========================================
+// MONGODB SCHEMAS
+// ========================================
+
+// User Schema
+const userSchema = new mongoose.Schema({
+  cognitoSub: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  bookshelf: [{ type: String }], // Array of volumeIds
+  friends: [{ type: String }], // Array of friend emails
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// Friend Request Schema
+const friendRequestSchema = new mongoose.Schema({
+  senderEmail: { type: String, required: true },
+  receiverEmail: { type: String, required: true },
+  status: { 
+    type: String, 
+    enum: ['pending', 'accepted', 'rejected', 'cancelled'],
+    default: 'pending'
+  },
+  createdAt: { type: Date, default: Date.now },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// Progress Schema
+const progressSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  volumeId: { type: String, required: true },
+  currentPage: { type: Number, required: true },
+  totalPages: { type: Number, required: true },
+  updatedAt: { type: Date, default: Date.now },
+});
+
+// Review Schema
+const reviewSchema = new mongoose.Schema({
+  email: { type: String, required: true },
+  name: { type: String, required: true },
+  volumeId: { type: String, required: true },
+  rating: { type: Number, required: true, min: 1, max: 5 },
+  reviewText: { type: String, required: true },
+  createdAt: { type: Date, default: Date.now },
+});
+
+const User = mongoose.model('User', userSchema);
+const FriendRequest = mongoose.model('FriendRequest', friendRequestSchema);
+const Progress = mongoose.model('Progress', progressSchema);
+const Review = mongoose.model('Review', reviewSchema);
+
+// ========================================
+// HELPER FUNCTIONS
+// ========================================
+
+// Get or create user from Cognito
+const getOrCreateUser = async (email, name, cognitoSub) => {
+  let user = await User.findOne({ email });
+  
+  if (!user) {
+    user = new User({
+      cognitoSub,
+      email,
+      name,
+      bookshelf: [],
+      friends: [],
+    });
+    await user.save();
+    console.log(`Created new user: ${email}`);
+  }
+  
+  return user;
 };
-const userPool = new CognitoUserPool(poolData);
 
-// Sign-Up Route
-// Sign-Up Route
-app.post("/api/signup", (req, res) => {
-  const { email, password, name } = req.body;
+// ========================================
+// AUTHENTICATION ROUTES
+// ========================================
 
-  const attributeList = [
-    new CognitoUserAttribute({ Name: "email", Value: email }),
-    new CognitoUserAttribute({ Name: "name", Value: name }),
-  ];
-
-  userPool.signUp(email, password, attributeList, null, async (err, result) => {
-    if (err) {
-      return res.status(400).json({ error: err.message });
-    }
-
-    try {
-      // Check if user already exists before creating
-      let user = await User.findOne({ email });
-      
-      if (!user) {
-        user = new User({ 
-          name, 
-          email,
-          cognitoSub: result.userSub, // Add Cognito sub
-          friends: [],
-          bookshelf: [],
-          progress: [],
-          reviews: []
-        });
-        await user.save();
-        console.log("Created new user in MongoDB:", email);
-      }
-
-      res.json({ message: "Sign-up successful and user added to database", user: result.user });
-    } catch (dbError) {
-      console.error("Error saving user to database:", dbError);
-      res.status(500).json({ error: "Failed to save user to database" });
-    }
-  });
-});
-
-// Login Route
-app.post("/api/login", async (req, res) => {
-  const { email, password } = req.body;
-
-  const user = new CognitoUser({
-    Username: email,
-    Pool: userPool,
-  });
-
-  const authDetails = new AuthenticationDetails({
-    Username: email,
-    Password: password,
-  });
-
-  user.authenticateUser(authDetails, {
-    onSuccess: async (result) => {
-      const accessToken = result.getAccessToken().getJwtToken();
-
-      // Optional: Fetch user info from MongoDB
-      let userInfo = null;
-      try {
-        userInfo = await User.findOne({ email });
-      } catch (dbError) {
-        console.error("Error retrieving user from database:", dbError);
-      }
-
-      res.json({
-        message: "Login successful",
-        token: accessToken,
-        user: userInfo, // This can be null if not found
-      });
-    },
-    onFailure: (err) => {
-      console.error("Login error:", err);
-      res.status(401).json({ error: err.message || "Login failed" });
-    },
-  });
-});
-
-// Confirm Registration Route
-app.post("/api/confirm", (req, res) => {
-  const { email, code } = req.body;
-
-  const user = new CognitoUser({
-    Username: email,
-    Pool: userPool,
-  });
-
-  user.confirmRegistration(code, true, (err, result) => {
-    if (err) {
-      return res.status(400).json({ error: err.message });
-    }
-    res.json({ message: "Email confirmed successfully!", result });
-  });
-});
-
-// Get all users
-app.get("/api/users", async (req, res) => {
+app.post('/api/signup', async (req, res) => {
   try {
-    const users = await User.find({}, "email name createdAt").sort({ name: 1 });
-    res.json(users);
+    const { email, password, name, cognitoSub } = req.body;
+    
+    // Check if user already exists
+    let user = await User.findOne({ email });
+    
+    if (!user) {
+      user = new User({
+        cognitoSub: cognitoSub || `temp-${Date.now()}-${email}`, // Generate temp ID if no cognitoSub
+        email,
+        name,
+        bookshelf: [],
+        friends: [],
+      });
+      await user.save();
+      console.log(`Created new user: ${email}`);
+    }
+    
+    res.status(201).json({ message: 'User created successfully', user });
   } catch (error) {
-    console.error("Error fetching users:", error);
-    res.status(500).json({ error: "Failed to fetch users" });
+    console.error('Error in signup:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.post('/api/login', async (req, res) => {
+  try {
+    const { email } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.status(200).json({ message: 'Login successful', user });
+  } catch (error) {
+    console.error('Error in login:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+// ========================================
+// USER ROUTES
+// ========================================
+
+// Get all users (excluding current user)
+app.get('/api/users', async (req, res) => {
+  try {
+    const users = await User.find({}, 'email name createdAt').sort({ name: 1 });
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Failed to fetch users' });
   }
 });
 
 // Search users by name or email
-app.get("/api/users/search", async (req, res) => {
+app.get('/api/users/search', async (req, res) => {
   try {
     const { q } = req.query;
     
     if (!q || q.trim().length === 0) {
-      return res.status(400).json({ error: "Search query is required" });
+      return res.status(400).json({ error: 'Search query is required' });
     }
     
     const users = await User.find({
       $or: [
-        { name: { $regex: q, $options: "i" } },
-        { email: { $regex: q, $options: "i" } }
+        { name: { $regex: q, $options: 'i' } },
+        { email: { $regex: q, $options: 'i' } }
       ]
-    }, "email name createdAt").limit(20);
+    }, 'email name createdAt').limit(20);
     
-    res.json(users);
+    res.status(200).json(users);
   } catch (error) {
-    console.error("Error searching users:", error);
-    res.status(500).json({ error: "Failed to search users" });
+    console.error('Error searching users:', error);
+    res.status(500).json({ error: 'Failed to search users' });
   }
 });
 
+// ========================================
+// FRIEND REQUEST ROUTES
+// ========================================
+
 // Send a friend request
-app.post("/api/friends/request", async (req, res) => {
+app.post('/api/friends/request', async (req, res) => {
   try {
     const { senderEmail, receiverEmail } = req.body;
     
+    // Validation
     if (!senderEmail || !receiverEmail) {
-      return res.status(400).json({ error: "Sender and receiver emails are required" });
+      return res.status(400).json({ error: 'Sender and receiver emails are required' });
     }
     
     if (senderEmail === receiverEmail) {
-      return res.status(400).json({ error: "Cannot send friend request to yourself" });
+      return res.status(400).json({ error: 'Cannot send friend request to yourself' });
     }
     
     // Check if users exist
@@ -177,27 +206,30 @@ app.post("/api/friends/request", async (req, res) => {
     const receiver = await User.findOne({ email: receiverEmail });
     
     if (!sender || !receiver) {
-      return res.status(404).json({ error: "One or both users not found" });
+      return res.status(404).json({ error: 'One or both users not found' });
     }
     
     // Check if already friends
     if (sender.friends.includes(receiverEmail)) {
-      return res.status(400).json({ error: "Already friends with this user" });
+      return res.status(400).json({ error: 'Already friends with this user' });
     }
     
     // Check if request already exists
     const existingRequest = await FriendRequest.findOne({
       $or: [
-        { senderEmail, receiverEmail, status: "pending" },
-        { senderEmail: receiverEmail, receiverEmail: senderEmail, status: "pending" }
+        { senderEmail, receiverEmail, status: 'pending' },
+        { senderEmail: receiverEmail, receiverEmail: senderEmail, status: 'pending' }
       ]
     });
     
     if (existingRequest) {
+      // Check who sent the existing request
       if (existingRequest.senderEmail === senderEmail) {
-        return res.status(400).json({ error: "Request already sent" });
+        // User already sent a request to this person
+        return res.status(400).json({ error: 'Request already sent' });
       } else {
-        return res.status(400).json({ error: "This user already sent you a friend request. Check your pending requests!" });
+        // The other person sent them a request (they should accept it instead)
+        return res.status(400).json({ error: 'This user already sent you a friend request. Check your pending requests!' });
       }
     }
     
@@ -205,35 +237,35 @@ app.post("/api/friends/request", async (req, res) => {
     const friendRequest = new FriendRequest({
       senderEmail,
       receiverEmail,
-      status: "pending",
+      status: 'pending',
     });
     
     await friendRequest.save();
     
     res.status(201).json({ 
-      message: "Friend request sent successfully", 
+      message: 'Friend request sent successfully', 
       request: friendRequest 
     });
   } catch (error) {
-    console.error("Error sending friend request:", error);
-    res.status(500).json({ error: "Failed to send friend request" });
+    console.error('Error sending friend request:', error);
+    res.status(500).json({ error: 'Failed to send friend request' });
   }
 });
 
-// Get pending friend requests
-app.get("/api/friends/requests/pending/:email", async (req, res) => {
+// Get pending friend requests (received)
+app.get('/api/friends/requests/pending/:email', async (req, res) => {
   try {
     const { email } = req.params;
     
     const requests = await FriendRequest.find({
       receiverEmail: email,
-      status: "pending"
+      status: 'pending'
     }).sort({ createdAt: -1 });
     
     // Populate sender information
     const requestsWithSenderInfo = await Promise.all(
       requests.map(async (request) => {
-        const sender = await User.findOne({ email: request.senderEmail }, "name email");
+        const sender = await User.findOne({ email: request.senderEmail }, 'name email');
         return {
           ...request.toObject(),
           senderInfo: sender
@@ -241,27 +273,27 @@ app.get("/api/friends/requests/pending/:email", async (req, res) => {
       })
     );
     
-    res.json(requestsWithSenderInfo);
+    res.status(200).json(requestsWithSenderInfo);
   } catch (error) {
-    console.error("Error fetching pending requests:", error);
-    res.status(500).json({ error: "Failed to fetch pending requests" });
+    console.error('Error fetching pending requests:', error);
+    res.status(500).json({ error: 'Failed to fetch pending requests' });
   }
 });
 
 // Get sent friend requests
-app.get("/api/friends/requests/sent/:email", async (req, res) => {
+app.get('/api/friends/requests/sent/:email', async (req, res) => {
   try {
     const { email } = req.params;
     
     const requests = await FriendRequest.find({
       senderEmail: email,
-      status: "pending"
+      status: 'pending'
     }).sort({ createdAt: -1 });
     
     // Populate receiver information
     const requestsWithReceiverInfo = await Promise.all(
       requests.map(async (request) => {
-        const receiver = await User.findOne({ email: request.receiverEmail }, "name email");
+        const receiver = await User.findOne({ email: request.receiverEmail }, 'name email');
         return {
           ...request.toObject(),
           receiverInfo: receiver
@@ -269,34 +301,34 @@ app.get("/api/friends/requests/sent/:email", async (req, res) => {
       })
     );
     
-    res.json(requestsWithReceiverInfo);
+    res.status(200).json(requestsWithReceiverInfo);
   } catch (error) {
-    console.error("Error fetching sent requests:", error);
-    res.status(500).json({ error: "Failed to fetch sent requests" });
+    console.error('Error fetching sent requests:', error);
+    res.status(500).json({ error: 'Failed to fetch sent requests' });
   }
 });
 
 // Accept friend request
-app.post("/api/friends/request/accept", async (req, res) => {
+app.post('/api/friends/request/accept', async (req, res) => {
   try {
     const { requestId, userEmail } = req.body;
     
     const request = await FriendRequest.findById(requestId);
     
     if (!request) {
-      return res.status(404).json({ error: "Friend request not found" });
+      return res.status(404).json({ error: 'Friend request not found' });
     }
     
     if (request.receiverEmail !== userEmail) {
-      return res.status(403).json({ error: "Not authorized to accept this request" });
+      return res.status(403).json({ error: 'Not authorized to accept this request' });
     }
     
-    if (request.status !== "pending") {
-      return res.status(400).json({ error: "Request is no longer pending" });
+    if (request.status !== 'pending') {
+      return res.status(400).json({ error: 'Request is no longer pending' });
     }
     
     // Update request status
-    request.status = "accepted";
+    request.status = 'accepted';
     request.updatedAt = new Date();
     await request.save();
     
@@ -311,67 +343,67 @@ app.post("/api/friends/request/accept", async (req, res) => {
       { $addToSet: { friends: request.senderEmail } }
     );
     
-    res.json({ 
-      message: "Friend request accepted", 
+    res.status(200).json({ 
+      message: 'Friend request accepted', 
       request 
     });
   } catch (error) {
-    console.error("Error accepting friend request:", error);
-    res.status(500).json({ error: "Failed to accept friend request" });
+    console.error('Error accepting friend request:', error);
+    res.status(500).json({ error: 'Failed to accept friend request' });
   }
 });
 
-// Reject friend request
-app.post("/api/friends/request/reject", async (req, res) => {
+// Reject/Cancel friend request
+app.post('/api/friends/request/reject', async (req, res) => {
   try {
     const { requestId } = req.body;
     
     const request = await FriendRequest.findById(requestId);
     
     if (!request) {
-      return res.status(404).json({ error: "Friend request not found" });
+      return res.status(404).json({ error: 'Friend request not found' });
     }
     
-    request.status = "rejected";
+    request.status = 'rejected';
     request.updatedAt = new Date();
     await request.save();
     
-    res.json({ 
-      message: "Friend request rejected", 
+    res.status(200).json({ 
+      message: 'Friend request rejected', 
       request 
     });
   } catch (error) {
-    console.error("Error rejecting friend request:", error);
-    res.status(500).json({ error: "Failed to reject friend request" });
+    console.error('Error rejecting friend request:', error);
+    res.status(500).json({ error: 'Failed to reject friend request' });
   }
 });
 
 // Get user's friends list
-app.get("/api/friends/:email", async (req, res) => {
+app.get('/api/friends/:email', async (req, res) => {
   try {
     const { email } = req.params;
     
     const user = await User.findOne({ email });
     
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: 'User not found' });
     }
     
     // Get detailed info for each friend
     const friends = await User.find(
       { email: { $in: user.friends } },
-      "email name createdAt"
+      'email name createdAt'
     );
     
-    res.json(friends);
+    res.status(200).json(friends);
   } catch (error) {
-    console.error("Error fetching friends:", error);
-    res.status(500).json({ error: "Failed to fetch friends" });
+    console.error('Error fetching friends:', error);
+    res.status(500).json({ error: 'Failed to fetch friends' });
   }
 });
 
 // Remove a friend
-app.post("/api/friends/remove", async (req, res) => {
+app.post('/api/friends/remove', async (req, res) => {
   try {
     const { userEmail, friendEmail } = req.body;
     
@@ -386,91 +418,117 @@ app.post("/api/friends/remove", async (req, res) => {
       { $pull: { friends: userEmail } }
     );
     
-    res.json({ message: "Friend removed successfully" });
+    res.status(200).json({ message: 'Friend removed successfully' });
   } catch (error) {
-    console.error("Error removing friend:", error);
-    res.status(500).json({ error: "Failed to remove friend" });
+    console.error('Error removing friend:', error);
+    res.status(500).json({ error: 'Failed to remove friend' });
   }
 });
 
 // Check friendship status
-app.get("/api/friends/status", async (req, res) => {
+app.get('/api/friends/status', async (req, res) => {
   try {
     const { userEmail, otherUserEmail } = req.query;
     
     const user = await User.findOne({ email: userEmail });
     
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(404).json({ error: 'User not found' });
     }
     
     // Check if they're friends
     if (user.friends.includes(otherUserEmail)) {
-      return res.json({ status: "friends" });
+      return res.status(200).json({ status: 'friends' });
     }
     
     // Check for pending request
     const pendingRequest = await FriendRequest.findOne({
       $or: [
-        { senderEmail: userEmail, receiverEmail: otherUserEmail, status: "pending" },
-        { senderEmail: otherUserEmail, receiverEmail: userEmail, status: "pending" }
+        { senderEmail: userEmail, receiverEmail: otherUserEmail, status: 'pending' },
+        { senderEmail: otherUserEmail, receiverEmail: userEmail, status: 'pending' }
       ]
     });
     
     if (pendingRequest) {
       if (pendingRequest.senderEmail === userEmail) {
-        return res.json({ status: "request_sent", requestId: pendingRequest._id });
+        return res.status(200).json({ status: 'request_sent', requestId: pendingRequest._id });
       } else {
-        return res.json({ status: "request_received", requestId: pendingRequest._id });
+        return res.status(200).json({ status: 'request_received', requestId: pendingRequest._id });
       }
     }
     
-    res.json({ status: "none" });
+    res.status(200).json({ status: 'none' });
   } catch (error) {
-    console.error("Error checking friendship status:", error);
-    res.status(500).json({ error: "Failed to check friendship status" });
+    console.error('Error checking friendship status:', error);
+    res.status(500).json({ error: 'Failed to check friendship status' });
   }
 });
 
-// Add book to user's bookshelf
-app.post("/api/bookshelf/add", async (req, res) => {
-  const { email, volumeId } = req.body;
+// ========================================
+// BOOKSHELF ROUTES
+// ========================================
+
+app.post('/api/bookshelf/add', async (req, res) => {
   try {
+    const { email, volumeId } = req.body;
     const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: "User not found" });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
     if (!user.bookshelf.includes(volumeId)) {
       user.bookshelf.push(volumeId);
       await user.save();
     }
-    res.json({ message: "Book added to bookshelf", bookshelf: user.bookshelf });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to add book" });
+    
+    res.status(200).json({ message: 'Book added to bookshelf', bookshelf: user.bookshelf });
+  } catch (error) {
+    console.error('Error adding book:', error);
+    res.status(500).json({ error: 'Failed to add book' });
   }
 });
 
-// Get user's bookshelf
-app.get("/api/bookshelf/:email", async (req, res) => {
+app.post('/api/bookshelf/delete', async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.params.email });
-    if (!user) return res.status(404).json({ error: "User not found" });
-    res.json({ bookshelf: user.bookshelf });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to get bookshelf" });
+    const { email, volumeId } = req.body;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    user.bookshelf = user.bookshelf.filter(id => id !== volumeId);
+    await user.save();
+    
+    res.status(200).json({ message: 'Book removed from bookshelf', bookshelf: user.bookshelf });
+  } catch (error) {
+    console.error('Error removing book:', error);
+    res.status(500).json({ error: 'Failed to remove book' });
   }
 });
 
-// Get progress for all books
-app.get("/api/progress/:email", async (req, res) => {
+app.get('/api/bookshelf/:email', async (req, res) => {
   try {
-    const progress = await Progress.find({ email: req.params.email });
-    res.json(progress);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch progress" });
+    const { email } = req.params;
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    res.status(200).json({ bookshelf: user.bookshelf });
+  } catch (error) {
+    console.error('Error fetching bookshelf:', error);
+    res.status(500).json({ error: 'Failed to fetch bookshelf' });
   }
 });
 
-// Update progress for a book
-app.post("/api/progress/update", async (req, res) => {
+// ========================================
+// PROGRESS ROUTES
+// ========================================
+
+app.post('/api/progress/update', async (req, res) => {
   try {
     const { email, volumeId, currentPage, totalPages } = req.body;
     
@@ -485,42 +543,69 @@ app.post("/api/progress/update", async (req, res) => {
     }
     
     await progress.save();
-    res.json({ message: "Progress updated", progress });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to update progress" });
+    res.status(200).json({ message: 'Progress updated', progress });
+  } catch (error) {
+    console.error('Error updating progress:', error);
+    res.status(500).json({ error: 'Failed to update progress' });
   }
 });
 
-app.get("/api/reviews/:email", async (req, res) => {
+app.get('/api/progress/:email', async (req, res) => {
   try {
-    const reviews = await Review.find({ email: req.params.email });
-    res.json(reviews);
-  } catch (err) {
-    res.status(500).json({ error: "Failed to get reviews" });
+    const { email } = req.params;
+    const progress = await Progress.find({ email });
+    res.status(200).json(progress);
+  } catch (error) {
+    console.error('Error fetching progress:', error);
+    res.status(500).json({ error: 'Failed to fetch progress' });
   }
 });
 
-app.post("/api/reviews/add", async (req, res) => {
-  const { email, volumeId, rating, reviewText } = req.body;
+// ========================================
+// REVIEW ROUTES
+// ========================================
+
+app.post('/api/reviews/add', async (req, res) => {
   try {
+    const { email, name, volumeId, rating, reviewText } = req.body;
+    
     const review = new Review({ email, name, volumeId, rating, reviewText });
     await review.save();
-    res.json({ message: "Review added", review });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to add review" });
+    
+    res.status(201).json({ message: 'Review added', review });
+  } catch (error) {
+    console.error('Error adding review:', error);
+    res.status(500).json({ error: 'Failed to add review' });
   }
 });
 
-app.get("/api/reviews/book/:volumeId", async (req, res) => {
+app.get('/api/reviews/:email', async (req, res) => {
   try {
-    const reviews = await Review.find({ volumeId: req.params.volumeId }).sort({ createdAt: -1 });
-    res.json({ reviews });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to get reviews" });
+    const { email } = req.params;
+    const reviews = await Review.find({ email });
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.error('Error fetching reviews:', error);
+    res.status(500).json({ error: 'Failed to fetch reviews' });
   }
 });
 
-// Start Server
+app.get('/api/reviews/book/:volumeId', async (req, res) => {
+  try {
+    const { volumeId } = req.params;
+    const reviews = await Review.find({ volumeId }).sort({ createdAt: -1 });
+    res.status(200).json(reviews);
+  } catch (error) {
+    console.error('Error fetching book reviews:', error);
+    res.status(500).json({ error: 'Failed to fetch book reviews' });
+  }
+});
+
+// ========================================
+// SERVER START
+// ========================================
+
+const PORT = process.env.PORT || 5050;
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });

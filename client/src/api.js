@@ -42,6 +42,10 @@ export const getBookReviews = async (volumeId) => {
   return axios.get(`${API_BASE_URL}/reviews/book/${volumeId}`);
 };
 
+export const deleteBookFromBookshelf = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/bookshelf/delete`, { email, volumeId });
+};
+
 // FRIEND SYSTEM API CALLS
 
 // Get all users (for searching/discovering friends)
