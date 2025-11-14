@@ -2,7 +2,7 @@
   display: flex;
   min-height: 100vh;
   background: #ffffff;
-  padding-top: 60px; /* Height of your horizontal navbar */
+  padding-top: 60px;
   box-sizing: border-box;
 }
 
@@ -13,10 +13,10 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 100px 0 32px 0; /* Match Progress page top padding */
+  padding: 100px 0 32px 0;
   position: relative;
   box-sizing: border-box;
-  margin-left: 180px; /* Add this: width of your vertical navbar */
+  margin-left: 180px;
 }
 
 .reviews-title {
@@ -33,7 +33,6 @@
   justify-content: center;
   align-items: center;
   width: 90%;
-  /* max-width: 900px; */
   margin-bottom: 32px;
   position: relative;
 }
@@ -49,8 +48,8 @@
 
 .add-review-btn {
   position: fixed !important;
-  top: 70px; /* below the horizontal navbar */
-  right: 20px; /* 40px from the right edge */
+  top: 70px;
+  right: 20px;
   z-index: 100;
   background: #ab7ce7 !important;
   color: #fff !important;
@@ -78,7 +77,7 @@
 
 .reviews-list {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 reviews per row */
+  grid-template-columns: repeat(2, 1fr); 
   gap: 32px;
   max-width: 900px;
   margin: 0 auto;
@@ -128,7 +127,32 @@
   color: #888;
 }
 
-/* Modal styles */
+.review-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.review-modal-box {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  padding: 32px;
+  min-width: 400px;
+  max-width: 500px;
+  width: 90vw;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.review-modal-title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: "Sen", sans-serif;
+}
+
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -140,7 +164,7 @@
 }
 
 .modal-content {
-  background: #f4f4f4;           /* Light gray background */
+  background: #f4f4f4;
   border-radius: 10px;
   padding: 32px 24px;
   min-width: 400px;
@@ -150,7 +174,7 @@
   display: flex;
   flex-direction: column;
   align-items: stretch;
-  color: #222;                   /* Dark text */
+  color: #222;
 }
 
 .modal-content h2 {
@@ -164,7 +188,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
-  align-items: center; /* Center form content horizontally */
+  align-items: center; 
 }
 
 .modal-content label,
@@ -176,7 +200,7 @@
 .book-dropdown,
 .review-box,
 .modal-actions {
-  width: 100%; /* Ensure all fields and actions take full width */
+  width: 100%; 
   box-sizing: border-box;
   text-align: left;
 }
@@ -187,14 +211,15 @@
   display: flex;
   gap: 4px;
   margin-top: 6px;
-  justify-content: center; /* Center stars horizontally */
+  justify-content: center;
 }
 
-.star {
-  color: #bbb;
+.star-rating .star {
+  cursor: pointer;
   font-size: 2rem;
   transition: color 0.2s;
 }
+
 .book-dropdown select {
   background: #f4f4f4;
   color: #222;
@@ -221,6 +246,7 @@
   box-sizing: border-box;
   resize: vertical;
 }
+
 .star.filled {
   color: #8561b4;
 }

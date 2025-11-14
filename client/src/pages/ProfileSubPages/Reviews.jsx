@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import ProfileNavbar from '../../components/ProfilePage/ProfileNavbar';
 import "../../styles/ProfilePage/Reviews.css";
 import { getReviews, addReview, getBookshelf } from "../../api";
-import Button from "@mui/material/Button"; // If using MUI
+import Button from "@mui/material/Button";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
@@ -18,7 +18,6 @@ const Review = () => {
   const [volumeOptions, setVolumeOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Fetch user's reviews and bookshelf
   useEffect(() => {
     const fetchData = async () => {
       if (!email) return;
@@ -34,7 +33,6 @@ const Review = () => {
     fetchData();
   }, [email]);
 
-  // Fetch book titles for volumeIds
   useEffect(() => {
     const fetchTitles = async () => {
       if (bookshelf.length === 0) return;
@@ -52,13 +50,11 @@ const Review = () => {
     fetchTitles();
   }, [bookshelf]);
 
-  // Fetch book title for each review
   const getTitleForReview = (volumeId) => {
     const found = volumeOptions.find(v => v.volumeId === volumeId);
     return found ? found.title : volumeId;
   };
 
-  // Modal handlers
   const openModal = () => {
     setSelectedVolume(bookshelf[0] || "");
     setRating(0);
@@ -68,7 +64,6 @@ const Review = () => {
   };
   const closeModal = () => setShowModal(false);
 
-  // Submit review
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!selectedVolume || rating === 0 || !reviewText.trim()) {
@@ -76,7 +71,6 @@ const Review = () => {
       return;
     }
     await addReview({ email, volumeId: selectedVolume, rating, reviewText });
-    // Refresh reviews
     const reviewsRes = await getReviews(email);
     setReviews(reviewsRes.data.reviews || []);
     setShowModal(false);
@@ -118,32 +112,15 @@ const Review = () => {
           open={showModal}
           onClose={closeModal}
           aria-labelledby="add-review-modal-title"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 2000
-          }}
+          className="review-modal"
         >
           <Box
-            sx={{
-              bgcolor: "#fff",
-              borderRadius: 2,
-              boxShadow: 24,
-              p: 4,
-              minWidth: 400,
-              maxWidth: 500,
-              width: "90vw",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "stretch",
-            }}
+            className="review-modal-box"
             onClick={e => e.stopPropagation()}
           >
-            <h2 style={{ textAlign: "center", marginBottom: 20, fontFamily: "Sen, sans-serif" }}>Add Review</h2>
+            <h2 className="review-modal-title">Add Review</h2>
             <form onSubmit={handleSubmit}>
-      
-               <div className="book-dropdown">
+              <div className="book-dropdown">
                 <select
                   value={selectedVolume}
                   onChange={e => setSelectedVolume(e.target.value)}
@@ -152,11 +129,8 @@ const Review = () => {
                     <option key={opt.volumeId} value={opt.volumeId}>{opt.title}</option>
                   ))}
                 </select>
-          </div>
+              </div>
               <br />
-         
-               
-              
               <div className="star-rating">
                 {[1,2,3,4,5].map(star => (
                   <span
@@ -167,14 +141,11 @@ const Review = () => {
                     onClick={() => setRating(star)}
                     onMouseEnter={() => setHoverRating(star)}
                     onMouseLeave={() => setHoverRating(0)}
-                    style={{ cursor: "pointer", fontSize: "2rem" }}
                   >★</span>
                 ))}
               </div>
-              
               <br />
-           
-           <div className="review-box">
+              <div className="review-box">
                 <textarea
                   value={reviewText}
                   onChange={e => setReviewText(e.target.value)}
@@ -183,9 +154,8 @@ const Review = () => {
                 />
               </div>
               <div className="modal-actions">
-               
                 <button type="button" className="cancel-btn" onClick={closeModal}>Cancel</button>
-                   <button type="submit" className="submit-btn">Submit</button>
+                <button type="submit" className="submit-btn">Submit</button>
               </div>
             </form>
           </Box>
