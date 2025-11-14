@@ -1,0 +1,268 @@
+.friends-container {
+    max-width: 1200px;
+    margin: 80px auto 0 auto; /* Add top margin to avoid navbar overlap */
+    padding: 2rem;
+    background-color: #ffffff;
+    min-height: calc(100vh - 80px);
+  }
+  
+  .friends-container h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    color: #000000;
+    font-weight: 700;
+  }
+  
+  .message {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 500;
+  }
+  
+  .message.success {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border: 1px solid #81c784;
+  }
+  
+  .message.error {
+    background-color: #ffebee;
+    color: #c62828;
+    border: 1px solid #ef5350;
+  }
+  
+  .tabs {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 2px solid #e0e0e0;
+  }
+  
+  .tabs button {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    background: none;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #666666;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .tabs button:hover {
+    color: #000000;
+  }
+  
+  .tabs button.active {
+    color: #8561b4;
+    border-bottom-color: #8561b4;
+  }
+  
+  .search-form {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  
+  .search-input {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    transition: border-color 0.3s ease;
+    background-color: #ffffff;
+    color: #000000;
+  }
+  
+  .search-input:focus {
+    outline: none;
+    border-color: #8561b4;
+  }
+  
+  .search-input::placeholder {
+    color: #999999;
+  }
+  
+  .user-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+  
+  .user-card {
+    background: #ffffff;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+  }
+  
+  .user-card:hover {
+    box-shadow: 0 4px 12px rgba(133, 97, 180, 0.2);
+    border-color: #8561b4;
+  }
+  
+  .user-info h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.25rem;
+    color: #000000;
+    font-weight: 600;
+  }
+  
+  .user-info p {
+    margin: 0 0 0.25rem 0;
+    color: #666666;
+    font-size: 0.9rem;
+  }
+  
+  .user-info small {
+    color: #999999;
+    font-size: 0.85rem;
+  }
+  
+  button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .btn-search {
+    background-color: #8561b4;
+    color: white;
+  }
+  
+  .btn-search:hover {
+    background-color: #6d4d95;
+  }
+  
+  .btn-add {
+    background-color: #8561b4;
+    color: white;
+  }
+  
+  .btn-add:hover {
+    background-color: #6d4d95;
+  }
+  
+  .btn-accept {
+    background-color: #8561b4;
+    color: white;
+    margin-right: 0.5rem;
+  }
+  
+  .btn-accept:hover {
+    background-color: #6d4d95;
+  }
+  
+  .btn-reject,
+  .btn-cancel {
+    background-color: #000000;
+    color: white;
+  }
+  
+  .btn-reject:hover,
+  .btn-cancel:hover {
+    background-color: #333333;
+  }
+  
+  .btn-remove {
+    background-color: #666666;
+    color: white;
+  }
+  
+  .btn-remove:hover {
+    background-color: #000000;
+  }
+  
+  .btn-friends,
+  .btn-pending {
+    background-color: #e0e0e0;
+    color: #666666;
+    cursor: not-allowed;
+  }
+  
+  button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+  
+  .request-actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .empty-state {
+    text-align: center;
+    color: #999999;
+    padding: 3rem;
+    font-size: 1.1rem;
+  }
+  
+  .friends-list h2,
+  .find-friends h2,
+  .pending-requests h2,
+  .sent-requests h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #000000;
+    font-weight: 600;
+  }
+  
+  .requests-section {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+  
+  /* Debug button styling */
+  button[style*="background: #ff9800"] {
+    background-color: #ff9800 !important;
+    color: white;
+    font-weight: 600;
+    border-radius: 6px;
+  }
+  
+  @media (max-width: 768px) {
+    .friends-container {
+      padding: 1rem;
+      margin-top: 60px;
+    }
+  
+    .user-grid {
+      grid-template-columns: 1fr;
+    }
+  
+    .tabs {
+      overflow-x: auto;
+    }
+  
+    .tabs button {
+      white-space: nowrap;
+    }
+  
+    .user-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .request-actions {
+      width: 100%;
+    }
+  
+    .request-actions button {
+      flex: 1;
+    }
+  }

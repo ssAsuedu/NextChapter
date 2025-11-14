@@ -4,7 +4,9 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from "amazon-cognito-identity-js";
 import User from "./models/User.js"; // Import the User model
-
+import Review from "./models/Review.js";
+import FriendRequest from "./models/FriendRequest.js";
+import Progress from "./models/Progress.js";
 dotenv.config();
 
 const app = express();
@@ -27,6 +29,7 @@ const poolData = {
 const userPool = new CognitoUserPool(poolData);
 
 // Sign-Up Route
+// Sign-Up Route
 app.post("/api/signup", (req, res) => {
   const { email, password, name } = req.body;
 
@@ -41,9 +44,22 @@ app.post("/api/signup", (req, res) => {
     }
 
     try {
-      // Add the user to MongoDB
-      const newUser = new User({ name, email });
-      await newUser.save();
+      // Check if user already exists before creating
+      let user = await User.findOne({ email });
+      
+      if (!user) {
+        user = new User({ 
+          name, 
+          email,
+          cognitoSub: result.userSub, // Add Cognito sub
+          friends: [],
+          bookshelf: [],
+          progress: [],
+          reviews: []
+        });
+        await user.save();
+        console.log("Created new user in MongoDB:", email);
+      }
 
       res.json({ message: "Sign-up successful and user added to database", user: result.user });
     } catch (dbError) {
@@ -109,6 +125,313 @@ app.post("/api/confirm", (req, res) => {
   });
 });
 
+// Get all users
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await User.find({}, "email name createdAt").sort({ name: 1 });
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+// Search users by name or email
+app.get("/api/users/search", async (req, res) => {
+  try {
+    const { q } = req.query;
+    
+    if (!q || q.trim().length === 0) {
+      return res.status(400).json({ error: "Search query is required" });
+    }
+    
+    const users = await User.find({
+      $or: [
+        { name: { $regex: q, $options: "i" } },
+        { email: { $regex: q, $options: "i" } }
+      ]
+    }, "email name createdAt").limit(20);
+    
+    res.json(users);
+  } catch (error) {
+    console.error("Error searching users:", error);
+    res.status(500).json({ error: "Failed to search users" });
+  }
+});
+
+// Send a friend request
+app.post("/api/friends/request", async (req, res) => {
+  try {
+    const { senderEmail, receiverEmail } = req.body;
+    
+    if (!senderEmail || !receiverEmail) {
+      return res.status(400).json({ error: "Sender and receiver emails are required" });
+    }
+    
+    if (senderEmail === receiverEmail) {
+      return res.status(400).json({ error: "Cannot send friend request to yourself" });
+    }
+    
+    // Check if users exist
+    const sender = await User.findOne({ email: senderEmail });
+    const receiver = await User.findOne({ email: receiverEmail });
+    
+    if (!sender || !receiver) {
+      return res.status(404).json({ error: "One or both users not found" });
+    }
+    
+    // Check if already friends
+    if (sender.friends.includes(receiverEmail)) {
+      return res.status(400).json({ error: "Already friends with this user" });
+    }
+    
+    // Check if request already exists
+    const existingRequest = await FriendRequest.findOne({
+      $or: [
+        { senderEmail, receiverEmail, status: "pending" },
+        { senderEmail: receiverEmail, receiverEmail: senderEmail, status: "pending" }
+      ]
+    });
+    
+    if (existingRequest) {
+      if (existingRequest.senderEmail === senderEmail) {
+        return res.status(400).json({ error: "Request already sent" });
+      } else {
+        return res.status(400).json({ error: "This user already sent you a friend request. Check your pending requests!" });
+      }
+    }
+    
+    // Create friend request
+    const friendRequest = new FriendRequest({
+      senderEmail,
+      receiverEmail,
+      status: "pending",
+    });
+    
+    await friendRequest.save();
+    
+    res.status(201).json({ 
+      message: "Friend request sent successfully", 
+      request: friendRequest 
+    });
+  } catch (error) {
+    console.error("Error sending friend request:", error);
+    res.status(500).json({ error: "Failed to send friend request" });
+  }
+});
+
+// Get pending friend requests
+app.get("/api/friends/requests/pending/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    const requests = await FriendRequest.find({
+      receiverEmail: email,
+      status: "pending"
+    }).sort({ createdAt: -1 });
+    
+    // Populate sender information
+    const requestsWithSenderInfo = await Promise.all(
+      requests.map(async (request) => {
+        const sender = await User.findOne({ email: request.senderEmail }, "name email");
+        return {
+          ...request.toObject(),
+          senderInfo: sender
+        };
+      })
+    );
+    
+    res.json(requestsWithSenderInfo);
+  } catch (error) {
+    console.error("Error fetching pending requests:", error);
+    res.status(500).json({ error: "Failed to fetch pending requests" });
+  }
+});
+
+// Get sent friend requests
+app.get("/api/friends/requests/sent/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    const requests = await FriendRequest.find({
+      senderEmail: email,
+      status: "pending"
+    }).sort({ createdAt: -1 });
+    
+    // Populate receiver information
+    const requestsWithReceiverInfo = await Promise.all(
+      requests.map(async (request) => {
+        const receiver = await User.findOne({ email: request.receiverEmail }, "name email");
+        return {
+          ...request.toObject(),
+          receiverInfo: receiver
+        };
+      })
+    );
+    
+    res.json(requestsWithReceiverInfo);
+  } catch (error) {
+    console.error("Error fetching sent requests:", error);
+    res.status(500).json({ error: "Failed to fetch sent requests" });
+  }
+});
+
+// Accept friend request
+app.post("/api/friends/request/accept", async (req, res) => {
+  try {
+    const { requestId, userEmail } = req.body;
+    
+    const request = await FriendRequest.findById(requestId);
+    
+    if (!request) {
+      return res.status(404).json({ error: "Friend request not found" });
+    }
+    
+    if (request.receiverEmail !== userEmail) {
+      return res.status(403).json({ error: "Not authorized to accept this request" });
+    }
+    
+    if (request.status !== "pending") {
+      return res.status(400).json({ error: "Request is no longer pending" });
+    }
+    
+    // Update request status
+    request.status = "accepted";
+    request.updatedAt = new Date();
+    await request.save();
+    
+    // Add each user to the other's friends list
+    await User.updateOne(
+      { email: request.senderEmail },
+      { $addToSet: { friends: request.receiverEmail } }
+    );
+    
+    await User.updateOne(
+      { email: request.receiverEmail },
+      { $addToSet: { friends: request.senderEmail } }
+    );
+    
+    res.json({ 
+      message: "Friend request accepted", 
+      request 
+    });
+  } catch (error) {
+    console.error("Error accepting friend request:", error);
+    res.status(500).json({ error: "Failed to accept friend request" });
+  }
+});
+
+// Reject friend request
+app.post("/api/friends/request/reject", async (req, res) => {
+  try {
+    const { requestId } = req.body;
+    
+    const request = await FriendRequest.findById(requestId);
+    
+    if (!request) {
+      return res.status(404).json({ error: "Friend request not found" });
+    }
+    
+    request.status = "rejected";
+    request.updatedAt = new Date();
+    await request.save();
+    
+    res.json({ 
+      message: "Friend request rejected", 
+      request 
+    });
+  } catch (error) {
+    console.error("Error rejecting friend request:", error);
+    res.status(500).json({ error: "Failed to reject friend request" });
+  }
+});
+
+// Get user's friends list
+app.get("/api/friends/:email", async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    // Get detailed info for each friend
+    const friends = await User.find(
+      { email: { $in: user.friends } },
+      "email name createdAt"
+    );
+    
+    res.json(friends);
+  } catch (error) {
+    console.error("Error fetching friends:", error);
+    res.status(500).json({ error: "Failed to fetch friends" });
+  }
+});
+
+// Remove a friend
+app.post("/api/friends/remove", async (req, res) => {
+  try {
+    const { userEmail, friendEmail } = req.body;
+    
+    // Remove from both users' friends lists
+    await User.updateOne(
+      { email: userEmail },
+      { $pull: { friends: friendEmail } }
+    );
+    
+    await User.updateOne(
+      { email: friendEmail },
+      { $pull: { friends: userEmail } }
+    );
+    
+    res.json({ message: "Friend removed successfully" });
+  } catch (error) {
+    console.error("Error removing friend:", error);
+    res.status(500).json({ error: "Failed to remove friend" });
+  }
+});
+
+// Check friendship status
+app.get("/api/friends/status", async (req, res) => {
+  try {
+    const { userEmail, otherUserEmail } = req.query;
+    
+    const user = await User.findOne({ email: userEmail });
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    // Check if they're friends
+    if (user.friends.includes(otherUserEmail)) {
+      return res.json({ status: "friends" });
+    }
+    
+    // Check for pending request
+    const pendingRequest = await FriendRequest.findOne({
+      $or: [
+        { senderEmail: userEmail, receiverEmail: otherUserEmail, status: "pending" },
+        { senderEmail: otherUserEmail, receiverEmail: userEmail, status: "pending" }
+      ]
+    });
+    
+    if (pendingRequest) {
+      if (pendingRequest.senderEmail === userEmail) {
+        return res.json({ status: "request_sent", requestId: pendingRequest._id });
+      } else {
+        return res.json({ status: "request_received", requestId: pendingRequest._id });
+      }
+    }
+    
+    res.json({ status: "none" });
+  } catch (error) {
+    console.error("Error checking friendship status:", error);
+    res.status(500).json({ error: "Failed to check friendship status" });
+  }
+});
+
 // Add book to user's bookshelf
 app.post("/api/bookshelf/add", async (req, res) => {
   const { email, volumeId } = req.body;
@@ -138,33 +461,40 @@ app.get("/api/bookshelf/:email", async (req, res) => {
 
 // Get progress for all books
 app.get("/api/progress/:email", async (req, res) => {
-  const user = await User.findOne({ email: req.params.email });
-  if (!user) return res.status(404).json({ error: "User not found" });
-  res.json({ progress: user.progress || [] });
+  try {
+    const progress = await Progress.find({ email: req.params.email });
+    res.json(progress);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch progress" });
+  }
 });
 
 // Update progress for a book
 app.post("/api/progress/update", async (req, res) => {
-  const { email, volumeId, currentPage, totalPages } = req.body;
-  const user = await User.findOne({ email });
-  if (!user) return res.status(404).json({ error: "User not found" });
-
-  const idx = user.progress.findIndex((p) => p.volumeId === volumeId);
-  if (idx > -1) {
-    user.progress[idx].currentPage = currentPage;
-    user.progress[idx].totalPages = totalPages;
-  } else {
-    user.progress.push({ volumeId, currentPage, totalPages });
+  try {
+    const { email, volumeId, currentPage, totalPages } = req.body;
+    
+    let progress = await Progress.findOne({ email, volumeId });
+    
+    if (progress) {
+      progress.currentPage = currentPage;
+      progress.totalPages = totalPages;
+      progress.updatedAt = new Date();
+    } else {
+      progress = new Progress({ email, volumeId, currentPage, totalPages });
+    }
+    
+    await progress.save();
+    res.json({ message: "Progress updated", progress });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update progress" });
   }
-  await user.save();
-  res.json({ message: "Progress updated", progress: user.progress });
 });
 
 app.get("/api/reviews/:email", async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.params.email });
-    if (!user) return res.status(404).json({ error: "User not found" });
-    res.json({ reviews: user.reviews });
+    const reviews = await Review.find({ email: req.params.email });
+    res.json(reviews);
   } catch (err) {
     res.status(500).json({ error: "Failed to get reviews" });
   }
@@ -173,17 +503,23 @@ app.get("/api/reviews/:email", async (req, res) => {
 app.post("/api/reviews/add", async (req, res) => {
   const { email, volumeId, rating, reviewText } = req.body;
   try {
-    const user = await User.findOne({ email });
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    user.reviews.push({ volumeId, rating, reviewText });
-    await user.save();
-
-    res.json({ message: "Review added", reviews: user.reviews });
+    const review = new Review({ email, name, volumeId, rating, reviewText });
+    await review.save();
+    res.json({ message: "Review added", review });
   } catch (err) {
     res.status(500).json({ error: "Failed to add review" });
   }
 });
+
+app.get("/api/reviews/book/:volumeId", async (req, res) => {
+  try {
+    const reviews = await Review.find({ volumeId: req.params.volumeId }).sort({ createdAt: -1 });
+    res.json({ reviews });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to get reviews" });
+  }
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

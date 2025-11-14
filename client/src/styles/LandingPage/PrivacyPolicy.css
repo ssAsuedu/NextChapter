@@ -7,6 +7,11 @@
 /* Import Inter font (needed if this is a separate file from About.css) */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
 
+/* ADDED: CSS variable for your accent color */
+:root {
+  --primary-accent: #8561b4;
+}
+
 /* --- Root Container --- */
 .policy-container {
     padding: 50px 80px;
@@ -27,10 +32,12 @@
 }
 
 .h1-policy-title {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: #1F2937; /* Charcoal/Dark Gray */
-    font-weight: 800;
+    color: var(--primary-accent); /* CHANGED: Applied accent color */
+    font-family: 'Roboto', sans-serif;
+    font-size: 48px;
+    font-weight: 700;
+    line-height: 120%;
+    margin: 0;
 }
 
 .last-updated {
@@ -73,12 +80,15 @@
 }
 
 .policy-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin: 0;
+    padding-left: 0; /* CHANGED: Removed default browser padding */
     list-style-type: disc;
-    margin-left: 25px;
-    padding-left: 0;
-    margin-bottom: 25px;
-    font-size: 1.05rem;
-    line-height: 1.8;
+    list-style-position: inside; /* CHANGED: Aligns bullets with text */
+    width: 100%; /* Full width */
+    align-items: flex-start; /* Left align list items */
 }
 
 .policy-list li {
@@ -93,18 +103,21 @@
 
 /* Key Callout/Disclaimer Block */
 .disclaimer-box {
-    padding: 20px;
-    background-color: #F3F4F6; /* Neutral Beige/Warm Gray background */
-    border-left: 5px solid #3B82F6; /* Soft Blue accent for important notice */
-    border-radius: 4px;
-    margin: 30px 0;
-    font-size: 1.05rem;
-    line-height: 1.7;
-    color: #1F2937;
+    display: flex;
+    padding: 24px;
+    flex-direction: column;
+    align-items: flex-start; /* Left align content */
+    gap: 8px;
+    width: 100%; /* Full width */
+    background-color: #F5F5F5; /* Light gray background */
+    border-left: 4px solid var(--primary-accent); /* CHANGED: Applied accent color */
+    margin: 32px 0;
+    box-sizing: border-box; /* Include padding in width */
 }
 
 .disclaimer-box strong {
-    color: #2563EB; /* Darker Soft Blue for emphasis */
+    color: var(--primary-accent); /* CHANGED: Applied accent color */
+    font-weight: 700;
 }
 
 /* Contact Information Styling */
@@ -123,6 +136,10 @@
         font-size: 2rem;
     }
     .h2-policy-heading {
-        font-size: 1.4rem;
+        font-size: 24px;
+    }
+    
+    .policy-list {
+        padding-left: 0; /* Keep consistent on mobile */
     }
 }
