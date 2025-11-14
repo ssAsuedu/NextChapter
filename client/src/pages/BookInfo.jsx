@@ -151,7 +151,7 @@ const BookInfo = () => {
 
   const info = book?.volumeInfo || {};
   const isBookInShelf = bookshelf.includes(volumeId);
-  const img = `https://books.google.com/books/content?id=${volumeId}&printsec=frontcover&img=1&zoom=3&edge=curl&source=gbs-api`; // fallback
+  const img = `https://books.google.com/books/content?id=${volumeId}&printsec=frontcover&img=1&zoom=3&edge=curl&source=gbs-api`;
 
   const handleAddToBookshelf = async () => {
     if (!email) {
@@ -326,25 +326,11 @@ const BookInfo = () => {
           </div>
         </div>
       </div>
-      <div id="reviews" className="bookinfo-reviews-wrapper"></div>
-        <h2
-          style={{
-            color: "#ab7ce7",
-            fontSize: "1.6rem",
-            fontWeight: "700",
-            marginBottom: "4px",
-            marginTop: "64px",
-          }}
-        >
+      <div id="reviews" className="bookinfo-reviews-wrapper">
+        <h2 className="bookinfo-reviews-header">
           Reviews
         </h2>
-        <p
-          style={{
-            color: "#7e7e7e",
-            fontSize: "1rem",
-            margin: "0 0 18px 4px",
-          }}
-        >
+        <p className="bookinfo-reviews-subtitle">
           Real reviews from passionate readers like you
         </p>
         <div className="bookinfo-reviews-section">
@@ -371,37 +357,38 @@ const BookInfo = () => {
             )}
         </div>
       </div>
+      </div>
       <hr className="bookinfo-section-separator" />
       {relatedBooks.length > 0 && (
-  <div className="bookinfo-related-section">
-    <h2 className="bookinfo-related-header">You May Also Like</h2>
-    <p className="bookinfo-related-subtitle">Books related to {info.title}</p>
-    <div className="bookinfo-related-list">
-      {relatedBooks.map(bk => {
-        const b = bk.volumeInfo;
-        return (
-          <div
-  key={bk.id}
-  className="bookinfo-related-card"
-  onClick={() => {
-    navigate(`/book/${bk.id}`);
-    window.scrollTo(0, 0);
-  }} 
->
-  <img
-    src={bk.volumeInfo.imageLinks?.thumbnail || "/placeholder-book.png"}
-    alt={bk.volumeInfo.title}
-  />
-  <p className="bookinfo-related-title-text">{bk.volumeInfo.title}</p>
-  <p className="bookinfo-related-author">
-    {bk.volumeInfo.authors ? bk.volumeInfo.authors.join(", ") : "Unknown"}
-  </p>
-</div>
-        );
-      })}
-    </div>
-  </div>
-)}
+        <div className="bookinfo-related-section">
+          <h2 className="bookinfo-related-header">You May Also Like</h2>
+          <p className="bookinfo-related-subtitle">Books related to {info.title}</p>
+          <div className="bookinfo-related-list">
+            {relatedBooks.map(bk => {
+              const b = bk.volumeInfo;
+              return (
+                <div
+                  key={bk.id}
+                  className="bookinfo-related-card"
+                  onClick={() => {
+                    navigate(`/book/${bk.id}`);
+                    window.scrollTo(0, 0);
+                  }} 
+                >
+                  <img
+                    src={bk.volumeInfo.imageLinks?.thumbnail || "/placeholder-book.png"}
+                    alt={bk.volumeInfo.title}
+                  />
+                  <p className="bookinfo-related-title-text">{bk.volumeInfo.title}</p>
+                  <p className="bookinfo-related-author">
+                    {bk.volumeInfo.authors ? bk.volumeInfo.authors.join(", ") : "Unknown"}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
