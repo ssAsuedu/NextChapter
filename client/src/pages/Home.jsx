@@ -74,7 +74,10 @@ const Home = () => {
             </p>
             <button
               className="trending-books-button"
-              onClick={() => navigate("/explore")}
+              onClick={() => {
+                navigate("/explore"); 
+                window.scrollTo(0, 0);
+              }}
             >
               Explore Trending Books
             </button>
