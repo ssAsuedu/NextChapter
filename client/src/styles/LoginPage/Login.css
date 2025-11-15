@@ -13,6 +13,7 @@
   align-items: center;
   background-color: #f4f4f4; 
   padding: 20px;
+  position: relative;
 }
 .login-form-content {
   width: 100%;
@@ -61,8 +62,60 @@
   background: url("../../assets/login.png") no-repeat center center;
   background-size: cover; /* Ensures the image covers the entire div */
 }
+.login-svg {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 180px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+  margin-right: 20px;
+}
 
+.login-left {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  margin-left: 25px;
+  width: 180px;
+  height: auto;
+  opacity: 0.9;
+  pointer-events: none;
+}
 .MuiFormLabel-asterisk, .required {
   color: red !important;
 }
+
+@media (max-width: 700px) {
+  .login-svg, .login-left, .login-image {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 700px) and (max-width: 960px) {
+  .login-page {
+    flex-direction: column;
+  }
+  .login-svg, .login-left {
+    display: none;
+  }
+  .login-form {
+    flex: unset;
+    height: 75vh;
+  }
+  .login-form h1 {
+    font-size: 3.2em;
+  }
+  .login-form form {
+    max-width: 600px;
+  }
+  .login-form-content {
+    max-width: 500px;
+  }
+  .account-creation {
+    font-size: 25px;
+  }
+}
+
 

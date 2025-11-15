@@ -1,12 +1,15 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { addBookToBookshelf } from "../../api";
 import "../../styles/SearchPage/BookCard.css";
 
 const BookCard = ({ info, volumeId }) => {
   const [saved, setSaved] = useState(false);
   const email = localStorage.getItem("userEmail");
+  const navigate = useNavigate();
 
-  const handleSave = async () => {
+  const handleSave = async (e) => {
+    e.stopPropagation(); // Prevent navigation when clicking save
     if (!email) {
       alert("Please log in to save books.");
       return;
@@ -19,8 +22,18 @@ const BookCard = ({ info, volumeId }) => {
     }
   };
 
+  const handleClick = () => {
+    navigate(`/book/${volumeId}`);
+  };
+
   return (
-    <div className="search-book-card">
+    <div
+      className="search-book-card"
+      onClick={handleClick}
+      tabIndex={0}
+      role="button"
+      style={{ cursor: "pointer" }}
+    >
       <img
         src={info.imageLinks?.thumbnail || "/default-book.png"}
         alt={info.title}

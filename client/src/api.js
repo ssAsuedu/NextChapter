@@ -18,6 +18,10 @@ export const addBookToBookshelf = async ({ email, volumeId }) => {
   return axios.post(`${API_BASE_URL}/bookshelf/add`, { email, volumeId });
 };
 
+export const deleteBookFromBookshelf = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/bookshelf/delete`, { email, volumeId });
+};
+
 export const getBookshelf = async (email) => {
   return axios.get(`${API_BASE_URL}/bookshelf/${email}`);
 };

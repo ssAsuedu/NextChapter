@@ -1,6 +1,6 @@
 .progress-page {
   padding: 100px 32px 32px 32px;
-  background: #f4f4f4;
+  background: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -26,29 +26,41 @@
 
 .progress-book-card {
   display: flex;
+  flex-direction: column; /* stack image above text */
+  align-items: center; /* center everything */
+  gap: 16px; /* less vertical spacing than before */
   gap: 24px;
   background: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 24px;
   align-items: center;
   width: 100%;
   min-width: 0;
-  max-width: 700px;      /* Add this line */
+  max-width: 700px;
+  /* Add this line */
   box-sizing: border-box;
 }
 
 .progress-book-image {
-  width: 90px;
-  height: 130px;
+  width: 250x;
+  height: 250 px;
   object-fit: cover;
   border-radius: 6px;
   background: #eee;
 }
 
+.progress-book-card:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 16px rgba(171, 124, 231, 0.4);
+  z-index: 2;
+}
+
 .progress-book-info {
   flex: 1 1 0;
   min-width: 0;
+  text-align: center;
 }
 
 .progress-bar-container {
@@ -134,4 +146,59 @@
   font-size: 0.95rem;
   color: #8561b4;
   font-weight: 600;
+  text-align: center;
+}
+
+
+.progress-top-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0px;
+  padding: 90px 0 0 50px;      /* Increased top padding to shift down */
+  background: #fff;
+}
+
+.progress-top-left {
+  flex: 0 0 260px;          /* Slightly larger flex basis */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.progress-top-image {
+  width: 400px;             /* Enlarged image */
+  height: 400px;
+  object-fit: contain;
+  display: block;
+}
+
+.progress-top-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* Center content horizontally */
+  justify-content: center;
+  padding-left: 0px;
+  text-align: center;       /* Center text */
+}
+
+.progress-title {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.progress-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.progress-stat-line {
+  font-size: 1.2rem;
+  color: #444;
+  font-weight: 500;
 }
