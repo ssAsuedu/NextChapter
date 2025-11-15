@@ -11,6 +11,7 @@
   "description": "",
   "type": "module",
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.932.0",
     "amazon-cognito-identity-js": "^6.3.15",
     "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",

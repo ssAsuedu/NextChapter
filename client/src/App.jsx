@@ -12,6 +12,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Progress from "./pages/ProfileSubPages/Progress";
 import Reviews from "./pages/ProfileSubPages/Reviews";
 import BookInfo from "./pages/BookInfo";
+import Friends from "./pages/ProfileSubPages/Friends";
 
 const App = () => {
   return (
@@ -29,6 +30,7 @@ const App = () => {
         <Route path="/progress" element={<Progress />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/book/:volumeId" element={<BookInfo />} />
+          <Route path="/friends" element={<Friends />} />
       </Routes>
     </Router>
   );
