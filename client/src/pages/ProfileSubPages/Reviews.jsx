@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import ProfileNavbar from '../../components/ProfilePage/ProfileNavbar';
 import "../../styles/ProfilePage/Reviews.css";
-import { getReviews, addReview, getBookshelf } from "../../api";
-import Button from "@mui/material/Button"; // If using MUI
+import { getReviews, addReview, getBookshelf, deleteReview, editReview } from "../../api";
+import Button from "@mui/material/Button";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
@@ -17,8 +17,14 @@ const Review = () => {
   const [reviewText, setReviewText] = useState("");
   const [volumeOptions, setVolumeOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [openMenuIndex, setOpenMenuIndex] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [editingReview, setEditingReview] = useState(null);
+  const [ratingError, setRatingError] = useState("");
+  const [duplicateError, setDuplicateError] = useState(""); 
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [reviewToDelete, setReviewToDelete] = useState(null);
 
-  // Fetch user's reviews and bookshelf
   useEffect(() => {
     const fetchData = async () => {
       if (!email) return;
@@ -34,52 +40,153 @@ const Review = () => {
     fetchData();
   }, [email]);
 
-  // Fetch book titles for volumeIds
   useEffect(() => {
     const fetchTitles = async () => {
-      if (bookshelf.length === 0) return;
-      const promises = bookshelf.map(id =>
+      const volumeIds = new Set([
+        ...bookshelf,
+        ...reviews.map(r => r.volumeId)
+      ]);
+  
+      if (volumeIds.size === 0) return;
+  
+      const promises = [...volumeIds].map(id =>
         fetch(`https://www.googleapis.com/books/v1/volumes/${id}`)
           .then(res => res.json())
           .then(data => ({
             volumeId: id,
-            title: data.volumeInfo?.title || id
+            title: data.volumeInfo?.title || "Unknown Title"
           }))
       );
+  
       const results = await Promise.all(promises);
       setVolumeOptions(results);
     };
+  
     fetchTitles();
-  }, [bookshelf]);
+  }, [bookshelf, reviews]);
 
-  // Fetch book title for each review
   const getTitleForReview = (volumeId) => {
     const found = volumeOptions.find(v => v.volumeId === volumeId);
     return found ? found.title : volumeId;
   };
 
-  // Modal handlers
   const openModal = () => {
+    setIsEditMode(false);
+    setEditingReview(null);
     setSelectedVolume(bookshelf[0] || "");
     setRating(0);
     setHoverRating(0);
     setReviewText("");
     setShowModal(true);
   };
-  const closeModal = () => setShowModal(false);
+  const closeModal = () => {
+    setShowModal(false);
+    setIsEditMode(false);
+    setEditingReview(null);
+  };
 
-  // Submit review
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!selectedVolume || rating === 0 || !reviewText.trim()) {
-      alert("Please select a book, give a rating, and write a review.");
+  
+    setRatingError("");
+    setDuplicateError("");
+  
+    if (rating === 0) {
+      setRatingError("Please choose a rating before submitting.");
       return;
     }
-    await addReview({ email, volumeId: selectedVolume, rating, reviewText });
-    // Refresh reviews
-    const reviewsRes = await getReviews(email);
-    setReviews(reviewsRes.data.reviews || []);
-    setShowModal(false);
+  
+    if (!reviewText.trim()) {
+      setRatingError("Review text cannot be empty.");
+      return;
+    }
+  
+    try {
+      if (isEditMode && editingReview) {
+        const response = await editReview({ 
+          email, 
+          volumeId: editingReview.volumeId, 
+          rating, 
+          reviewText 
+        });
+      } else {
+        const name = localStorage.getItem("userName") || "";
+        const response = await addReview({
+          email,
+          name,
+          volumeId: selectedVolume,
+          rating,
+          reviewText
+        });
+      }
+  
+      const reviewsRes = await getReviews(email);
+      setReviews(reviewsRes.data.reviews || []);
+  
+      setShowModal(false);
+      setRatingError("");
+      setDuplicateError("");
+  
+    } catch (error) {
+      if (error.response?.data?.error === "You have already reviewed this book.") {
+        setDuplicateError("You have already reviewed this book.");
+      } else {
+        setDuplicateError("Failed to submit review.");
+      }
+    }
+  };
+  
+  const toggleMenu = (index) => {
+    setOpenMenuIndex(openMenuIndex === index ? null : index);
+  };
+
+  useEffect(() => {
+    const handleClickOutside = () => {
+      if (openMenuIndex !== null) {
+        setOpenMenuIndex(null);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [openMenuIndex]);
+
+  const handleEditReview = (review, index) => {
+    setIsEditMode(true);
+    setEditingReview(review);
+    setSelectedVolume(review.volumeId);
+    setRating(review.rating);
+    setReviewText(review.reviewText);
+    setShowModal(true);
+    setOpenMenuIndex(null);
+  };
+
+  const handleDeleteReview = (review) => {
+    setReviewToDelete(review);
+    setShowDeleteModal(true);
+    setOpenMenuIndex(null);
+  };
+
+  const confirmDeleteReview = async () => {
+    if (!reviewToDelete) return;
+  
+    try {
+      const response = await deleteReview({
+        email,
+        volumeId: reviewToDelete.volumeId
+      });
+  
+      console.log("Delete response:", response.data);
+  
+      const reviewsRes = await getReviews(email);
+      setReviews(reviewsRes.data.reviews || []);
+  
+    } catch (error) {
+      console.error("Error deleting review:", error);
+      alert("Failed to delete review.");
+    }
+  
+    setShowDeleteModal(false);
+    setReviewToDelete(null);
   };
 
   return (
@@ -101,7 +208,32 @@ const Review = () => {
             <p>No reviews yet.</p>
           ) : (
             reviews.map((review, idx) => (
-              <div className="review-card" key={idx}>
+              <div className="review-card" key={review._id || idx}>
+                <button 
+                  className="review-options-btn"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleMenu(idx);
+                  }}
+                >
+                  ⋮
+                </button>
+                {openMenuIndex === idx && (
+                  <div className="review-options-menu">
+                    <button 
+                      className="review-option-item"
+                      onClick={() => handleEditReview(review, idx)}
+                    >
+                      Edit Review
+                    </button>
+                    <button 
+                      className="review-option-item delete"
+                      onClick={() => handleDeleteReview(review, idx)}
+                    >
+                      Delete Review
+                    </button>
+                  </div>
+                )}
                 <div className="review-title">{getTitleForReview(review.volumeId)}</div>
                 <div className="review-rating">
                   {[1,2,3,4,5].map(star => (
@@ -109,7 +241,14 @@ const Review = () => {
                   ))}
                 </div>
                 <div className="review-text">{review.reviewText}</div>
-                <div className="review-date">{new Date(review.createdAt).toLocaleDateString()}</div>
+                <div className="review-date">
+                  {new Date(review.createdAt).toLocaleDateString()}
+                  {review.updatedOn && review.updatedOn !== review.createdAt && (
+                    <span className="review-updated">
+                      &nbsp;· Updated on {new Date(review.updatedOn).toLocaleDateString()}
+                    </span>
+                  )}
+                </div>
               </div>
             ))
           )}
@@ -118,45 +257,29 @@ const Review = () => {
           open={showModal}
           onClose={closeModal}
           aria-labelledby="add-review-modal-title"
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 2000
-          }}
+          className="review-modal"
         >
           <Box
-            sx={{
-              bgcolor: "#fff",
-              borderRadius: 2,
-              boxShadow: 24,
-              p: 4,
-              minWidth: 400,
-              maxWidth: 500,
-              width: "90vw",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "stretch",
-            }}
+            className="review-modal-box"
             onClick={e => e.stopPropagation()}
           >
-            <h2 style={{ textAlign: "center", marginBottom: 20, fontFamily: "Sen, sans-serif" }}>Add Review</h2>
+            <h2 className="review-modal-title">{isEditMode ? 'Edit Review' : 'Add Review'}</h2>
             <form onSubmit={handleSubmit}>
-      
-               <div className="book-dropdown">
+              <div className="book-dropdown">
                 <select
                   value={selectedVolume}
-                  onChange={e => setSelectedVolume(e.target.value)}
+                  onChange={e => {
+                    setSelectedVolume(e.target.value);
+                    setDuplicateError("");
+                  }}
+                  disabled={isEditMode}
                 >
                   {volumeOptions.map(opt => (
                     <option key={opt.volumeId} value={opt.volumeId}>{opt.title}</option>
                   ))}
                 </select>
-          </div>
+              </div>
               <br />
-         
-               
-              
               <div className="star-rating">
                 {[1,2,3,4,5].map(star => (
                   <span
@@ -164,30 +287,62 @@ const Review = () => {
                     className={
                       (hoverRating || rating) >= star ? "star filled" : "star"
                     }
-                    onClick={() => setRating(star)}
+                    onClick={() => {
+                      setRating(star);
+                      setRatingError(""); 
+                    }}
                     onMouseEnter={() => setHoverRating(star)}
                     onMouseLeave={() => setHoverRating(0)}
-                    style={{ cursor: "pointer", fontSize: "2rem" }}
                   >★</span>
                 ))}
-              </div>
-              
+              </div>  
+              {ratingError && <p className="review-error">{ratingError}</p>}
+              {duplicateError && <p className="review-error">{duplicateError}</p>}
               <br />
-           
-           <div className="review-box">
+              <div className="review-box">
                 <textarea
                   value={reviewText}
-                  onChange={e => setReviewText(e.target.value)}
+                  onChange={e => { 
+                    setReviewText(e.target.value);
+                    setRatingError(""); 
+                    setDuplicateError("");
+                  }}
                   rows={4}
                   required
                 />
               </div>
               <div className="modal-actions">
-               
                 <button type="button" className="cancel-btn" onClick={closeModal}>Cancel</button>
-                   <button type="submit" className="submit-btn">Submit</button>
+                <button type="submit" className="submit-btn">{isEditMode ? 'Update' : 'Submit'}</button>
               </div>
             </form>
+          </Box>
+        </Modal>
+        <Modal
+          open={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+          className="delete-modal"
+        >
+          <Box className="delete-modal-box" onClick={e => e.stopPropagation()}>
+            <h2 className="delete-modal-title">Delete Review</h2>
+            <p className="delete-modal-text">
+              Are you sure you want to delete this review? This action cannot be undone.
+            </p>
+
+            <div className="delete-modal-actions">
+              <button
+                className="cancel-btn"
+                onClick={() => setShowDeleteModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="delete-btn"
+                onClick={confirmDeleteReview}
+              >
+                Delete
+              </button>
+            </div>
           </Box>
         </Modal>
       </div>

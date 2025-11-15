@@ -42,6 +42,14 @@ export const addReview = async ({ email, name, volumeId, rating, reviewText }) =
   return axios.post(`${API_BASE_URL}/reviews/add`, { email, name, volumeId, rating, reviewText });
 };
 
+export const deleteReview = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/reviews/delete`, { email, volumeId });
+};
+
+export const editReview = async ({ email, volumeId, rating, reviewText }) => {
+  return axios.post(`${API_BASE_URL}/reviews/edit`, { email, volumeId, rating, reviewText });
+};
+
 export const getBookReviews = async (volumeId) => {
   return axios.get(`${API_BASE_URL}/reviews/book/${volumeId}`);
 };
