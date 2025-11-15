@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
+  cognitoSub: { type: String, unique: true, sparse: true },
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  friends: [{ type: String }],
   createdAt: { type: Date, default: Date.now },
   bookshelf: [{ type: String }],
   progress: [
