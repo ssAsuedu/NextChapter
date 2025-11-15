@@ -7,7 +7,7 @@
 
 .signup-image {
   flex: 1; /* Takes up half the width */
-  background: url("../../assets/login.png") no-repeat center center;
+  background: url("../../assets/signup_login_image.png") no-repeat center center;
   background-size: cover; /* Ensures the image covers the entire div */
 }
 
@@ -35,7 +35,7 @@
   font-size: 2.5rem;
   margin-bottom: 20px;
   text-align: left;
-  color: #2D1B3D;
+  color: var(--text-color);
 }
 
 .signup-form form {
@@ -53,12 +53,12 @@
   font-weight: 600;
   margin-top: 20px;
   text-align: center;
-  color: #2D1B3D;
+  color: var(--text-color);
 }
 
 .login a {
   font-weight: 600;
-  color: #6B3F69;
+  color: var(--hover);
 }
 
 .login a:hover {
@@ -91,6 +91,73 @@
   margin-right: 30px;
 }
 
+/* signup materialUI styles */
+
+.signup-textfield-label {
+  font-family: 'Crimson Text', serif !important;
+  font-size: 18px !important;
+}
+
+.signup-textfield-label .MuiFormLabel-asterisk {
+  color: red !important;
+}
+
+.signup-textfield-label.Mui-focused {
+  color: var(--hover) !important;
+  font-weight: 600 !important;
+}
+
+.signup-textfield-input {
+  color: var(--text-color) !important;
+  font-family: 'Crimson Text', serif !important;
+  font-size: 16px !important;
+}
+
+.signup-textfield-input::placeholder {
+  color: #666666 !important;
+  opacity: 1 !important;
+}
+
+/* outline input hover */
+.signup-textfield-root:hover .MuiOutlinedInput-notchedOutline {
+  border-width: 2px !important;
+  border-color: var(--hover) !important;
+}
+
+/*outline input focus */
+.signup-textfield-root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+  border-width: 2px !important;
+  border-color: var(--hover) !important;
+}
+
+/*autofill style */
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px white inset !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+  caret-color: var(--text-color) !important;
+}
+
+.signup {
+  background-color: var(--hover) !important;
+  color: #fff !important;
+  font-family: 'Crimson Text', serif !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  padding: 10px !important;
+  border-radius: 999px !important;
+  transition: background 0.2s, color 0.2s, transform 0.2s !important;
+
+}
+.signup:hover {
+  background-color: var(--text-color) !important;
+  transform: scale(1.07) !important;
+  box-shadow: 0 4px 12px rgba(77, 43, 145, 0.25) !important;
+}
+
+@media screen and (min-width: 700px) and (max-width: 900px) {
+  
+}
+
 @media (max-width: 700px) {
   .signup-image, .signup-svg {
     display: none;
@@ -112,6 +179,10 @@
     flex: unset;
     height: 75vh;
   }
+  .signup-form form div {
+    margin-bottom: 10px;
+  }
+
   .signup-form h1 {
     font-size: 3.2em;
   }
@@ -126,5 +197,15 @@
   }
   .password-error-list {
     font-size: 15px;
+  }
+
+  .signup-textfield-label {
+    font-size: 20px !important;
+  }
+  .MuiFormHelperText-root.Mui-error {
+    font-size: 15px !important;
+  }
+  .signup-textfield-input::placeholder {
+    font-size: 30px !important;
   }
 }
