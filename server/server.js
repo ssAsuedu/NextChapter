@@ -190,6 +190,11 @@ app.post("/api/reviews/add", async (req, res) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ error: "User not found" });
 
+    const existingReview = user.reviews.find(r => r.volumeId === volumeId);
+    if (existingReview) {
+      return res.status(400).json({ error: "You have already reviewed this book." });
+    }
+
     user.reviews.push({ volumeId, rating, reviewText });
     await user.save();
 
@@ -198,6 +203,57 @@ app.post("/api/reviews/add", async (req, res) => {
     res.json({ message: "Review added", review });
   } catch (err) {
     res.status(500).json({ error: "Failed to add review" });
+  }
+});
+
+// Delete a review
+app.post("/api/reviews/delete", async (req, res) => {
+  const { email, volumeId } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const userReview = user.reviews.find(r => r.volumeId === volumeId);
+    if (!userReview) return res.status(404).json({ error: "Review not found for this user" });
+
+    user.reviews.pull(userReview._id);
+    await user.save();
+
+    await Review.findOneAndDelete({ email, volumeId });
+
+    res.json({ message: "Review deleted successfully", reviews: user.reviews });
+  } catch (err) {
+    console.error("Delete review error:", err);
+    res.status(500).json({ error: "Failed to delete review" });
+  }
+});
+
+// Edit a review
+app.post("/api/reviews/edit", async (req, res) => {
+  const { email, volumeId, rating, reviewText } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    const userReview = user.reviews.find(r => r.volumeId === volumeId);
+    if (!userReview) return res.status(404).json({ error: "Review not found for this user" });
+
+    userReview.rating = rating;
+    userReview.reviewText = reviewText;
+    userReview.updatedOn = Date.now();
+    await user.save();
+
+    await Review.findOneAndUpdate(
+      { email, volumeId },
+      { rating, reviewText, updatedOn: Date.now() }
+    );
+
+    res.json({ message: "Review updated successfully", reviews: user.reviews });
+  } catch (err) {
+    console.error("Edit review error:", err);
+    res.status(500).json({ error: "Failed to edit review" });
   }
 });
 

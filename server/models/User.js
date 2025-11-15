@@ -18,6 +18,7 @@ const userSchema = new mongoose.Schema({
       rating: Number,
       reviewText: String,
       createdAt: { type: Date, default: Date.now },
+      updatedOn: { type: Date, default: Date.now }
     },
   ],
 });
