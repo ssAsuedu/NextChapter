@@ -202,3 +202,122 @@
   color: #444;
   font-weight: 500;
 }
+
+/* adjust responsiveness for mobile view of the progress page*/
+@media (max-width: 900px) {
+ .progress-list {
+   grid-template-columns: 1fr;
+   max-width: 100%;
+ }
+
+ .progress-top-section {
+   flex-direction: column;
+   padding: 40px 16px 0 16px;
+   text-align: center;
+ }
+
+ .progress-top-left,
+ .progress-top-right {
+   flex: unset;
+   width: 100%;
+ }
+
+ .progress-top-image {
+   width: 70%;
+   max-width: 300px;
+   height: auto;
+ }
+
+ .progress-title {
+   font-size: 2rem;
+ }
+}
+
+@media (max-width: 600px) {
+ .progress-page {
+   padding: 60px 16px 16px 16px;
+ }
+
+ .progress-page h1 {
+   font-size: 1.8rem;
+ }
+
+ .progress-book-card {
+   padding: 16px;
+ }
+
+ .progress-book-image {
+   width: 180px;
+   height: 180px;
+ }
+
+ .progress-inputs {
+   flex-wrap: wrap;
+   justify-content: center;
+ }
+
+ .progress-stat-line {
+   font-size: 1rem;
+ }
+
+ .profile-vertical-navbar {
+   position: fixed;
+   left: -200px;
+   top: 60px; /* pushes menu below the fixed top nav */
+   height: calc(100vh - 60px); /* fits screen below top nav */
+   width: 180px;
+   transition: left 0.3s ease;
+   z-index: 1000;
+ }
+
+ .profile-vertical-navbar.open {
+   left: 0;
+ }
+
+ /* blurred background overlay when the vertical nav bar is called */
+ .overlay {
+   position: fixed;
+   top: 60px;
+   left: 0;
+   width: 100%;
+   height: calc(100vh - 60px);
+   background: rgba(0, 0, 0, 0.45);
+   backdrop-filter: blur(1px);
+   z-index: 900;
+ }
+
+}
+
+/* hide hamburger by default (desktop) */
+.mobile-nav-toggle {
+ display: none;
+ position: fixed;
+ bottom: 20px;
+ left: 7px;
+ background: transparent;
+ border: none;
+ padding: 0;
+ cursor: pointer;
+ z-index: 2000;
+ width: 30px;
+ height: 30px;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+}
+
+/* only show the hamburger on mobile */
+@media (max-width: 600px) {
+ .mobile-nav-toggle {
+   display: flex;
+ }
+}
+
+/* black hamburger bars */
+.mobile-nav-toggle .bar {
+ width: 22px;
+ height: 2.5px;
+ background-color: #000;
+ margin: 3px 0;
+ border-radius: 2px;
+}
