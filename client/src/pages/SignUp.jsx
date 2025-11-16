@@ -115,13 +115,13 @@ const SignUp = () => {
                   helperText = {errors.name}
                   slotProps={{
                     root: {
-                      className: 'signup-textfield-root',
+                      className: 'form-textfield-root',
                     },
                     inputLabel: {
-                      className: 'signup-textfield-label',
+                      className: 'form-textfield-label',
                     },
                     input: {
-                      className: 'signup-textfield-input',
+                      className: 'form-textfield-input',
                     },
                   }}
           />
@@ -141,13 +141,13 @@ const SignUp = () => {
             helperText = {errors.email}
             slotProps={{
               root: {
-                className: 'signup-textfield-root',
+                className: 'form-textfield-root',
               },
               inputLabel: {
-                className: 'signup-textfield-label',
+                className: 'form-textfield-label',
               },
               input: {
-                className:'signup-textfield-input',
+                className:'form-textfield-input',
               },
             }}
           />
@@ -174,13 +174,13 @@ const SignUp = () => {
               }
               slotProps={{
               root: {
-                className: 'signup-textfield-root',
+                className: 'form-textfield-root',
               },
               inputLabel: {
-                className: 'signup-textfield-label',
+                className: 'form-textfield-label',
               },
               input: {
-                className:'signup-textfield-input',
+                className:'form-textfield-input',
               },
             }}
           />
@@ -214,13 +214,13 @@ const SignUp = () => {
                   margin="normal"
                   slotProps={{
                     root: {
-                      className: 'signup-textfield-root',
+                      className: 'form-textfield-root',
                     },
                     inputLabel: {
-                      className: 'signup-textfield-label',
+                      className: 'form-textfield-label',
                     },
                     input: {
-                      className:'signup-textfield-input',
+                      className:'form-textfield-input',
                     },
                   }}
                 />
@@ -238,13 +238,13 @@ const SignUp = () => {
                   margin="normal"
                   slotProps={{
                     root: {
-                      className: 'signup-textfield-root',
+                      className: 'form-textfield-root',
                     },
                     inputLabel: {
-                      className: 'signup-textfield-label',
+                      className: 'form-textfield-label',
                     },
                     input: {
-                      className:'signup-textfield-input',
+                      className:'form-textfield-input',
                     },
                   }}
             />

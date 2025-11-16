@@ -93,39 +93,39 @@
 
 /* signup materialUI styles */
 
-.signup-textfield-label {
+.form-textfield-label {
   font-family: 'Crimson Text', serif !important;
   font-size: 18px !important;
 }
 
-.signup-textfield-label .MuiFormLabel-asterisk {
+.form-textfield-label .MuiFormLabel-asterisk {
   color: red !important;
 }
 
-.signup-textfield-label.Mui-focused {
+.form-textfield-label.Mui-focused {
   color: var(--hover) !important;
   font-weight: 600 !important;
 }
 
-.signup-textfield-input {
+.form-textfield-input {
   color: var(--text-color) !important;
   font-family: 'Crimson Text', serif !important;
   font-size: 16px !important;
 }
 
-.signup-textfield-input::placeholder {
+.form-textfield-input::placeholder {
   color: #666666 !important;
   opacity: 1 !important;
 }
 
 /* outline input hover */
-.signup-textfield-root:hover .MuiOutlinedInput-notchedOutline {
+.form-textfield-root:hover .MuiOutlinedInput-notchedOutline {
   border-width: 2px !important;
   border-color: var(--hover) !important;
 }
 
 /*outline input focus */
-.signup-textfield-root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+.form-textfield-root .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
   border-width: 2px !important;
   border-color: var(--hover) !important;
 }
