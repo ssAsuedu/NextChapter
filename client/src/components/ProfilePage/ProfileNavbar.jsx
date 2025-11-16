@@ -1,19 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "../../styles/ProfilePage/ProfileNavbar.css";
 
+
 const ProfileNavbar = () => {
-  return (
-    <nav className="profile-vertical-navbar">
-      <ul>
-        <li><Link to="/profile">Bookshelf</Link></li>
-        <li><Link to="/progress">Progress</Link></li>
-        <li><Link to="/reviews">Reviews</Link></li>
-        <li><Link to="/friends">Friends</Link></li>
-        <li><Link to="/account">Account</Link></li>
-      </ul>
-    </nav>
-  );
+ const [open, setOpen] = useState(false);
+
+
+ return (
+   <>
+     {/* Hamburger button (mobile only) */}
+     <button
+       className="mobile-nav-toggle"
+       onClick={() => setOpen(!open)}
+     >
+       <span className="bar"></span>
+       <span className="bar"></span>
+       <span className="bar"></span>
+     </button>
+
+
+     <nav className={`profile-vertical-navbar ${open ? "open" : ""}`}>
+       <ul>
+         <li><Link to="/profile">Bookshelf</Link></li>
+         <li><Link to="/progress">Progress</Link></li>
+         <li><Link to="/reviews">Reviews</Link></li>
+         <li><Link to="/friends">Friends</Link></li>
+         <li><Link to="/account">Account</Link></li>
+       </ul>
+     </nav>
+     {open && <div className="overlay" onClick={() => setOpen(false)}></div>}
+   </>
+ );
 };
 
+
 export default ProfileNavbar;
+
+
+
