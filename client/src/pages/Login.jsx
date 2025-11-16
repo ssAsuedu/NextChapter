@@ -71,68 +71,16 @@ const Login = () => {
               error = {!!errors.email}
               helperText = {errors.email}
               slotProps={{
-              inputLabel: {
-                sx: {
-                //font and size for label
-                  fontFamily: "'Crimson Text', serif",
-                  fontSize: "18px",
-                  "@media screen and (min-width:700px) and (max-width: 900px)": {
-                      fontSize: "20px",
-                    },
-              // asterisk color
-              "& .MuiFormLabel-asterisk": {
-                color: "red",
+                root: {
+                  className: 'form-textfield-root',
                 },
-
-              // when the field is clicked
-              "&.Mui-focused": {
-                color: "#2D1B3D",
-                fontWeight: 600,
-              },
-            },
-          },
-
-          // style of the actual text inside field
-          input: {
-            sx: {
-              color: "#2D1B3D",
-              fontFamily: "'Crimson Text', serif",
-              fontSize: "16px",
-              "&::placeholder": {
-                color: "#666666",
-                opacity: 1,
-              },
-            },
-          },
-        }}
-        sx={{
-          //autofill textfield/text color
-          "& input:-webkit-autofill": {
-            WebkitBoxShadow: "0 0 0 1000px white inset !important",
-            WebkitTextFillColor: "#2D1B3D",
-            caretColor: "#2D1B3D",
-          },
-          //border when hovered
-          "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-            borderWidth: "2px",
-            borderColor: "#6B3F69",
-          },
-
-          //border when clicked
-          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderWidth: "2px",
-            borderColor: "#6B3F69",
-            },
-            "& .MuiFormHelperText-root.Mui-error": {
-              "@media screen and (min-width:700px) and (max-width: 900px)": {
-                fontSize: "15px",
-              },
-            },
-            //change focus blue to dark purple
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#2D1B3D",
-            },
-          }}
+                inputLabel: {
+                  className: 'form-textfield-label',
+                },
+                input: {
+                   className:'form-textfield-input',
+                },
+              }}
           />
           </div>
           <div>
@@ -148,67 +96,16 @@ const Login = () => {
               error = {!!errors.password}
               helperText = {errors.password}
               slotProps={{
-              inputLabel: {
-                sx: {
-                //font and size for label
-                  fontFamily: "'Crimson Text', serif",
-                  fontSize: "18px",
-                  "@media screen and (min-width:700px) and (max-width: 900px)": {
-                      fontSize: "20px",
-                    },
-              // asterisk color
-              "& .MuiFormLabel-asterisk": {
-                color: "red",
+                root: {
+                  className: 'form-textfield-root',
                 },
-
-              // when the field is clicked
-              "&.Mui-focused": {
-                color: "#2D1B3D",
-                fontWeight: 600,
-              },
-            },
-          },
-
-          // style of the actual text inside field
-          input: {
-            sx: {
-              color: "#2D1B3D",
-              fontFamily: "'Crimson Text', serif",
-              fontSize: "16px",
-              "&::placeholder": {
-                color: "#666666",
-                opacity: 1,
-              },
-            },
-          },
-        }}
-        sx={{
-          "& input:-webkit-autofill": {
-            WebkitBoxShadow: "0 0 0 1000px white inset !important",
-            WebkitTextFillColor: "#2D1B3D",
-            caretColor: "#2D1B3D",
-          },
-        //border when hovered
-          "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline": {
-            borderWidth: "2px",
-            borderColor: "#6B3F69",
-          },
-
-          //border when clicked
-          "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline": {
-            borderWidth: "2px",
-            borderColor: "#6B3F69",
-            },
-            "& .MuiFormHelperText-root.Mui-error": {
-              "@media screen and (min-width:700px) and (max-width: 900px)": {
-                fontSize: "15px",
-              },
-            },
-            //change focus blue to dark purple
-            "& .MuiInputLabel-root.Mui-focused": {
-              color: "#2D1B3D",
-            },
-          }}
+                inputLabel: {
+                  className: 'form-textfield-label',
+                },
+                input: {
+                  className:'form-textfield-input',
+                },
+              }}
             />
           </div>
           <Button
@@ -216,29 +113,7 @@ const Login = () => {
             variant="contained"
             color="primary"
             fullWidth
-            sx={{ // Custom styles for the button
-              marginTop: "20px",
-              backgroundColor: "#6B3F69",
-              borderRadius: "10px",
-              fontFamily: "'Crimson Text', serif",
-              fontSize: "16px",
-              fontSize: {
-                "@media screen and (min-width:700px) and (max-width: 900px)": {
-                  fontSize: "20px",
-                },
-                fontSize: "16px",
-              },
-              fontWeight: "600",
-              padding: {
-                "@media screen and (min-width:700px) and (max-width: 900px)": {
-                  padding: "15px",
-                },
-                padding: "10px",
-              },
-              "&:hover": {
-                backgroundColor: "#5a3358",
-              },
-            }}
+            className="login"
           >
             Login
           </Button>

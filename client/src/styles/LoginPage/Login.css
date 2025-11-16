@@ -27,12 +27,12 @@
   font-weight: 600;
   margin-top: 20px;
   text-align: center;
-  color: #2D1B3D;
+  color: var(--text-color);
 }
 
 .account-creation a {
   font-weight: 600;
-  color: #6B3F69;
+  color: var(--hover);
 }
 
 .account-creation a:hover {
@@ -45,7 +45,7 @@
   font-size: 2.5rem;
   margin-bottom: 20px;
   text-align: left;
-  color: #2D1B3D;
+  color: var(--text-color);
 }
 
 .login-form form {
@@ -59,7 +59,7 @@
 
 .login-image {
   flex: 1; /* Takes up the other half of the width */
-  background: url("../../assets/login.png") no-repeat center center;
+  background: url("../../assets/signup_login_image.png") no-repeat center center;
   background-size: cover; /* Ensures the image covers the entire div */
 }
 .login-svg {
@@ -87,6 +87,21 @@
   color: red !important;
 }
 
+.login {
+  background-color: var(--hover) !important;
+  color: #fff !important;
+  font-family: 'Crimson Text', serif !important;
+  font-size: 17px !important;
+  font-weight: 700 !important;
+  padding: 10px !important;
+  border-radius: 999px !important;
+  transition: background 0.2s, color 0.2s, transform 0.2s !important;
+}
+.login:hover {
+  background-color: var(--text-color) !important;
+  transform: scale(1.07) !important;
+  box-shadow: 0 4px 12px rgba(77, 43, 145, 0.25) !important;
+}
 @media (max-width: 700px) {
   .login-svg, .login-left, .login-image {
     display: none;
@@ -115,6 +130,15 @@
   }
   .account-creation {
     font-size: 25px;
+  }
+   .form-textfield-label {
+    font-size: 20px !important;
+  }
+  .MuiFormHelperText-root.Mui-error {
+    font-size: 15px !important;
+  }
+  .form-textfield-input::placeholder {
+    font-size: 30px !important;
   }
 }
 
