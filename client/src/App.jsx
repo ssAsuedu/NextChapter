@@ -13,7 +13,7 @@ import Progress from "./pages/ProfileSubPages/Progress";
 import Reviews from "./pages/ProfileSubPages/Reviews";
 import BookInfo from "./pages/BookInfo";
 import Friends from "./pages/ProfileSubPages/Friends";
-
+import Account from "./pages/ProfileSubPages/Account";
 const App = () => {
   return (
     <Router>
@@ -31,6 +31,7 @@ const App = () => {
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/book/:volumeId" element={<BookInfo />} />
           <Route path="/friends" element={<Friends />} />
+          <Route path="/account" element={<Account />} />
       </Routes>
     </Router>
   );

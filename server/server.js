@@ -579,8 +579,18 @@ app.get('/api/friends/status', async (req, res) => {
   }
 });
 
-
-
+// Update user name
+app.post('/api/users/update-name', async (req, res) => {
+  const { email, name } = req.body;
+  if (!email || !name) return res.status(400).json({ error: "Email and name required" });
+  try {
+    const user = await User.findOneAndUpdate({ email }, { name }, { new: true });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json({ message: "Name updated", user });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update name" });
+  }
+});
 
 // Start Server
 app.listen(PORT, () => {

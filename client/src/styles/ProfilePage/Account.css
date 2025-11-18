@@ -1,0 +1,72 @@
+.account-page {
+  display: flex;
+  margin-top: 80px;
+  min-height: 100vh;
+  background: #ffffff;
+}
+
+.account-info {
+  margin: 40px auto;
+  padding: 32px 40px;
+  background: #fff;
+  border-radius: 12px;
+  min-width: 320px;
+}
+
+.account-info h1 {
+  margin-bottom: 24px;
+  color: #ab7ce7;
+}
+
+.account-info p {
+  font-size: 1.1rem;
+  margin: 12px 0;
+}
+
+.account-info-row {
+  display: flex;
+  align-items: center;
+  margin: 12px 0;
+  gap: 8px;
+}
+
+.account-separator {
+  border: none;
+  border-top: 1px solid #e0e0e0;
+  margin: 0 0 0 0;
+}
+
+.edit-btn, .save-btn, .cancel-btn {
+  margin-left: 12px;
+  padding: 4px 10px;
+  border: none;
+  border-radius: 4px;
+  background: #ab7ce7;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+}
+
+.edit-btn:hover, .save-btn:hover {
+  background: #8d5cc7;
+}
+
+.cancel-btn {
+  background: #bbb;
+  color: #fff;
+}
+
+.cancel-btn:hover {
+  background: #999;
+}
+
+.edit-name-input {
+  margin-left: 8px;
+  padding: 4px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  color: #333;
+  background: #ffffff;
+}
