@@ -120,3 +120,7 @@ export const checkFriendshipStatus = async ({ userEmail, otherUserEmail }) => {
     params: { userEmail, otherUserEmail }
   });
 };
+
+export const updateUserName = async ({ email, name }) => {
+  return axios.post(`${API_BASE_URL}/users/update-name`, { email, name });
+};

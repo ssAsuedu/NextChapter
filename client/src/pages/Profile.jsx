@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getBookshelf } from "../api";
+import { getBookshelf, getAllUsers, getFriends } from "../api";
 import axios from "axios";
 import BookCard from "../components/ProfilePage/BookShelfCard";
 import "../styles/ProfilePage/Profile.css";
@@ -12,9 +12,10 @@ const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 const Profile = () => {
   const userName = localStorage.getItem("userName");
   const email = localStorage.getItem("userEmail");
-  const userCreatedAt = localStorage.getItem("userCreatedAt");
   const [bookshelf, setBookshelf] = useState([]);
   const [books, setBooks] = useState([]);
+  const [createdAt, setCreatedAt] = useState(null);
+  const [friendCount, setFriendCount] = useState(0);
 
   useEffect(() => {
     const fetchBookshelf = async () => {
@@ -51,8 +52,29 @@ const Profile = () => {
     fetchBookDetails();
   }, [bookshelf]);
 
-  const formattedDate = userCreatedAt
-    ? new Date(userCreatedAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      if (!email) return;
+      try {
+        // Get createdAt from all users
+        const usersRes = await getAllUsers();
+        const foundUser = usersRes.data.find(u => u.email === email);
+        if (foundUser) {
+          setCreatedAt(foundUser.createdAt);
+        }
+        // Get friend count using getFriends (same as Account.jsx)
+        const friendsRes = await getFriends(email);
+        setFriendCount(Array.isArray(friendsRes.data) ? friendsRes.data.length : 0);
+      } catch (e) {
+        setCreatedAt(null);
+        setFriendCount(0);
+      }
+    };
+    fetchUserInfo();
+  }, [email]);
+
+  const formattedDate = createdAt
+    ? new Date(createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
     : "N/A";
 
   return (
@@ -66,7 +88,7 @@ const Profile = () => {
         <div className="profile-info">
           <h2 className="profile-username">{userName || "User"}</h2>
           <p className="profile-created">Joined: {formattedDate}</p>
-          <p className="profile-followers">Followers: 0</p>
+          <p className="profile-followers">Friends: {friendCount}</p>
         </div>
       </div>
       {/* Bookshelf Section */}
