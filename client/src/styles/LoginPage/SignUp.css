@@ -47,7 +47,7 @@
   margin-bottom: 15px;
 }
 
-.login {
+.login-text {
   font-family: "Crimson Text", sans-serif;
   font-size: 18px;
   font-weight: 600;
@@ -56,12 +56,12 @@
   color: var(--text-color);
 }
 
-.login a {
+.login-text a {
   font-weight: 600;
   color: var(--hover);
 }
 
-.login a:hover {
+.login-text a:hover {
   text-decoration: underline;
 }
 
