@@ -16,6 +16,17 @@ const Navbar = () => {
     navigate("/"); // Redirect to the home page
   };
 
+const scrollToSection = (hash) => {
+  if (window.location.pathname !== "/about") { //check the current page location
+    navigate(`/about${hash}`); //if the user isnt on the about page already, navigate them there with React Router's navigate
+  } else {
+    const element = document.querySelector(hash); //if user is already on about
+    if (element) { //scroll smoothly to that section
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  }
+};
+
   //Hide the navigation bar on signup and login
   if (location.pathname === "/login" || location.pathname === "/signup") {
     return null;
@@ -32,7 +43,24 @@ const Navbar = () => {
     <nav>
       <ul>
         <li><Link to="/">Home</Link></li>
-        <li><Link to="/about">About</Link></li>
+          <li className="about-link">
+            <Link to="/about">About</Link>
+            <span className="material-symbols-outlined">
+              keyboard_arrow_down
+            </span>
+            <ul className="dropdown">
+            <li>
+              <span onClick={() => scrollToSection("#mission")}>Our Mission</span>
+            </li>
+            <li>
+              <span onClick={() => scrollToSection("#what-we-offer")}>What We Offer</span>
+            </li>
+            <li>
+              <span onClick={() => scrollToSection("#team")}>Our Team</span>
+            </li>
+          </ul>
+          </li>
+        
         <li><Link to="/search">Search</Link></li>
         <li><Link to="/explore">Explore</Link></li>
         <li><Link to="/privacyPolicy">Privacy Policy</Link></li>
