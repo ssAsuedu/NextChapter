@@ -193,14 +193,16 @@ const Review = () => {
     <div className="reviews-page">
       <ProfileNavbar />
       <div className="reviews-content">
-        <Button
-          variant="contained"
-          className="add-review-btn"
-          onClick={openModal}
-        >
-          Add Review
-        </Button>
-        <h1 className="reviews-title">My Reviews</h1>
+        <div className="reviews-header">
+          <h1>Your Reviews</h1>
+          <Button
+            variant="contained"
+            className="reviews-add-btn"
+            onClick={openModal}
+          >
+            Add Review
+          </Button>
+        </div>
         <div className="reviews-list">
           {loading ? (
             <p>Loading...</p>
@@ -296,8 +298,6 @@ const Review = () => {
                   >★</span>
                 ))}
               </div>  
-              {ratingError && <p className="review-error">{ratingError}</p>}
-              {duplicateError && <p className="review-error">{duplicateError}</p>}
               <br />
               <div className="review-box">
                 <textarea
@@ -305,14 +305,25 @@ const Review = () => {
                   onChange={e => { 
                     setReviewText(e.target.value);
                     setRatingError(""); 
-                    setDuplicateError("");
                   }}
                   rows={4}
                   required
                 />
               </div>
+              {ratingError && <p className="review-error">{ratingError}</p>}
+              {duplicateError && <p className="review-error">{duplicateError}</p>}
               <div className="modal-actions">
-                <button type="button" className="cancel-btn" onClick={closeModal}>Cancel</button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={() => {
+                    closeModal();
+                    setRatingError("");
+                    setDuplicateError("");
+                  }}
+                >
+                  Cancel
+                </button>
                 <button type="submit" className="submit-btn">{isEditMode ? 'Update' : 'Submit'}</button>
               </div>
             </form>
