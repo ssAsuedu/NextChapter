@@ -73,7 +73,7 @@ const About = () => {
       </div>
 
       {/* Mission Section */}
-      <section className="section-block">
+      <section id="mission" className="section-block">
         <div className="mission-content">
           <div className="text-block">
             <h2 className="h2-heading">Our Mission</h2>
@@ -95,7 +95,7 @@ const About = () => {
       </section>
 
       {/* What We Offer Section - Features Grid */}
-      <section className="section-block">
+      <section id="what-we-offer" className="section-block">
         <h2 className="h2-heading">What We Offer</h2>
         <div className="features-grid">
 
@@ -137,7 +137,7 @@ const About = () => {
       </section>
 
       {/* Our Team Section - WITH EMOJI AVATARS */}
-      <section className="section-block">
+      <section id="team" className="section-block">
         <h2 className="h2-heading">Our Team</h2>
         <p className="paragraph-text">
           Next Chapter was created by a team of five passionate developers and book lovers as a
