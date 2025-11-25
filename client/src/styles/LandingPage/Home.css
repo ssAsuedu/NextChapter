@@ -6,6 +6,7 @@ body {
   font-family:  'Sen', Arial, Helvetica, sans-serif;
   background-color: #f4f4f4;
   color: #333;
+  overflow-x: hidden;
 }
 
 .landing-page {
@@ -16,9 +17,8 @@ body {
 
 /* Hero Section */
 .hero {
-  width: 100vw;
-  min-width: 100vw;
-  height: 90vh;
+  width: 100%;
+  min-width: 100%;
   display: flex;
   align-items: center;
   justify-content: flex-start;
@@ -30,9 +30,13 @@ body {
 }
 
 .hero-content {
-  width: 100vw;
+  width: 100%;
   height: 100%;
   margin: 0;
+  margin-top: 100px;
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 120px;
   border-radius: 0;
   box-shadow: none;
   display: flex;
@@ -59,7 +63,7 @@ body {
   font-family: inherit;
   font-size: 3.2rem;
   font-weight: 700;
-  color: var(--primary-color);
+  color: var(--hover);
   margin-bottom: 0.5rem;
 }
 
@@ -97,18 +101,19 @@ body {
 /* Buttons */
 .browse-button, .signup-button, section button {
   background-color: var(--primary-color);
-  color: #fff;
+  color: #1a1a1a;
   border: none;
   border-radius: 999px; /* More oval */
   padding: 12px 32px;
   font-size: 1.1rem;
   font-family: inherit;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
   transition: background 0.2s, color 0.2s, transform 0.2s;
   margin-right: 8px;
   outline: none;
 }
+
 
 .signup-button {
   background-color: #f2f2f2;
@@ -163,7 +168,7 @@ section h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
   font-family: inherit;
-  color: var(--primary-color);
+  color: var(--hover);
   font-weight: 700;
 }
 
@@ -173,6 +178,20 @@ section p {
   margin-bottom: 20px;
   font-family: inherit;
   color: #444;
+}
+
+section h3 {
+  font-size: 1.8rem;
+  color: var(--hover);
+  font-weight: 700;
+  font-family: inherit;
+}
+
+section h4 {
+  font-size: 1.4rem;
+  color: var(--hover);
+  font-weight: 700;
+  font-family: inherit;
 }
 
 .recommended-books a {
@@ -189,7 +208,7 @@ section p {
   width: 250px;
   height: 250px;
   background: #fff;
-  color: #888;
+  color: var(--secondary-color);
   border: 1px solid var(--primary-color);
   border-radius: 16px;
   margin: 6px 12px;
@@ -213,6 +232,9 @@ section p {
   font-size: 2.2rem !important;
   transition: color 0.3s;
 }
+h6 {
+  color: var(--secondary-color);
+}
 
 .about-button:hover {
   background: var(--primary-color);
@@ -220,10 +242,12 @@ section p {
   transform: scale(1.08);
 }
 
-.about-button:hover .about-icon {
+.about-button:hover .about-icon  {
   color: #fff;
 }
-
+.about-button:hover h6 {
+  color: white;
+}
 /* Trending Books Section */
 .trending-books {
   width: 100vw;
@@ -274,7 +298,7 @@ section p {
 
 .trending-books-right h2 {
   font-size: 2.5rem;
-  color: var(--primary-color);
+  color: var(--hover);
   margin-bottom: 1rem;
 }
 
@@ -287,7 +311,7 @@ section p {
 
 .trending-books-button {
   background-color: var(--primary-color);
-  color: #fff;
+  color: #1a1a1a;
   border: none;
   border-radius: 999px;
   padding: 12px 32px;
@@ -309,40 +333,112 @@ section p {
   width: 100%;
   margin: 0px 0 0 0;
   font-size: 2.5rem;
-  color: var(--primary-color);
+  color: var(--hover);
   font-weight: 700;
   display: block;
 }
   
 
 /* Responsive Design */
-@media (max-width: 768px) {
-  .hero-content h1 {
-    font-size: 2rem;
-  }
 
-  .hero-content p {
-    font-size: 1rem;
-  }
-
-  section h2 {
-    font-size: 1.5rem;
-  }
-
-  section p {
-    font-size: 1rem;
-  }
-
-  section button {
-    font-size: 0.95rem;
-    padding: 8px 16px;
-  }
-
-  .hero-content {
-    flex-direction: column;
+@media (min-width: 320px) and (max-width: 600px) {
+  * {
+    max-width: 100%;
   }
 
   .left-side-hero, .right-side-hero {
     width: 100%;
+  }
+
+  .hero {
+    justify-content: center;
+  }
+  .hero-content {
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+  }
+   
+  .left-side-hero {
+    padding: 0;
+  }
+
+  .left-side-hero h1{
+    font-size: 2.4rem;
+  }
+  .right-side-hero {
+    display: none;
+  }
+  .values-title {
+    font-size: 2.1rem;
+  }
+
+  .browse-button, .signup-button {
+    padding: 15px 20px 15px 20px;
+    
+  }
+  .about {
+    margin-top: 0;
+    flex-direction: column;
+    margin-bottom: 0;
+  }
+  
+  .hero-profile-image-container {
+    display: none;
+  }
+
+  
+  .trending-books-left {
+    display: none !important;
+  }
+
+  .trending-books-right {
+    width: 100%;
+    padding: 0px 20px 0px 20px;
+    gap: 10px;
+  }
+  .trending-books-right p {
+    font-size: 1.1rem;
+  }
+  section h3 {
+    font-size: 1.6rem;
+  }
+
+  .recommended-books {
+    margin-top: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  h4 {
+    font-size: 1.3rem;
+    color: var(--hover);
+    font-weight: 700;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1000px) {
+  .hero-content h1 {
+    font-size: 2.8rem;
+  }
+
+  .hero-content {
+    flex-direction: row;
+    gap: 30px;
+  }
+
+  .hero-profile-image {
+    
+    width: 100%;
+    height: 100%;
+  }
+  .hero-profile-image-container {
+    width: 350px;
+    height: 350px;
+    padding: 0;
+  }
+  .browse-button, .signup-button {
+    padding: 15px 20px 15px 20px;
   }
 }
