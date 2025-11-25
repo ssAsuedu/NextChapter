@@ -124,3 +124,7 @@ export const checkFriendshipStatus = async ({ userEmail, otherUserEmail }) => {
 export const updateUserName = async ({ email, name }) => {
   return axios.post(`${API_BASE_URL}/users/update-name`, { email, name });
 };
+
+export const changePassword = async ({ email, oldPassword, newPassword }) => {
+  return axios.post(`${API_BASE_URL}/users/change-password`, { email, oldPassword, newPassword });
+};
