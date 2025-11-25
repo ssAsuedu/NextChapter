@@ -592,6 +592,38 @@ app.post('/api/users/update-name', async (req, res) => {
   }
 });
 
+// Change password
+app.post("/api/users/change-password", async (req, res) => {
+  const { email, oldPassword, newPassword } = req.body;
+  if (!email || !oldPassword || !newPassword) {
+    return res.status(400).json({ error: "Email, old password, and new password required" });
+  }
+
+  const user = new CognitoUser({
+    Username: email,
+    Pool: userPool,
+  });
+
+  const authDetails = new AuthenticationDetails({
+    Username: email,
+    Password: oldPassword,
+  });
+
+  user.authenticateUser(authDetails, {
+    onSuccess: () => {
+      user.changePassword(oldPassword, newPassword, (err, result) => {
+        if (err) {
+          return res.status(400).json({ error: err.message });
+        }
+        res.json({ message: "Password changed successfully" });
+      });
+    },
+    onFailure: (err) => {
+      res.status(401).json({ error: err.message || "Authentication failed" });
+    },
+  });
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
