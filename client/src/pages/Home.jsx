@@ -68,7 +68,7 @@ const Home = () => {
             />
           </div>
           <div className="trending-books-right">
-            <h2>Books Everyone's Talking About</h2>
+            <h3>Books Everyone's Talking About</h3>
             <p>
               Discover the most popular books in our community. See what other readers are enjoying and join the conversation!
             </p>
@@ -87,7 +87,7 @@ const Home = () => {
 
       {/* Recommended Books Section */}
       <section className="recommended-books">
-        <h2>Books We Think You Might Love</h2>
+        <h4>Books We Think You Might Love</h4>
         <p>
           Please <a href="/login">login</a> to see a collection of books we've selected that we think you'll enjoy!
         </p>
