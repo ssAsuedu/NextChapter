@@ -113,7 +113,9 @@ body {
   margin-right: 8px;
   outline: none;
 }
-
+.browse-button{
+  color: #fff;
+}
 
 .signup-button {
   background-color: #f2f2f2;
