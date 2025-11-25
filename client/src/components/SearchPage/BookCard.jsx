@@ -13,8 +13,8 @@ const BookCard = ({ info, volumeId }) => {
 
   const title = info.title || "No Title Available";
   const titleWords = title.split(" ");
-  const isLongTitle = titleWords.length > 20;
-  const shortTitle = isLongTitle ? titleWords.slice(0, 12).join(" ") + "..." : title;
+  const isLongTitle = titleWords.length > 10;
+  const shortTitle = isLongTitle ? titleWords.slice(0, 10).join(" ") + "..." : title;
 
   const handleSave = async (e) => {
     e.stopPropagation();
@@ -58,6 +58,7 @@ const BookCard = ({ info, volumeId }) => {
               setShowFullTitle(!showFullTitle);
             }}
           >
+           {/*   drop down for see more which shows the full title  */}
             {showFullTitle ? "See less" : "See more"}
           </span>
         )}
