@@ -1,8 +1,9 @@
 body {
-  background:#ffffff;
+  background: #ffffff;
   display: flex;
   justify-content: center;
-  align-items: flex-start; /* Align to top */
+  align-items: flex-start;
+  /* Align to top */
   min-height: 100vh;
   margin: 0;
 }
@@ -10,7 +11,8 @@ body {
 .search-page {
   max-width: 1000px;
   width: 100%;
-  margin-top: 80px; /* Only top margin needed */
+  margin-top: 80px;
+  /* Only top margin needed */
   padding: 24px;
   background: #ffffff;
   border-radius: 12px;
@@ -23,7 +25,8 @@ body {
   margin-bottom: 32px;
   font-size: 2.2rem;
   font-family: "Sen", sans-serif;
-  color: #222222; /* Dark gray */
+  color: #222222;
+  /* Dark gray */
 }
 
 .search-form {
@@ -37,11 +40,13 @@ body {
   width: 350px;
   padding: 10px 14px;
   font-size: 1rem;
-  border: 2px solid #888888; /* Darker gray border */
+  border: 2px solid #888888;
+  /* Darker gray border */
   border-radius: 6px;
   outline: none;
   background: #f4f4f4;
-  color: #333333; /* Dark gray text */
+  color: #333333;
+  /* Dark gray text */
   transition: border-color 0.2s;
 }
 
@@ -87,7 +92,7 @@ body {
   width: 180px;
   background: #f8f8f8;
   border-radius: 8px;
-  box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -129,4 +134,157 @@ body {
   text-align: center;
   color: #888;
   margin-top: 32px;
+}
+
+.search-book-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-book-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 16px rgba(171, 124, 231, 0.4);
+  z-index: 2;
+}
+
+#search-carousel .book-card {
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  min-width: 160px;
+  padding: 14px;
+  border-radius: 10px;
+  background: #f8f8f8;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+}
+
+#search-carousel .book-image {
+  width: 100px;
+  height: 150px;
+  object-fit: cover;
+  align-self: center;
+  margin-bottom: 10px;
+}
+
+#search-carousel .book-details {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  height: 110px;
+  overflow: hidden;
+}
+
+#search-carousel .book-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+}
+
+#search-carousel .save-book-btn {
+  margin-top: auto;
+  align-self: center;
+  width: 110px;
+}
+
+.genre-filter-container {
+  margin: 15px 0;
+  text-align: left;
+  width: 100%;
+  color: #ab7ce7;
+}
+
+.genre-filter-container label {
+  font-size: 1rem;
+  font-weight: 500;
+  margin-right: 8px;
+  display: inline-block;
+}
+
+.genre-filter {
+  padding: 6px 12px;              
+  height: 35px;                  
+  border: 2px solid #ab7ce7;
+  border-radius: 10px;
+  background-color: white;     
+  color: #5a2ea6;
+  font-size: 0.95rem;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.genre-filter:hover,
+.genre-filter:focus {
+  background-color: white;       
+  border-color: #9a5ed6;          
+}
+
+
+/* mobile view, list */
+@media (max-width: 768px) {
+
+  #search-carousel,
+  .search-results-container {
+    display: flex;
+    flex-direction: column;
+    /* do not allow horizonatal scroll */
+    align-items: center;
+    overflow-x: hidden !important;
+    gap: 18px;
+    width: 100%;
+  }
+
+
+  .search-book-card,
+  .book-card {
+    width: 90% !important;
+    max-width: 360px;
+    min-height: auto;
+    margin: 0 auto;
+  }
+
+  button.scroll-btn,
+  .scroll-btn,
+  .scroll-btn.left,
+  .scroll-btn.right {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .search-book-card:hover {
+    transform: none !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  .search-form {
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .search-input,
+  .search-button {
+    width: 100%;
+    max-width: 420px;
+  }
+
+  
+
+}
+
+/* resume regular behavior on normal dimensions */
+@media (min-width: 769px) {
+  #search-carousel {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+  }
+
+ 
+
+
 }
