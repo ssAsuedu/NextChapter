@@ -119,7 +119,7 @@ const scrollToSection = (hash) => {
                 {userInitial}
               </div>
             )}
-            <button onClick={handleSignOut}>Sign Out</button>
+            <button onClick={handleSignOut} className="auth-signout">Sign Out</button>
           </>
         ) : (
           <>

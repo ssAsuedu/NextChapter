@@ -76,11 +76,16 @@ li a:hover {
   align-items: center;
   gap: 20px; /* Space between buttons */
 }
-
+.auth-signout{
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  border-radius: 999px;
+  color: var(--secondary-color);
+}
 .auth-signup {
   background-color: var(--primary-color);
   border-radius: 999px;
-  color: black;
+  color: #fff;
   padding: 8px 16px;
   transition: background 0.2s, color 0.2s, transform 0.2s;
   font-size: 14px;
