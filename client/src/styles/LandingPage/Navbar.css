@@ -31,6 +31,7 @@ ul {
   align-items: center;
   gap: 8px;
 }
+
 .about-link li {
   gap: 0px;
   padding-right: 8px;
@@ -76,19 +77,27 @@ li a:hover {
   gap: 20px; /* Space between buttons */
 }
 
-.auth-buttons button {
+.auth-signup {
   background-color: var(--primary-color);
-  color: white;
-  padding: 8px 16px;
   border-radius: 999px;
-  cursor: pointer;
-  font-size: 14px;
+  color: black;
+  padding: 8px 16px;
   transition: background 0.2s, color 0.2s, transform 0.2s;
+  font-size: 14px;
+}
+.auth-login {
+  background-color: #f2f2f2;
+  color: var(--secondary-color);
+  border-radius: 999px;
+  padding: 8px 16px;
+  border: 1px solid #ccc;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  font-size: 14px;
 }
 
 .auth-buttons button:hover {
-  background-color: var(--hover); /* Same background as the navbar */
-  color: white; /* Black text */
+  background-color: var(--hover);
+  color: white;
   transform: scale(1.07);
 }
 
@@ -107,27 +116,68 @@ li a:hover {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.hidden {
+  display: none;
+}
 .material-symbols-outlined {
   cursor: pointer;
 }
 
+.toggle-dropdown {
+  display: none;
+}
 
-/* Responsive adjustments for smaller screens */
 @media (max-width: 768px) {
+  
   nav {
-    padding: 0 10px; /* Reduce padding for smaller screens */
+    display: block;
+    
   }
 
-  ul {
-    gap: 10px; /* Reduce spacing between links */
+  .nav-links {
+    display: none;
+    
   }
-
   .auth-buttons {
-    gap: 10px; /* Reduce gap between buttons for smaller screens */
+    display: none;
   }
 
-  .auth-buttons button {
-    padding: 6px 12px; /* Adjust button size */
-    font-size: 12px; /* Adjust font size */
+  .menu {
+    color: var(--hover)
+  }
+
+  .burger-drop {
+    display: flex;
+    padding: 0;
+    margin-top: 10px;
+    background-color: transparent;
+  }
+
+  .toggle-dropdown {
+    display: block;
+
+  }
+
+   .space-between {
+    display: flex;
+    justify-content: space-between;
+    
+   }
+  .nav-links.open {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+
+  .about-link span.material-symbols-outlined {
+    display: none;
+  }
+
+  .about-link .dropdown {
+    display: none !important;
+  }
+
+  .about-link {
+    display: block;
   }
 }
