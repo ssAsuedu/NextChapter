@@ -43,10 +43,40 @@ const Search = () => {
       </form>
       <div className="results-section">
         {books.length > 0 ? (
-          <div className="books-grid">
-            {books.map((book) => (
-              <BookCard key={book.id} info={book.volumeInfo} volumeId={book.id} />
-            ))}
+          <div className="category-scroll-wrapper">
+            <button
+              className="scroll-btn left"
+              onClick={() =>
+                document.getElementById("search-carousel").scrollBy({
+                  left: -500,
+                  behavior: "smooth",
+                })
+              }
+            >
+              &#8249;
+            </button>
+
+            <div className="category-scroll" id="search-carousel">
+              {books.map((book) => (
+                <BookCard
+                  key={book.id}
+                  info={book.volumeInfo}
+                  volumeId={book.id}
+                />
+              ))}
+            </div>
+
+            <button
+              className="scroll-btn right"
+              onClick={() =>
+                document.getElementById("search-carousel").scrollBy({
+                  left: 500,
+                  behavior: "smooth",
+                })
+              }
+            >
+              &#8250;
+            </button>
           </div>
         ) : (
           <p className="no-results">{loading ? "" : "No results found."}</p>
