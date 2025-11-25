@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import "../../styles/ProfilePage/Account.css";
 import ProfileNavbar from '../../components/ProfilePage/ProfileNavbar';
-import { getAllUsers, getFriends, updateUserName } from '../../api';
-import axios from "axios";
+import { getAllUsers, getFriends, updateUserName, changePassword } from '../../api';
 
-const API_BASE_URL = "http://localhost:5050/api";
 
 const Account = () => {
   const email = localStorage.getItem("userEmail");
@@ -84,11 +82,7 @@ const Account = () => {
       return;
     }
     try {
-      await axios.post(`${API_BASE_URL}/users/change-password`, {
-        email,
-        oldPassword,
-        newPassword,
-      });
+      await changePassword({ email, oldPassword, newPassword }); // Use the API function here
       setShowPasswordModal(false); // Hide modal first
       setOldPassword("");
       setNewPassword("");
