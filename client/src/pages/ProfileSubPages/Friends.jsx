@@ -12,7 +12,7 @@ import {
   checkFriendshipStatus
 } from '../../api.js';
 import '../../styles/ProfilePage/Friends.css';
-
+import ProfileNavbar from "../../components/ProfilePage/ProfileNavbar";
 const Friends = () => {
   const [activeTab, setActiveTab] = useState('friends');
   const [friends, setFriends] = useState([]);
@@ -329,8 +329,10 @@ const Friends = () => {
   };
 
   return (
+    <div>
+    <ProfileNavbar />
     <div className="friends-container">
-      <h1>Friends</h1>
+      <h1 className="friends-title">Friends</h1>
 
       {!currentUserEmail && (
         <div className="message error">
@@ -498,6 +500,7 @@ const Friends = () => {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 };
