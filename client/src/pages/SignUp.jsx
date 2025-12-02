@@ -262,7 +262,7 @@ const SignUp = () => {
             </form>
           </>
         )}
-        <p className="login">Have an account already? <a href="/login">Login</a></p>
+        <p className="login-redirect">Have an account already? <a href="/login">Login</a></p>
       </div>
       </div>
       {/* Right Half with image */}
