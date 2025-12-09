@@ -47,7 +47,7 @@
   margin-bottom: 15px;
 }
 
-.login {
+.login-redirect {
   font-family: "Crimson Text", sans-serif;
   font-size: 18px;
   font-weight: 600;
@@ -56,12 +56,12 @@
   color: var(--text-color);
 }
 
-.login a {
+.login-redirect a {
   font-weight: 600;
   color: var(--hover);
 }
 
-.login a:hover {
+.login-redirect a:hover {
   text-decoration: underline;
 }
 
@@ -188,7 +188,7 @@ input:-webkit-autofill {
   .signup-form-content {
     max-width: 500px;
   }
-  .login {
+  .login-redirect {
     font-size: 25px;
   }
   .password-error-list {
