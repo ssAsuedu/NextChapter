@@ -1,153 +1,182 @@
-/*
- * Privacy Policy Page CSS
- * Aesthetic: Minimalist Black/White/Light Gray (Figma Design)
- * Font: Roboto
- */
+@import url('../../styles/colors.css');
 
-/* Import Roboto font */
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+/* ============================================
+   PRIVACY POLICY PAGE
+   Matching Home/Explore/About vibe
+   Clean prose, no bullet points
+   ============================================ */
 
-/* --- Root Container --- */
-.policy-container {
-    display: flex;
-    padding: 80px 80px 80px 64px; /* Added top and bottom padding */
-    flex-direction: column;
-    align-items: flex-start; /* Left align all content */
-    gap: 32px;
-    min-height: 100vh;
-    background-color: #FFFFFF; /* Pure white background */
-    font-family: 'Roboto', sans-serif;
-    color: #000000; /* Pure black text */
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 150%; /* 24px */
-    max-width: 1200px; /* Max width for readability */
+/* Container */
+.privacy-page {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: 'Sen', Arial, Helvetica, sans-serif;
+  background-color: #fff;
 }
 
-/* --- Header Section --- */
-.policy-header {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Left align header content */
-    gap: 16px;
-    width: 100%; /* Full width */
-    padding-bottom: 32px;
-    border-bottom: 1px solid #F5F5F5; /* Very light gray border */
+/* ============ HERO SECTION ============ */
+.privacy-hero {
+  width: 100%;
+  padding: 140px 20px 60px;
+  background: linear-gradient(135deg, #f8f5ff 0%, #ffffff 100%);
+  text-align: center;
 }
 
-.h1-policy-title {
-    color: #000000;
-    font-family: 'Roboto', sans-serif;
-    font-size: 48px;
-    font-weight: 700;
-    line-height: 120%;
-    margin: 0;
+.privacy-hero h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: var(--hover);
+  margin: 0 0 0.75rem 0;
 }
 
 .last-updated {
-    color: #666666; /* Medium gray for metadata */
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 150%;
-    margin: 0;
+  font-size: 1rem;
+  color: #777;
+  margin: 0;
 }
 
-/* --- Section Styles --- */
-.policy-section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start; /* Left align section content */
-    gap: 16px;
-    width: 100%; /* Full width */
-    padding: 24px 0;
+/* ============ CONTENT CONTAINER ============ */
+.privacy-content {
+  max-width: 750px;
+  margin: 0 auto;
+  padding: 50px 20px 80px;
 }
 
-/* Main Section Headings */
-.h2-policy-heading {
-    color: #000000;
-    font-family: 'Roboto', sans-serif;
-    font-size: 32px;
-    font-weight: 700;
-    line-height: 120%;
-    margin: 0;
-    padding-bottom: 8px;
+/* ============ INTRO ============ */
+.privacy-intro {
+  font-size: 1.15rem;
+  color: #444;
+  line-height: 1.8;
+  text-align: center;
+  margin-bottom: 2rem;
 }
 
-/* Body Text */
-.policy-paragraph {
-    color: #000000;
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 150%;
-    margin: 0;
-    width: 100%; /* Ensure full width */
-    text-align: left; /* Explicitly left align */
+/* ============ DISCLAIMER BOX ============ */
+.privacy-disclaimer {
+  background: #f8f5ff;
+  border-left: 4px solid var(--primary-color);
+  padding: 20px 24px;
+  border-radius: 0 12px 12px 0;
+  margin-bottom: 2.5rem;
 }
 
-/* Lists */
-.policy-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin: 0;
-    padding-left: 24px;
-    list-style-type: disc;
-    width: 100%; /* Full width */
-    align-items: flex-start; /* Left align list items */
+.privacy-disclaimer p {
+  color: #444;
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
 }
 
-.policy-list li {
-    color: #000000;
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 150%;
+.privacy-disclaimer strong {
+  color: var(--hover);
 }
 
-/* Key Callout/Disclaimer Block */
-.disclaimer-box {
-    display: flex;
-    padding: 24px;
-    flex-direction: column;
-    align-items: flex-start; /* Left align content */
-    gap: 8px;
-    width: 100%; /* Full width */
-    background-color: #F5F5F5; /* Light gray background */
-    border-left: 4px solid #000000; /* Black accent border */
-    margin: 32px 0;
-    box-sizing: border-box; /* Include padding in width */
+/* ============ SECTIONS ============ */
+.privacy-section {
+  margin-bottom: 2rem;
 }
 
-.disclaimer-box strong {
-    color: #000000;
-    font-weight: 700;
+.privacy-section h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--hover);
+  margin: 0 0 0.75rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #f0e8ff;
 }
 
-/* Contact Information */
-.contact-info {
-    color: #000000;
-    font-family: 'Roboto', sans-serif;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 150%;
+.privacy-section p {
+  font-size: 1.05rem;
+  color: #444;
+  line-height: 1.8;
+  margin: 0;
 }
 
-/* --- Media Queries --- */
-@media (max-width: 800px) {
-    .policy-container {
-        padding: 40px 24px; /* Reduced but still has top padding */
-    }
-    
-    .h1-policy-title {
-        font-size: 36px;
-    }
-    
-    .h2-policy-heading {
-        font-size: 24px;
-    }
-    
-    .policy-list {
-        padding-left: 20px; /* Slightly less padding on mobile */
-    }
+.privacy-section p strong {
+  color: var(--hover);
+  font-weight: 600;
+}
+
+/* ============ CONTACT SECTION (highlighted) ============ */
+.privacy-section.contact-section {
+  background: #f8f5ff;
+  padding: 28px;
+  border-radius: 16px;
+  margin-top: 2.5rem;
+}
+
+.privacy-section.contact-section h2 {
+  border-bottom: none;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.privacy-section.contact-section p {
+  text-align: center;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablet */
+@media (max-width: 900px) {
+  .privacy-hero {
+    padding: 120px 20px 50px;
+  }
+
+  .privacy-hero h1 {
+    font-size: 2.4rem;
+  }
+
+  .privacy-content {
+    padding: 40px 24px 70px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .privacy-hero {
+    padding: 110px 20px 40px;
+  }
+
+  .privacy-hero h1 {
+    font-size: 2rem;
+  }
+
+  .privacy-content {
+    padding: 35px 20px 60px;
+  }
+
+  .privacy-intro {
+    font-size: 1.05rem;
+    text-align: left;
+  }
+
+  .privacy-disclaimer {
+    padding: 18px 20px;
+  }
+
+  .privacy-section h2 {
+    font-size: 1.25rem;
+  }
+
+  .privacy-section p {
+    font-size: 1rem;
+  }
+
+  .privacy-section.contact-section {
+    padding: 24px 20px;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 400px) {
+  .privacy-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .privacy-section h2 {
+    font-size: 1.15rem;
+  }
 }
