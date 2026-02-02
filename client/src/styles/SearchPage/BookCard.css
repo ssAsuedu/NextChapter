@@ -109,5 +109,5 @@
 
 .search-save-btn:disabled {
   background: #bbb;
-  cursor: default;
+  cursor: not-allowed;
 }

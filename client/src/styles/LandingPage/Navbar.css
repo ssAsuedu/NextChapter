@@ -58,6 +58,7 @@ ul {
 }
 .dropdown span:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 .about-link:hover .dropdown {
   display: flex;

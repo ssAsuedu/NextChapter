@@ -30,14 +30,8 @@ useEffect(() => {
 })
 
 const scrollToSection = (hash) => {
-  if (window.location.pathname !== "/about") { //check the current page location
-    navigate(`/about${hash}`); //if the user isnt on the about page already, navigate them there with React Router's navigate
-  } else {
-    const element = document.querySelector(hash); //if user is already on about
-    if (element) { //scroll smoothly to that section
-      element.scrollIntoView({ behavior: "smooth" });
-    }
-  }
+  navigate(`/about${hash}`); 
+  setMenuOpen(false);
 };
 
   //Hide the navigation bar on signup and login

@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import '../styles/LandingPage/About.css';
 
 // MUI Icons (matching your Home page)
@@ -13,6 +15,16 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const About = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  }, [location]);
 
   const teamMembers = [
     { name: 'Shifa Sadaat', role: 'Backend' },
@@ -33,7 +45,7 @@ const About = () => {
       </section>
 
       {/* Mission Section - NO BOOK ICON */}
-      <section className="about-section mission-section">
+      <section id="mission" className="about-section mission-section">
         <h2 className="section-heading">Our Mission</h2>
         <div className="mission-text">
           <p>
@@ -50,7 +62,7 @@ const About = () => {
       </section>
 
       {/* Features Section */}
-      <section className="about-section features-section">
+      <section id="what-we-offer" className="about-section features-section">
         <h2 className="section-heading">What We Offer</h2>
         <div className="features-grid">
           <div className="feature-card">
@@ -91,7 +103,7 @@ const About = () => {
       </section>
 
       {/* Team Section */}
-      <section className="about-section team-section">
+      <section id="team" className="about-section team-section">
         <h2 className="section-heading">Our Team</h2>
         <p className="team-intro">
           Next Chapter was created by a team of five passionate developers and book lovers as a
