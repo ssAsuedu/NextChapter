@@ -1,3 +1,7 @@
+* {
+  font-family: 'Sen', Arial, Helvetica, sans-serif !important;
+}
+
 .login-page {
   display: flex;
   height: 100vh; /* Full height of the viewport */
@@ -11,7 +15,8 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #f4f4f4; 
+  /* background-color: #f4f4f4;  */
+  background-color: var(--background-color);
   padding: 20px;
   position: relative;
 }
@@ -22,7 +27,7 @@
 }
 
 .account-creation {
-  font-family: "Crimson Text", sans-serif;
+  /* font-family: "Crimson Text", sans-serif; */
   font-size: 18px;
   font-weight: 600;
   margin-top: 20px;
@@ -39,7 +44,6 @@
   text-decoration: underline;
 }
 .login-form h1 {
-  font-family: "Crimson Text", serif;
   font-weight: 600;
   text-align: left;
   font-size: 2.5rem;
@@ -87,10 +91,12 @@
   color: red !important;
 }
 
+.MuiFormHelperText-root.Mui-error {
+  color: var(--error-state) !important;
+}
 .login {
   background-color: var(--hover) !important;
   color: #fff !important;
-  font-family: 'Crimson Text', serif !important;
   font-size: 17px !important;
   font-weight: 700 !important;
   padding: 10px !important;
