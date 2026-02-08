@@ -1,18 +1,14 @@
 @import url('../../styles/colors.css');
 
-/* General Styles */
-body {
-  margin: 0;
-  font-family:  'Sen', Arial, Helvetica, sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  overflow-x: hidden;
-}
-
 .landing-page {
-  width: 100%;
+  /* max-width: 1200px; */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
   overflow-x: hidden;
   font-family:  'Sen', Arial, Helvetica, sans-serif;
+  background-color: #f2effc;
 }
 
 /* Hero Section */
@@ -34,8 +30,8 @@ body {
   height: 100%;
   margin: 0;
   margin-top: 100px;
-  margin-left: 20px;
-  margin-right: 20px;
+  /* margin-left: 20px;
+  margin-right: 20px; */
   margin-bottom: 120px;
   border-radius: 0;
   box-shadow: none;
@@ -43,10 +39,11 @@ body {
   text-align: left;
   overflow: hidden;
   font-family: inherit;
+  justify-content: space-between;
 }
 
 .left-side-hero, .right-side-hero {
-  background-color: white;
+  /* background-color: white; */
   width: 50%;
   display: flex;
   flex-direction: column;
@@ -63,7 +60,7 @@ body {
   font-family: inherit;
   font-size: 3.2rem;
   font-weight: 700;
-  color: var(--hover);
+  color: var(--text-color);
   margin-bottom: 0.5rem;
 }
 
@@ -93,15 +90,16 @@ body {
   height: 560px;
   object-fit: cover;
   border-radius: 24px; /* Square but with oval corners */
-  background: #ffff;
+  /* background: #ffff; */
   
   display: block;
 }
 
 /* Buttons */
 .browse-button, .signup-button, section button {
-  background-color: var(--primary-color);
-  color: #1a1a1a;
+  background-color: var(--hover);
+  /* background-color: #89B7C2; */
+  /* color: #1a1a1a; */
   border: none;
   border-radius: 999px; /* More oval */
   padding: 12px 32px;
@@ -124,7 +122,7 @@ body {
 }
 
 .browse-button:hover, .signup-button:hover, section button:hover {
-  background-color: #6c3fc5;
+  background-color: var(--text-color);
   color: #fff;
   transform: scale(1.07);
 }
@@ -144,24 +142,30 @@ section button:hover {
 }
 
 /* Section Styles */
-section {
-  width: 100%;
+.hero, .trending-books, .about, .recommended-books {
   padding: 60px 20px;
-  text-align: center;
-  font-family: inherit;
+
 }
 .about{
   display:flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+
 }
 
+.about-wrapper {
+  display: flex;
+}
+
+.about-button {
+  box-shadow: rgba(171, 124, 231, 0.3) 0px 4px 12px;
+}
 .about, .features, .community, .trending-books, .recommended-books {
   background-color: transparent;
   margin: 20px auto;
   border-radius: 8px;
-  max-width: 800px;
+  /* max-width: 800px; */
   color: #333;
   font-family: inherit;
 }
@@ -179,7 +183,7 @@ section p {
   line-height: 1.8;
   margin-bottom: 20px;
   font-family: inherit;
-  color: #444;
+  color: var(--second-color);
 }
 
 section h3 {
@@ -191,7 +195,7 @@ section h3 {
 
 section h4 {
   font-size: 1.4rem;
-  color: var(--hover);
+  color: var(--text-color);
   font-weight: 700;
   font-family: inherit;
 }
@@ -252,29 +256,24 @@ h6 {
 }
 /* Trending Books Section */
 .trending-books {
-  width: 100vw;
-  min-width: 100vw;
-  padding: 0;
-  margin: 0;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+  width: 100%;
 }
 
 .trending-books-content {
-  width: 100vw;
+  display: flex;
+  justify-content: space-between;
+  
+  /* width: 100vw;
   height: 460px;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: space-between;
-  box-sizing: border-box;
+  box-sizing: border-box; */
 }
 
 .trending-books-left {
-  width: 50%;
+  /* width: 50%; */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -289,10 +288,10 @@ h6 {
 }
 
 .trending-books-right {
-  width: 50%;
+  /* width: 50%; */
   display: flex;
   flex-direction: column;
-  align-items: center;
+  /* align-items: center; */
   justify-content: center;
   padding-left: 40px;
   box-sizing: border-box;
@@ -300,20 +299,21 @@ h6 {
 
 .trending-books-right h2 {
   font-size: 2.5rem;
-  color: var(--hover);
+  color: var(--text-color);
   margin-bottom: 1rem;
 }
 
 .trending-books-right p {
   font-size: 1.2rem;
-  color: #444;
-  margin-bottom: 24px;
-  max-width: 500px;
+  max-width: 700px;
+  color: var(--secondary-color);
 }
-
+.trending-books-right button {
+  width: fit-content;
+}
 .trending-books-button {
-  background-color: var(--primary-color);
-  color: #1a1a1a;
+  background-color: var(--hover);
+  color: #fff;
   border: none;
   border-radius: 999px;
   padding: 12px 32px;
@@ -326,16 +326,16 @@ h6 {
 }
 
 .trending-books-button:hover {
-  background-color: #6c3fc5;
+  background-color: var(--text-color);
   color: #fff;
   transform: scale(1.07);
 }
 .values-title{
-  text-align: center;
   width: 100%;
   margin: 0px 0 0 0;
   font-size: 2.5rem;
-  color: var(--hover);
+  color: var(--text-color);
+  max-width: 500px;
   font-weight: 700;
   display: block;
 }
@@ -344,6 +344,10 @@ h6 {
 /* Responsive Design */
 
 @media (min-width: 320px) and (max-width: 600px) {
+  .landing-page {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
   * {
     max-width: 100%;
   }
@@ -352,9 +356,6 @@ h6 {
     width: 100%;
   }
 
-  .hero {
-    justify-content: center;
-  }
   .hero-content {
     flex-direction: column;
     width: 100%;
@@ -383,6 +384,7 @@ h6 {
     margin-top: 0;
     flex-direction: column;
     margin-bottom: 0;
+    gap: 20px;
   }
   
   .hero-profile-image-container {
@@ -396,9 +398,11 @@ h6 {
 
   .trending-books-right {
     width: 100%;
-    padding: 0px 20px 0px 20px;
     gap: 10px;
+    padding-left: 0px;
   }
+
+  
   .trending-books-right p {
     font-size: 1.1rem;
   }
@@ -417,6 +421,11 @@ h6 {
     font-size: 1.3rem;
     color: var(--hover);
     font-weight: 700;
+  }
+
+  .about-wrapper {
+    display: block;
+    flex-wrap: wrap;
   }
 }
 

@@ -53,7 +53,7 @@
   width: 30px;
   height: 60px;
   border: none;
-  background: #ab7ce7;
+  background: var(--primary-color);
   color: #fff;
   font-size: 2rem;
   border-radius: 0 30px 30px 0;
@@ -79,7 +79,7 @@
 }
 
 .scroll-btn:hover {
-  background: #8561b4;
+  background: var(--hover);
   color: #f4f4f4;
 }
 
