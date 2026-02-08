@@ -20,7 +20,7 @@
   flex-direction: column;
   justify-content: center; /* Centers content vertically */
   align-items: center; /* Centers content horizontally */
-  background-color: #f4f4f4; /* Light gray background */
+  background-color: var(--background-color); /* Light gray background */
   padding: 20px;
   position: relative;
 }
