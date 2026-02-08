@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
+const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+
 const Review = () => {
   const email = localStorage.getItem("userEmail");
   const [reviews, setReviews] = useState([]);
@@ -48,9 +50,9 @@ const Review = () => {
       ]);
   
       if (volumeIds.size === 0) return;
-  
+
       const promises = [...volumeIds].map(id =>
-        fetch(`https://www.googleapis.com/books/v1/volumes/${id}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`)
           .then(res => res.json())
           .then(data => ({
             volumeId: id,

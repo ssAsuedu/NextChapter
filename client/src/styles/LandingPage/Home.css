@@ -313,7 +313,7 @@ h6 {
 
 .trending-books-button {
   background-color: var(--primary-color);
-  color: #1a1a1a;
+  color: #fff;
   border: none;
   border-radius: 999px;
   padding: 12px 32px;
