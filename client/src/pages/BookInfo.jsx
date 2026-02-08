@@ -95,7 +95,7 @@ const BookInfo = () => {
   
         if (author) {
           const authorRes = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=inauthor:${encodeURIComponent(author)}&maxResults=20`
+            `https://www.googleapis.com/books/v1/volumes?q=inauthor:${encodeURIComponent(author)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
           );
           const authorData = await authorRes.json();
   
@@ -114,7 +114,7 @@ const BookInfo = () => {
 
         if (related.length < 4 && simplifiedGenre) {
           const genreRes = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(simplifiedGenre)}&maxResults=20`
+            `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(simplifiedGenre)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
           );
           const genreData = await genreRes.json();
   
