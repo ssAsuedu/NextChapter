@@ -52,15 +52,7 @@ const Home = () => {
             <p>
               Discover the most popular books in our community. See what other readers are enjoying and join the conversation!
             </p>
-            <button
-              className="trending-books-button"
-              onClick={() => {
-                navigate("/explore"); 
-                window.scrollTo(0, 0);
-              }}
-            >
-              Explore Trending Books
-            </button>
+            <button className="trending-books-button" onClick={() => navigate("/explore")}>Explore Trending Books</button>
           </div>
         </div>
       </section>

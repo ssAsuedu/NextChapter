@@ -1,12 +1,13 @@
 // filepath: /src/components/SearchPage/BookCard.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { addBookToBookshelf } from "../../api";
+import { getBookshelf, addBookToBookshelf } from "../../api";
 import "../../styles/SearchPage/BookCard.css";
 
 const BookCard = ({ info, volumeId }) => {
   const [saved, setSaved] = useState(false);
   const [showFullTitle, setShowFullTitle] = useState(false);
+  const [bookshelf, setBookshelf] = useState([]);
 
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const BookCard = ({ info, volumeId }) => {
     try {
       await addBookToBookshelf({ email, volumeId });
       setSaved(true);
+      setBookshelf(prev => [...prev, volumeId]);
     } catch {
       alert("Failed to save book.");
     }
@@ -33,6 +35,20 @@ const BookCard = ({ info, volumeId }) => {
   const handleClick = () => {
     navigate(`/book/${volumeId}`);
   };
+
+  // Fetch user's bookshelf
+  useEffect(() => {
+    const fetchBookshelf = async () => {
+      if (!email) return;
+      try {
+        const res = await getBookshelf(email);
+        setBookshelf(res.data.bookshelf || []);
+      } catch {
+        setBookshelf([]);
+      }
+    };
+    fetchBookshelf();
+  }, [email]);
 
   return (
     <div
@@ -74,9 +90,9 @@ const BookCard = ({ info, volumeId }) => {
       <button
         className="search-save-btn"
         onClick={handleSave}
-        disabled={saved}
+        disabled={bookshelf.includes(volumeId)}
       >
-        {saved ? "Saved" : "Save to Bookshelf"}
+        {bookshelf.includes(volumeId) ? "Saved" : "Save to Bookshelf"}
       </button>
     </div>
   );

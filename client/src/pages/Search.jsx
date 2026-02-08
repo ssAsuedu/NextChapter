@@ -1,5 +1,4 @@
-// filepath: /src/pages/Contact.jsx
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useRef, useEffect } from "react";
 import axios from "axios";
 import "../styles/SearchPage/Search.css";
 import BookCard from "../components/SearchPage/BookCard";
@@ -11,7 +10,8 @@ const Search = () => {
   const [books, setBooks] = useState([]);
   const [loading, setLoading] = useState(false);
   const [selectedGenre, setSelectedGenre] = useState(""); 
-  const [genres, setGenres] = useState([]); 
+  const [genres, setGenres] = useState([]);
+  const carouselRef = useRef(null);
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -26,7 +26,6 @@ const Search = () => {
       const fetchedBooks = response.data.items || [];
       setBooks(fetchedBooks);
 
-
       setSelectedGenre("");
 
       const allGenres = fetchedBooks.flatMap(
@@ -36,11 +35,23 @@ const Search = () => {
     } catch (err) {
       setBooks([]);
       setGenres([]);
-      setSelectedGenre(""); // reset the filter whenever a new search happens 
+      setSelectedGenre("");
     }
 
     setLoading(false);
   };
+
+  useEffect(() => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
+  }, [books]);
+
+  useEffect(() => {
+    if (carouselRef.current) {
+      carouselRef.current.scrollLeft = 0;
+    }
+  }, [selectedGenre]);
 
   const filteredBooks = useMemo(() => {
     if (!selectedGenre) return books;
@@ -82,7 +93,6 @@ const Search = () => {
             ))}
           </select>
         </div>
-        
       )}
 
       <div className="results-section">
@@ -91,7 +101,7 @@ const Search = () => {
             <button
               className="scroll-btn left"
               onClick={() =>
-                document.getElementById("search-carousel").scrollBy({
+                carouselRef.current?.scrollBy({
                   left: -500,
                   behavior: "smooth",
                 })
@@ -99,8 +109,7 @@ const Search = () => {
             >
               &#8249;
             </button>
-              
-            <div className="category-scroll" id="search-carousel">
+            <div className="category-scroll" ref={carouselRef} id="search-carousel">
               {filteredBooks.map((book) => (
                 <BookCard
                   key={book.id}
@@ -113,7 +122,7 @@ const Search = () => {
             <button
               className="scroll-btn right"
               onClick={() =>
-                document.getElementById("search-carousel").scrollBy({
+                carouselRef.current?.scrollBy({
                   left: 500,
                   behavior: "smooth",
                 })

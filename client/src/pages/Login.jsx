@@ -53,8 +53,8 @@ const Login = () => {
       {/* Left Half with Login Form */}
       <div className="login-form">
         <div className="login-form-content">
-          <img src={readingLeft} className="login-left"></img>
-          <img src={readingBook} alt="Leaf Icon" className="login-svg"></img>
+          <img src={readingLeft} alt="Girl sitting while reading a book with a stack of 3 books next to her." className="login-left"></img>
+          <img src={readingBook} alt="Girl reading a black book." className="login-svg"></img>
           <h1>Welcome Back!</h1>
         <form onSubmit={handleLogin} noValidate>
           <div>
@@ -123,7 +123,7 @@ const Login = () => {
       </div>
 
       {/* Right Half with Background Image */}
-      <div className="login-image"></div>
+      <div className="login-image" alt="Person sitting at a desk reading a book with a cup of coffee, lamp, and bookshelf filled with books in the background."></div>
     </div>
   );
 };
