@@ -16,6 +16,7 @@ const BookInfo = () => {
   const [expanded, setExpanded] = useState(false);
   const [genresExpanded, setGenresExpanded] = useState(false);
   const [reviews, setReviews] = useState([]);
+  const [sortBy, setSortBy] = useState("recent");
   const [bookshelf, setBookshelf] = useState([]);
   const [relatedBooks, setRelatedBooks] = useState([]);
   const email = localStorage.getItem("userEmail");
@@ -147,8 +148,17 @@ const BookInfo = () => {
   
     fetchRelated();
   }, [book]);
-      
 
+  const getSortedReviews = () => {
+    const sorted = [...reviews];
+    if (sortBy === "highest") {
+      return sorted.sort((a, b) => b.rating - a.rating);
+    } else {
+      // most recent
+      return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    }
+  };
+    
   const info = book?.volumeInfo || {};
   const isBookInShelf = bookshelf.includes(volumeId);
   const img = `https://books.google.com/books/content?id=${volumeId}&printsec=frontcover&img=1&zoom=3&edge=curl&source=gbs-api`;
@@ -333,12 +343,24 @@ const BookInfo = () => {
         <p className="bookinfo-reviews-subtitle">
           Real reviews from passionate readers like you
         </p>
+        <div className="bookinfo-sort-container">
+          <label htmlFor="sort-reviews">Sort by: </label>
+          <select 
+            id="sort-reviews"
+            value={sortBy} 
+            onChange={(e) => setSortBy(e.target.value)}
+            className="bookinfo-sort-select"
+          >
+            <option value="recent">Most Recent</option>
+            <option value="highest">Highest Rating</option>
+          </select>
+        </div>
         <div className="bookinfo-reviews-section">
           <div className="bookinfo-reviews-list">
             {reviews.length === 0 ? (
               <p>No reviews for this book</p>
             ) : (
-              reviews.map((r, idx) => (
+              getSortedReviews().map((r, idx) => (
                 <div key={idx} className="bookinfo-review">
                   <div className="bookinfo-review-content">
                     <strong>{r.name || r.email}</strong> -{" "}
