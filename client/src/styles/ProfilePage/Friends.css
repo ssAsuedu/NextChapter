@@ -10,6 +10,7 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 120px 20px 60px;
+  margin-left: 180px;
   background-color: #fff;
   min-height: 100vh;
   font-family: 'Sen', Arial, Helvetica, sans-serif;
@@ -141,6 +142,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 16px;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
@@ -151,17 +153,29 @@
   transform: translateY(-2px);
 }
 
+.user-info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .user-info h3 {
   margin: 0 0 6px 0;
   font-size: 1.1rem;
   color: var(--hover);
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user-info p {
   margin: 0 0 4px 0;
   color: #666;
   font-size: 0.9rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .user-info small {
@@ -258,6 +272,7 @@ button:disabled {
 .request-actions {
   display: flex;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 /* ============ EMPTY STATE ============ */
@@ -291,6 +306,7 @@ button:disabled {
 @media (max-width: 768px) {
   .friends-container {
     padding: 100px 16px 40px;
+    margin-left: 0;
   }
 
   .friends-title {
