@@ -37,26 +37,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* About Section */}
-      <h2 className="values-title">Learn More Next Chapter's Mission</h2>
-      <section className="about">
-        <button className="about-button">
-          <Book className="about-icon" />
-          Platform
-          <h6>Our application empowers users to achieve their reading goals.</h6>
-        </button>
-        <button className="about-button">
-          <Team className="about-icon" />
-          Team
-          <h6>Developed by a team of passionate readers who want to share their love for books.</h6>
-        </button>
-        <button className="about-button">
-          <Values className="about-icon" />
-          Values
-          <h6>Next Chapter is built on our core values of curiosity, connection, and self-improvement.</h6>
-        </button>
-      </section>
-
       {/* Trending Books Section */}
       <section className="trending-books">
         <div className="trending-books-content">
@@ -68,13 +48,35 @@ const Home = () => {
             />
           </div>
           <div className="trending-books-right">
-            <h3>Books Everyone's Talking About</h3>
+            <h2>Books Everyone's Talking About</h2>
             <p>
               Discover the most popular books in our community. See what other readers are enjoying and join the conversation!
             </p>
             <button className="trending-books-button" onClick={() => navigate("/explore")}>Explore Trending Books</button>
           </div>
         </div>
+      </section>
+      {/* About Section */}
+      <section className="about">
+        <h3 className="values-title">Learn More About Next Chapter's Mission</h3>
+        <div className="about-wrapper">
+          <button className="about-button">
+            <Book className="about-icon" />
+            Platform
+            <h6>Our application empowers users to achieve their reading goals.</h6>
+          </button>
+          <button className="about-button">
+            <Team className="about-icon" />
+            Team
+            <h6>Developed by a team of passionate readers who want to share their love for books.</h6>
+          </button>
+          <button className="about-button">
+            <Values className="about-icon" />
+            Values
+            <h6>Next Chapter is built on our core values of curiosity, connection, and self-improvement.</h6>
+          </button>
+        </div>
+        
       </section>
 
       {/* Recommended Books Section */}

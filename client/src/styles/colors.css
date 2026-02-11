@@ -1,8 +1,8 @@
 :root {
   --primary-color: #ab7ce7;
-  --secondary-color: #666;
-  --background-color: #EDE6FF;
-  --navbar-hover-bg: rgba(171, 124, 231, 0.12);
+  --secondary-color: #4F4F4F;
+  --background-color: #f2effc;
+  --navbar-hover-bg: #ab7ce71f;
   --hover: #6c3fc5;
   --text-color: #4D2B91;
   --error-state: #9d2323;

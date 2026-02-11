@@ -1,44 +1,8 @@
-.book-card {
-  width: 180px;
-  background: #fffef2;
-  border-radius: 8px;
-  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.book-image {
-  width: 120px;
-  height: 180px;
-  object-fit: cover;
-  border-radius: 4px;
-  margin-bottom: 12px;
-  background: #eee;
-}
-
-.book-details {
-  text-align: center;
-}
-
-.book-title {
-  font-size: 1.05rem;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #222;
-}
-
-.book-authors {
-  font-size: 0.95rem;
-  color: #555;
-  margin-bottom: 4px;
-}
-
-
 .search-book-card {
-  width: 280px;
-  min-height: 380px;
+  /* width: 150px;
+  min-height: 380px; */
+  /* width: 100px; */
+  width: 150px;
   padding: 16px;
   border-radius: 12px;
   background: white;
@@ -49,6 +13,12 @@
   text-align: center;
   cursor: pointer;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
+  /* flex: 0 0 calc(50% - 16px); */
+  /* flex: 0 0 50%; */
+  /* max-width: 180px; */
+  flex: 0 0 180px;
+  flex-grow: 1;
+  overflow-x: hidden !important;
 }
 
 .search-book-card:hover {
@@ -58,45 +28,52 @@
 
 
 .search-book-image {
-  width: 160px;
-  height: 240px;
+  /* width: 160px;
+  height: 240px; */
+  width: 100%;
+  aspect-ratio: 2/3;
   object-fit: cover;
   border-radius: 8px;
   background: #eee;
   margin-bottom: 12px;
 }
 
-
+.title-author-wrapper {
+  display: flex;
+  flex-direction: column;
+  /* gap: 5px; */
+}
 .search-book-title {
   font-size: 1rem;
   font-weight: 700;
-  margin: 8px 0 4px 0;
-  color: #222;
-  text-align: center;
+  /* margin: 8px 0 4px 0; */
+  color: var(--text-color);
+  text-align: left;
 }
 
 .see-more-toggle {
   display: inline-block;
   margin-left: 6px;
   cursor: pointer;
-  color: #8561b4;
+  color: var(--primary-color);
   font-size: 0.85rem;
 }
 
 .search-book-authors {
   font-size: 0.95rem;
   color: #555;
+  text-align: left;
   margin-bottom: 14px;
 }
 
 .search-save-btn {
   margin-top: auto;  
-  width: 100%;
+  width: fit-content;
   padding: 10px;
-  background: #ab7ce7;
+  background: var(--primary-color);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: 999px;
   font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
@@ -104,7 +81,7 @@
 }
 
 .search-save-btn:hover:not(:disabled) {
-  background: #9a68d1;
+  background: var(--hover);
 }
 
 .search-save-btn:disabled {

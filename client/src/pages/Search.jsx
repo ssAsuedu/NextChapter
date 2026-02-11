@@ -63,22 +63,22 @@ const Search = () => {
   return (
     <div className="search-page">
       <h1>Book Search</h1>
-      <form className="search-form" onSubmit={handleSearch}>
+      <form className="search-page-form" onSubmit={handleSearch}>
         <input
           type="text"
           placeholder="Search for books..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          className="search-input"
+          className="search-page-input"
         />
-        <button type="submit" className="search-button" disabled={loading}>
+        <button type="submit" className="browse-button" disabled={loading}>
           {loading ? "Searching..." : "Search"}
         </button>
       </form>
 
       {genres.length > 0 && (
         <div className="genre-filter-container">
-          <label htmlFor="genre-filter">Genre:</label>
+          <h2 htmlFor="genre-filter">Genre:</h2>
           <select
             id="genre-filter"
             value={selectedGenre}
@@ -109,8 +109,7 @@ const Search = () => {
             >
               &#8249;
             </button>
-
-            <div className="category-scroll" ref={carouselRef}>
+            <div className="category-scroll" ref={carouselRef} id="search-carousel">
               {filteredBooks.map((book) => (
                 <BookCard
                   key={book.id}
@@ -119,7 +118,7 @@ const Search = () => {
                 />
               ))}
             </div>
-
+              
             <button
               className="scroll-btn right"
               onClick={() =>

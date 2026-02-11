@@ -64,7 +64,8 @@ const BookCard = ({ info, volumeId }) => {
         className="search-book-image"
       />
 
-      <h3 className="search-book-title">
+      <div className="title-author-wrapper">
+        <h3 className="search-book-title">
         {showFullTitle || !isLongTitle ? title : shortTitle}
         {isLongTitle && (
           <span
@@ -80,9 +81,11 @@ const BookCard = ({ info, volumeId }) => {
         )}
       </h3>
 
-      <p className="search-book-authors">
+        <h4 className="search-book-authors">
         {info.authors ? info.authors.join(", ") : "Unknown Author"}
-      </p>
+        </h4>
+      </div>
+      
 
       <button
         className="search-save-btn"
