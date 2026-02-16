@@ -88,7 +88,6 @@ const go = (path) => {
           <li className="about-link">
             <Link to="/about">About</Link>
             <span className="material-symbols-outlined dropdown">
-              keyboard_arrow_down
             </span>
             <ul className="dropdown">
               <li>
