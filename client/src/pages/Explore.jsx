@@ -2,9 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import BookCard from "../components/ExplorePage/ExploreCard";
 import "../styles/ExplorePage/Explore.css";
-import { getBookshelf, addBookToBookshelf } from "../api"; // Import bookshelf API
+import { getBookshelf, addBookToBookshelf, getTrendingBooks } from "../api";
 import { createPortal } from "react-dom";
-import { getSearchFromCache, setSearchInCache } from "../../utils/apiCache";
+import { getSearchFromCache, setSearchInCache, getBookFromCache, setBookInCache } from "../../utils/apiCache";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -25,7 +25,9 @@ const Explore = () => {
   const [booksByCategory, setBooksByCategory] = useState({});
   const [loading, setLoading] = useState({});
   const [bookshelf, setBookshelf] = useState([]);
-  const [hoveredCard, setHoveredCard] = useState(null); // { volumeId, coords, info }
+  const [hoveredCard, setHoveredCard] = useState(null);
+  const [trendingBooks, setTrendingBooks] = useState([]);
+  const [trendingLoading, setTrendingLoading] = useState(true);
   const scrollRefs = useRef({});
   const email = localStorage.getItem("userEmail");
 
@@ -42,6 +44,48 @@ const Explore = () => {
     };
     fetchBookshelf();
   }, [email]);
+
+  // Fetch trending books
+  useEffect(() => {
+    const fetchTrending = async () => {
+      setTrendingLoading(true);
+      try {
+        const res = await getTrendingBooks(12);
+        const trendingData = res.data.trending || [];
+
+        if (trendingData.length === 0) {
+          setTrendingBooks([]);
+          setTrendingLoading(false);
+          return;
+        }
+
+        // Fetch book details from Google Books API for each trending volumeId
+        const bookDetails = [];
+        for (const item of trendingData) {
+          let book = getBookFromCache(item.volumeId);
+          if (book) {
+            bookDetails.push({ ...book, readers: item.readers });
+          } else {
+            try {
+              const bookRes = await axios.get(
+                `https://www.googleapis.com/books/v1/volumes/${item.volumeId}?key=${GOOGLE_BOOKS_API_KEY}`
+              );
+              setBookInCache(item.volumeId, bookRes.data);
+              bookDetails.push({ ...bookRes.data, readers: item.readers });
+              await new Promise((r) => setTimeout(r, 200)); // throttle
+            } catch {
+              // Skip books that fail to load
+            }
+          }
+        }
+        setTrendingBooks(bookDetails);
+      } catch {
+        setTrendingBooks([]);
+      }
+      setTrendingLoading(false);
+    };
+    fetchTrending();
+  }, []);
 
   // Fetch books for each category
   useEffect(() => {
@@ -121,6 +165,59 @@ const Explore = () => {
   return (
     <div className="explore-page">
       <h1>Explore Books</h1>
+
+      {/* ===== TRENDING SECTION ===== */}
+      <div className="category-section trending-section">
+        <h2 className="category-title trending-title">
+           Trending with Readers
+        </h2>
+        <div className="category-scroll-wrapper">
+          <button
+            className="scroll-btn left"
+            aria-label="Scroll Trending left"
+            onClick={() => handleScroll("Trending", "left")}
+          >
+            &#8249;
+          </button>
+          <div
+            className="category-scroll"
+            ref={(el) => (scrollRefs.current["Trending"] = el)}
+          >
+            {trendingLoading ? (
+              <div className="category-loading">Loading trending books...</div>
+            ) : trendingBooks.length > 0 ? (
+              trendingBooks.map((book) => (
+                <div key={book.id} className="trending-card-wrapper">
+                  <BookCard
+                    info={book.volumeInfo}
+                    volumeId={book.id}
+                    bookshelf={bookshelf}
+                    onMouseEnter={handleCardMouseEnter}
+                    onMouseLeave={handleCardMouseLeave}
+                    isHovered={hoveredCard?.volumeId === book.id}
+                  />
+                  <span className="trending-reader-count">
+                    {book.readers} {book.readers === 1 ? "reader" : "readers"}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <div className="category-loading">
+                No trending books yet — be the first to add books to your shelf!
+              </div>
+            )}
+          </div>
+          <button
+            className="scroll-btn right"
+            aria-label="Scroll Trending right"
+            onClick={() => handleScroll("Trending", "right")}
+          >
+            &#8250;
+          </button>
+        </div>
+      </div>
+
+      {/* ===== CATEGORY SECTIONS ===== */}
       {categories.map((cat) => (
         <div key={cat.label} className="category-section">
           <h2 className="category-title">{cat.label}</h2>

@@ -624,6 +624,34 @@ app.post("/api/users/change-password", async (req, res) => {
   });
 });
 
+// ============ TRENDING BOOKS ROUTE ============
+
+// Get trending books (most-added to bookshelves across all users)
+app.get("/api/trending", async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 12;
+
+    // Aggregate: unwind all users' bookshelves, count occurrences of each volumeId
+    const trending = await User.aggregate([
+      { $unwind: "$bookshelf" },
+      { $group: { _id: "$bookshelf", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: limit },
+    ]);
+
+    // Return array of { volumeId, count }
+    const results = trending.map((item) => ({
+      volumeId: item._id,
+      readers: item.count,
+    }));
+
+    res.json({ trending: results });
+  } catch (err) {
+    console.error("Error fetching trending books:", err);
+    res.status(500).json({ error: "Failed to fetch trending books" });
+  }
+});
+
 // Start Server
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);

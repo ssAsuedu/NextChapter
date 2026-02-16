@@ -121,6 +121,30 @@ export const checkFriendshipStatus = async ({ userEmail, otherUserEmail }) => {
   });
 };
 
+// TRENDING BOOKS
+
+export const getTrendingBooks = async (limit = 12) => {
+  return axios.get(`${API_BASE_URL}/trending`, { params: { limit } });
+};
+
+// WISHLIST API CALLS
+
+export const getWishlist = async (email) => {
+  return axios.get(`${API_BASE_URL}/wishlist/${email}`);
+};
+
+export const addToWishlist = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/wishlist/add`, { email, volumeId });
+};
+
+export const removeFromWishlist = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/wishlist/remove`, { email, volumeId });
+};
+
+export const moveWishlistToBookshelf = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/wishlist/move-to-bookshelf`, { email, volumeId });
+};
+
 export const updateUserName = async ({ email, name }) => {
   return axios.post(`${API_BASE_URL}/users/update-name`, { email, name });
 };
