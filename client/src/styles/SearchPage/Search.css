@@ -1,42 +1,37 @@
-body {
-  background: #ffffff;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  /* Align to top */
-  min-height: 100vh;
-  margin: 0;
-}
-
 .search-page {
-  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  /* max-width: 1000px; */
   width: 100%;
   margin-top: 80px;
   /* Only top margin needed */
   padding: 24px;
   background: #ffffff;
   border-radius: 12px;
-  min-height: 80vh;
   box-sizing: border-box;
+  margin-left: auto;
+  margin-right: auto;
+  
 }
 
 .search-page h1 {
-  text-align: center;
+  color: var(--text-color);
   margin-bottom: 32px;
   font-size: 2.2rem;
   font-family: "Sen", sans-serif;
-  color: #222222;
   /* Dark gray */
 }
 
-.search-form {
-  display: flex;
-  justify-content: center;
-  gap: 12px;
-  margin-bottom: 32px;
+.search-page-form {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 12px !important;
+  margin-bottom: 32px !important;
 }
 
-.search-input {
+.search-page-input {
   width: 350px;
   padding: 10px 14px;
   font-size: 1rem;
@@ -50,19 +45,9 @@ body {
   transition: border-color 0.2s;
 }
 
-.search-input:focus {
-  border-color: #007bff;
-}
-
-.search-button {
-  background-color: #ab7ce7;
-  color: white;
-  border: 2px solid #ab7ce7;
-  padding: 8px 16px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: all 0.3s ease;
+.search-page-input:focus {
+  border-color: var(--hover);
+  
 }
 
 .search-button:disabled {
@@ -74,7 +59,7 @@ body {
 .search-button:hover:not(:disabled) {
   background-color: #f4f4f4;
   color: #333;
-  border: 2px solid #8561b4;
+  border: 2px solid var(--primary-color);
 }
 
 .results-section {
@@ -88,7 +73,8 @@ body {
   justify-content: center;
 }
 
-.book-card {
+/* being used from explore.jsx */
+.book-card { 
   width: 180px;
   background: #f8f8f8;
   border-radius: 8px;
@@ -112,6 +98,9 @@ body {
   text-align: center;
 }
 
+.category-grid {
+
+}
 .book-title {
   font-size: 1.05rem;
   font-weight: 600;
@@ -145,12 +134,16 @@ body {
   box-shadow: 0 0 16px rgba(171, 124, 231, 0.4);
   z-index: 2;
 }
+#search-carousel {
+  width: 100%;
+}
 
 #search-carousel .book-card {
   display: flex;
   flex-direction: column;
-  width: 160px;
-  min-width: 160px;
+  /* width: 160px;
+  min-width: 160px; */
+  
   padding: 14px;
   border-radius: 10px;
   background: #f8f8f8;
@@ -190,23 +183,20 @@ body {
   margin: 15px 0;
   text-align: left;
   width: 100%;
-  color: #ab7ce7;
-}
-
-.genre-filter-container label {
-  font-size: 1rem;
-  font-weight: 500;
-  margin-right: 8px;
-  display: inline-block;
+  color: var(--text-color);
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  
 }
 
 .genre-filter {
   padding: 6px 12px;              
   height: 35px;                  
-  border: 2px solid #ab7ce7;
+  border: 2px solid var(--hover);
   border-radius: 10px;
   background-color: white;     
-  color: #5a2ea6;
+  color: var(--text-color);
   font-size: 0.95rem;
   cursor: pointer;
   outline: none;
@@ -216,7 +206,7 @@ body {
 .genre-filter:hover,
 .genre-filter:focus {
   background-color: white;       
-  border-color: #9a5ed6;          
+  border-color: var(--hover);          
 }
 
 
@@ -258,14 +248,14 @@ body {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
 
-  .search-form {
+  .search-page-form {
     flex-direction: column;
     align-items: center;
     width: 100%;
     gap: 10px;
   }
 
-  .search-input,
+  .search-page-input,
   .search-button {
     width: 100%;
     max-width: 420px;
@@ -283,8 +273,4 @@ body {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
   }
-
- 
-
-
 }
