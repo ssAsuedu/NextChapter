@@ -110,11 +110,23 @@
   margin: 0;
   font-family: inherit; /* Inherit from .profile-info */
 }
-
 .profile-created,
 .profile-followers {
   font-size: 1.2rem;
   color: var(--secondary-color);
   margin: 0;
-  font-family: inherit; /* Inherit from .profile-info */
+  font-family: inherit;
+  /* Inherit from .profile-info */
 }
+
+.badge-icon {
+  width: 80px;
+  height: 80px;
+}
+
+/* .profile-badges-row {
+  margin-top: 8px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+} */

@@ -72,6 +72,62 @@ li a {
 li a:hover {
   color: var(--primary-color);
 }
+
+/* created dropdown for profile that bahaves like the about dropdown */
+.profile-link {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.profile-dropdown {
+  display: none;              
+  gap: 0;                     
+  position: absolute;
+  top: 100%;
+  left: 0;
+  flex-direction: column;
+  width: 150px;
+  background-color: var(--primary-color);
+  box-shadow: 0 4px 12px rgba(171, 124, 231, 0.7);
+  border-radius: 8px;
+  z-index: 200;             
+}
+
+.profile-dropdown li {
+  padding-top: 12px;
+  padding-bottom: 8px;
+  padding-left: 8px;
+  padding-right: 8px;
+}
+
+.profile-dropdown span {
+  padding: 0;
+  color: white;
+  display: block;
+  width: 100%;
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  flex-direction: column;
+  width: 150px;
+}
+
+.profile-link:hover .profile-dropdown {
+  display: flex;
+}
+
+.profile-dropdown span:hover {
+  text-decoration: underline;
+}
+
+/* end profile dropdown section */
+
 .auth-buttons {
   display: flex;
   align-items: center;
@@ -186,4 +242,46 @@ li a:hover {
   .about-link {
     display: block;
   }
-}
+
+  .profile-link {
+    display: none;           
+  }
+
+  .desktop-profile {
+    display: none;
+  }
+
+  .mobile-profile-header span,
+  .mobile-profile-sub span {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .mobile-profile-header {
+    padding: 12px 0;
+    font-weight: 700;
+  }
+
+  .mobile-profile-sub {
+    padding: 10px 0 10px 18px; 
+    font-size: 1rem;
+    opacity: 0.95;
+  }.mobile-profile-sub span:hover,
+  .mobile-profile-header span:hover {
+    text-decoration: underline;
+  }
+  
+  .mobile-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .mobile-dropdown-header .material-symbols-outlined {
+    font-size: 20px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+  }
+  }
