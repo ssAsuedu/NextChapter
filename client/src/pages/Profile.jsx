@@ -3,9 +3,11 @@ import { getBookshelf, getAllUsers, getFriends } from "../api";
 import axios from "axios";
 import BookCard from "../components/ProfilePage/BookShelfCard";
 import "../styles/ProfilePage/Profile.css";
-import ProfileNavbar from "../components/ProfilePage/ProfileNavbar";
 import ProfileLogo from "../assets/profile2.svg";
 import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
+import HalfwayBadge from "../assets/HalfwayBadge.svg";
+import JourneyComplete from "../assets/JourneyComplete.svg";
+import NewChapter from "../assets/NewChapter.svg";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -79,7 +81,6 @@ const Profile = () => {
 
   return (
     <div className="profile-page">
-      <ProfileNavbar />
       {/* Top Profile Section */}
       <div className="profile-top-section">
         <div className="profile-logo-container">
@@ -89,9 +90,14 @@ const Profile = () => {
           <h2 className="profile-username">{userName || "User"}</h2>
           <p className="profile-created">Joined: {formattedDate}</p>
           <p className="profile-followers">Friends: {friendCount}</p>
+          <div className="profile-badges-row">
+            <img src={HalfwayBadge} alt="Halfway Badge" className="badge-icon" />
+            <img src={JourneyComplete} alt="Journey Complete Badge" className="badge-icon" />
+            <img src={NewChapter} alt="New Chapter Badge" className="badge-icon" />
+          </div>
         </div>
       </div>
-      {/* Bookshelf Section */}
+      { }
       <div className="profile-content">
         <h1>Your Bookshelf</h1>
         <div className="bookshelf-grid">

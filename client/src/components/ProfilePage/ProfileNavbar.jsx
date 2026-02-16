@@ -9,17 +9,6 @@ const ProfileNavbar = () => {
 
  return (
    <>
-     {/* Hamburger button (mobile only) */}
-     <button
-       className="mobile-nav-toggle"
-       onClick={() => setOpen(!open)}
-     >
-       <span className="bar"></span>
-       <span className="bar"></span>
-       <span className="bar"></span>
-     </button>
-
-
      <nav className={`profile-vertical-navbar ${open ? "open" : ""}`}>
        <ul>
          <li><Link to="/profile">Bookshelf</Link></li>
