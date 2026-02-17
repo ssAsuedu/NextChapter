@@ -26,4 +26,10 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    rules: {
+      // don't error on unused function args; allow underscore convention
+      "no-unused-vars": ["warn", { args: "none", argsIgnorePattern: "^_" }],
+    },
+  },
 ])

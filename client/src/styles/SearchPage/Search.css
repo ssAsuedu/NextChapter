@@ -64,6 +64,53 @@
 
 .results-section {
   margin-top: 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Bound the carousel to the viewport width and hide external overflow */
+.category-scroll-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: min(1200px, 100vw);
+  margin: 0 auto;
+  overflow: hidden; /* prevents horizontal overflow beyond window */
+  box-sizing: border-box;
+}
+
+/* The scrollable row stays inside the wrapper */
+.category-scroll {
+  display: flex;
+  gap: 16px;
+  padding: 0 48px;           /* space for overlay arrows */
+  overflow-x: auto;          /* scroll inside, not page-wide */
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+}
+
+/* Overlay arrows so they don’t affect layout width */
+.scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.9);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  cursor: pointer;
+}
+
+.scroll-btn.left { left: 8px; }
+.scroll-btn.right { right: 8px; }
+
+/* Ensure items don’t force wider width */
+#search-carousel .book-card {
+  flex: 0 0 auto; /* no flex-grow */
+  max-width: 160px;
 }
 
 .books-grid {
@@ -272,5 +319,13 @@
     flex-direction: row;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
+  }
+
+  /* Keep desktop cards fixed-sized */
+  #search-carousel .search-book-card,
+  #search-carousel .book-card {
+    flex: 0 0 160px;
+    width: 160px;
+    min-width: 160px;
   }
 }
