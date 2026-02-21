@@ -43,8 +43,12 @@ app.post("/api/signup", (req, res) => {
     }
 
     try {
-      // Add the user to MongoDB
-      const newUser = new User({ name, email });
+      // Add the user to MongoDB and give the NewChapter badge
+      const newUser = new User({
+        name,
+        email,
+        badges: [{ type: "NEW_CHAPTER" }],
+      });
       await newUser.save();
 
       res.json({ message: "Sign-up successful and user added to database", user: result.user });
@@ -119,6 +123,20 @@ app.post("/api/bookshelf/add", async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
     if (!user.bookshelf.includes(volumeId)) {
       user.bookshelf.push(volumeId);
+      // if user has more than 20 books in shelf, then they earn the future librarian badge 
+      if (user.bookshelf.length >= 20) {
+        const alreadyHas = (user.badges || []).some(
+          (b) => b.type === "FUTURE_LIBRARIAN"
+        );
+
+        if (!alreadyHas) {
+          user.badges = user.badges || [];
+          user.badges.push({
+            type: "FUTURE_LIBRARIAN",
+            earnedAt: new Date(),
+          });
+        }
+      }
       await user.save();
     }
     res.json({ message: "Book added to bookshelf", bookshelf: user.bookshelf });
@@ -165,6 +183,9 @@ app.post("/api/progress/update", async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ error: "User not found" });
 
+  const safeTotal = Math.max(0, Number(totalPages) || 0);
+  const safeCurrent = Math.max(0, Math.min(Number(currentPage) || 0, safeTotal));
+
   const idx = user.progress.findIndex((p) => p.volumeId === volumeId);
   if (idx > -1) {
     user.progress[idx].currentPage = currentPage;
@@ -172,8 +193,40 @@ app.post("/api/progress/update", async (req, res) => {
   } else {
     user.progress.push({ volumeId, currentPage, totalPages });
   }
+  // logic for the badges earend based on user progress are being handled here 
+  // below handles the logic for the halfway badge (it is limited to one halfway badge per book)
+  const percent = safeTotal > 0 ? safeCurrent / safeTotal : 0;
+
+  if (percent >= 0.5) {
+    const alreadyHas = (user.badges || []).some(
+      (b) => b.type === "HALFWAY" && b.volumeId === volumeId
+    );
+
+    if (!alreadyHas) {
+      user.badges = user.badges || [];
+      user.badges.push({ type: "HALFWAY", volumeId, earnedAt: new Date() });
+    }
+  }
+  // for finishing a book 
+  if (safeTotal > 0 && safeCurrent >= safeTotal) {
+    const alreadyFinished = (user.badges || []).some(
+      (b) => b.type === "FINISHED" && b.volumeId === volumeId
+    );
+
+    if (!alreadyFinished) {
+      user.badges = user.badges || [];
+      user.badges.push({ type: "FINISHED", volumeId, earnedAt: new Date() });
+    }
+  }
   await user.save();
-  res.json({ message: "Progress updated", progress: user.progress });
+  res.json({ message: "Progress updated", progress: user.progress, badges: user.badges, });
+});
+// logic to get all of the badges accosiated with a user account  
+app.get("/api/badges/:email", async (req, res) => {
+  const user = await User.findOne({ email: req.params.email });
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  res.json({ badges: user.badges || [] });
 });
 
 app.get("/api/reviews/:email", async (req, res) => {
@@ -198,6 +251,16 @@ app.post("/api/reviews/add", async (req, res) => {
     }
 
     user.reviews.push({ volumeId, rating, reviewText });
+
+    // critic in the making badge check, if the user has posted 10 reviews or more 
+    if ((user.reviews || []).length >= 10) {
+      const alreadyHas = (user.badges || []).some(b => b.type === "CRITIC_IN_THE_MAKING");
+      if (!alreadyHas) {
+        user.badges = user.badges || [];
+        user.badges.push({ type: "CRITIC_IN_THE_MAKING", earnedAt: new Date() });
+      }
+    }
+
     await user.save();
 
     const review = new Review({ email, name, volumeId, rating, reviewText });
