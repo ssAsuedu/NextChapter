@@ -1,10 +1,11 @@
 @import url('../colors.css');
+
 .account-page {
   display: flex;
   margin-top: 80px;
-  min-height: 100vh;
-  background: #ffffff;
+  min-height: 100vh; 
 }
+
 .account-title{
   margin-bottom: 24px;
   color: var(--primary-color);
@@ -13,15 +14,56 @@
 }
 .account-info {
   margin: 40px auto;
-  padding: 32px 40px;
-  background: #fff;
   border-radius: 12px;
-  min-width: 320px;
+  gap: 30px;
+
+}
+
+.account-img {
+  width: 250px;
+  height: 250px;
+  background: none;
+}
+
+.account-user {
+  color: var(--text-color);
+  font-size: 28px;
+
+}
+
+.email-text {
+  font-size: 20px;
+
+}
+
+.member-text {
+  font-size: 18px;
+}
+
+.friend-text {
+  font-size: 16px;
+}
+
+.account-secondary {
+  color: var(--secondary-color);
+}
+
+.info-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 50px;
+  background-color: var(--background-color);
+  padding: 30px 100px 30px 100px;
+  border-radius: 15px;
+  border: 2px solid var(--primary-color);
+  
 }
 
 .account-info h1 {
   margin-bottom: 24px;
-  color: #ab7ce7;
+  color: var(--text-color);
 }
 .account-title{
   margin-bottom: 24px;
@@ -31,11 +73,6 @@
   font-weight: 700;
 }
 
-.account-info p {
-  font-size: 1.5rem;
-  margin: 12px 0;
-}
-
 .account-info-row {
   display: flex;
   align-items: center;
@@ -43,68 +80,94 @@
   gap: 8px;
 }
 
+.row-info {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 30px;
+  margin-top: 30px;
+}
+
+.name-input {
+  width: 300px;
+
+}
+
+.row-info h2 {
+  color: var(--text-color);
+
+}
 .account-separator {
   border: none;
   border-top: 1px solid #e0e0e0;
   margin: 0 0 0 0;
 }
 
+
+
 .edit-btn, .save-btn, .cancel-btn {
-  margin-left: 12px;
   padding: 4px 10px;
   border: none;
-  border-radius: 4px;
+  border-radius: 999px;
+
   background: #ab7ce7;
   color: #fff;
   cursor: pointer;
   font-size: 0.95rem;
-  transition: background 0.2s;
-}
-
-.edit-btn:hover, .save-btn:hover {
-  background: #8d5cc7;
+  transition: background 0.2s, color 0.2s, transform 0.2s
 }
 
 .cancel-btn {
-  background: #bbb;
-  color: #fff;
-}
-
-.cancel-btn:hover {
-  background: #999;
-}
-
-.edit-name-input {
-  margin-left: 8px;
-  padding: 4px 8px;
+  background: #f2f2f2;
   border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
-  color: #333;
-  background: #ffffff;
+  color: var(--secondary-color);
 }
 
+.save-btn, .cancel-btn {
+  padding: 10px 15px 10px 15px; 
+}
+
+.cancel-btn:hover, .save-btn:hover {
+  background-color: var(--text-color);
+  transform: scale(1.07);
+  color: white;
+
+}
+
+.display-items {
+  font-size: 24px;
+}
+
+.account-info-buttons {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
 .password-modal {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.2);
+  background: rgba(0,0,0,0.5);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 100;
 }
+
 .password-modal form {
-  background: #fff;
+  background: var(--background-color);
   padding: 32px 24px;
   border-radius: 10px;
   box-shadow: 0 2px 16px rgba(171, 124, 231, 0.12);
   display: flex;
   flex-direction: column;
-  min-width: 320px;
+  min-width: 500px;
+  border: 3px solid var(--primary-color);
 }
+
 .password-modal form h3 {
   text-align: center;
   margin-bottom: 16px;
+  color: var(--text-color);
+
 }
 .password-modal .modal-buttons {
   display: flex;
@@ -121,4 +184,59 @@
   font-size: 1rem;
   background: #f9f9f9;
   color: #222;
+}
+
+.input-field-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+@media (max-width: 600px) { /* responsive styles */
+  .account-img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .account-user, .account-secondary {
+    margin: 0;
+  }
+
+  .info-display {
+    gap: 15px;
+    padding: 0;
+    margin-left: 15px;
+    margin-right: 15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 15px;
+    padding-top: 15px;
+  }
+
+  .account-secondary {
+    margin-bottom: 8px;
+  }
+  .name-email-wrapper {
+    display: block;
+  }
+
+  .row-info {
+    margin-left: 15px;
+  }
+  
+  .account-info-buttons {
+    gap: 0;
+    justify-content: space-between;
+  }
+  .change-password, .save-changes {
+    padding: 10px 15px 10px 15px;
+    margin-left: 10px;
+  }
+
+  .password-modal form {
+    padding: 0;
+    min-width: 300px;
+    padding: 15px 20px 15px 20px;
+
+  }
 }
