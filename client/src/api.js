@@ -33,6 +33,10 @@ export const getProgress = async (email) => {
 export const updateProgress = async ({ email, volumeId, currentPage, totalPages }) => {
   return axios.post(`${API_BASE_URL}/progress/update`, { email, volumeId, currentPage, totalPages });
 };
+// code for getting all of a users badges 
+export const getBadges = async (email) => {
+  return axios.get(`${API_BASE_URL}/badges/${email}`);
+};
 
 export const getReviews = async (email) => {
   return axios.get(`${API_BASE_URL}/reviews/${email}`);
