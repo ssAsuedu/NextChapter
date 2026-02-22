@@ -1,0 +1,150 @@
+@import url('../../styles/colors.css');
+
+footer {
+    min-height: 200px;
+    width: 100%;
+    background-color: var(--text-color);
+    padding: 0;
+    margin: 0;
+    padding: 3rem 4rem;
+}
+
+.content-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    /* padding-top: 70px; */
+
+}
+.name {
+    font-size: 30px;
+    font-weight: 600;
+    margin-top: 0;
+}
+.description {
+    font-size: 18px;
+    line-height: 1.6;
+    max-width: 400px;
+}
+
+.team-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0;
+    margin: 0;
+   
+
+}
+.team-content {
+    color: white;
+    padding: 0;
+}
+
+.nav-sections {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 50px;
+}
+
+.discover-section, .about-us-section, .profile-section, .support-section {
+    display: flex;
+    flex-direction: column;
+    color: white;
+    gap: 12px;
+}
+
+.footer-header {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.footer-links {
+    font-size: 16px;
+    color: white;
+    font-weight: 400;
+    
+}
+
+.footer-links:hover {
+    color: #F3F0FD;
+    text-decoration: underline;
+}
+
+
+@media (max-width: 600px) {
+    footer {
+        width: 100%;
+        padding: 2.5rem 1rem;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+
+    .name {
+        font-size: 20px;
+    }
+
+    .description {
+        font-size: 16px;
+        max-width: 300px;
+    }
+
+    .footer-header {
+        font-size: 16px;
+        margin-bottom: 0;
+        max-width: 80px;
+    }
+
+    .footer-links {
+        font-size: 14px;
+        
+    }
+
+    .team-info {
+        flex-direction: column;
+        justify-content: center;
+        
+    }
+
+    .nav-sections {
+        gap: 25px;
+    }
+
+    .content-wrapper {
+        flex-direction: column;
+        gap: 20px;
+        
+    }
+
+    .discover-section, .about-us-section, .profile-section, .support-section {
+        gap: 5px;
+    }
+}
+
+@media (width: 768px) {
+    footer {
+        padding: 2.5rem 2rem;
+    }
+    .description {
+        max-width: 300px;
+    }
+
+    .footer-header {
+        margin-bottom: 0;
+    }
+
+    .nav-sections {
+        gap: 25px;
+    }
+
+    .desktop-only {
+        display: none;
+    }
+    .content-wrapper {
+        gap: 35px;
+    }
+}
