@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/LandingPage/ScrollToTop";
 import Navbar from "./components/LandingPage/Navbar";
+import Footer from "./components/LandingPage/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Search from "./pages/Search";
@@ -35,7 +36,9 @@ const App = () => {
           <Route path="/friends" element={<Friends />} />
           <Route path="/account" element={<Account />} />
       </Routes>
+      <Footer />
     </Router>
+
   );
 };
 

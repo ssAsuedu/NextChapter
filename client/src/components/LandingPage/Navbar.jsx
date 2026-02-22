@@ -76,7 +76,7 @@ const go = (path) => {
   };
 
   return (
-    <nav
+    <nav className="main-navbar"
       style={{
         height: menuOpen ? "auto" : "60px",
         boxShadow: "0 4px 12px rgba(171, 124, 231, 0.3)"
