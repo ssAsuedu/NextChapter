@@ -238,225 +238,172 @@ const Profile = () => {
     ? new Date(createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
     : "N/A";
 
-    return (
-      <div className="profile-page">
-    
-        {/* Top Profile Section */}
-        <div className="profile-top-section">
-          <div className="profile-logo-container">
-            <img src={ProfileLogo} alt="Profile Logo" className="profile-logo" />
-          </div>
-    
-          <div className="profile-info">
-            <h2 className="profile-username">{userName || "User"}</h2>
-            <p className="profile-created">Joined: {formattedDate}</p>
-            <p className="profile-followers">Friends: {friendCount}</p>
-            <div className="profile-badges-row">
-              {badges.length === 0 ? (
-                <p>No badges yet</p>
-              ) : (
-                badges.map((badge, i) => (
-                  <img
-                    key={i}
-                    src={badgeIcons[badge.type]}
-                    className="badge-icon"
-                    alt={badge.type}
-                  />
-                ))
-              )}
-            </div>
-          </div>
+  return (
+    <div className="profile-page">
+  
+      {/* Top Profile Section */}
+      <div className="profile-top-section">
+        <div className="profile-logo-container">
+          <img src={ProfileLogo} alt="Profile Logo" className="profile-logo" />
         </div>
-    
-        {/* Main Content */}
-        <div className="profile-content">
-    
-          {/* Bookshelf Header */}
-          <div className="profile-header-row">
-            <h1>Your Bookshelf</h1>
-          </div>
-    
-          {/* Bookshelf Grid */}
-          <div className="bookshelf-grid">
-            {books.length > 0 ? (
-              books.map(book => (
-                <BookCard
-                  key={book.id}
-                  info={book.volumeInfo}
-                  volumeId={book.id}
+  
+        <div className="profile-info">
+          <h2 className="profile-username">{userName || "User"}</h2>
+          <p className="profile-created">Joined: {formattedDate}</p>
+          <p className="profile-followers">Friends: {friendCount}</p>
+          <div className="profile-badges-row">
+            {badges.length === 0 ? (
+              <p>No badges yet</p>
+            ) : (
+              badges.map((badge, i) => (
+                <img
+                  key={i}
+                  src={badgeIcons[badge.type]}
+                  className="badge-icon"
+                  alt={badge.type}
                 />
               ))
-            ) : (
-              <p>No books saved yet.</p>
             )}
           </div>
-    
-          {/* Lists Section */}
-          <div className="lists-section">
-            <div className="profile-header-row">
-              <h1>Your Lists</h1>
-              <Button
-                variant="contained"
-                onClick={openCreateListModal}
-                className="create-list-btn"
-              >
-                Create New List
-              </Button>
-            </div>
-            <div className="lists-grid">
-              {lists.length > 0 ? (
-                lists.map(list => (
-                  <div key={list._id} className="list-card">
-                    <div className="list-thumbnail">
-                      {list.books.slice(0, 3).map((bookId, index) => {
-                        const book = books.find(b => b.id === bookId);
-                        return book ? (
-                          <img
-                            key={bookId}
-                            src={book.volumeInfo?.imageLinks?.thumbnail}
-                            alt=""
-                            className="list-thumb-img"
-                            style={{ zIndex: 3 - index }}
-                          />
-                        ) : null;
-                      })}
-                    </div>
-
-                    <h3>{list.name}</h3>
-                    <p>{list.books.length} books</p>
-
-                    <div className="list-actions">
-                      <button
-                        className="edit-list-btn"
-                        onClick={() => openEditListModal(list)}
-                      >
-                        Edit
-                      </button>
-
-                      <button
-                        className="delete-list-btn"
-                        onClick={() => handleDeleteList(list._id)}
-                      >
-                        Delete
-                      </button>
-                    </div>
+        </div>
+      </div>
+  
+      {/* Main Content */}
+      <div className="profile-content">
+  
+        {/* Bookshelf Header */}
+        <div className="profile-header-row">
+          <h1>Your Bookshelf</h1>
+        </div>
+  
+        {/* Bookshelf Grid */}
+        <div className="bookshelf-grid">
+          {books.length > 0 ? (
+            books.map(book => (
+              <BookCard
+                key={book.id}
+                info={book.volumeInfo}
+                volumeId={book.id}
+              />
+            ))
+          ) : (
+            <p>No books saved yet.</p>
+          )}
+        </div>
+  
+        {/* Lists Section */}
+        <div className="lists-section">
+          <div className="profile-header-row">
+            <h1>Your Lists</h1>
+            <Button
+              variant="contained"
+              onClick={openCreateListModal}
+              className="create-list-btn"
+            >
+              Create New List
+            </Button>
+          </div>
+          <div className="lists-grid">
+            {lists.length > 0 ? (
+              lists.map(list => (
+                <div key={list._id} className="list-card">
+                  <div className="list-thumbnail">
+                    {list.books.slice(0, 3).map((bookId, index) => {
+                      const book = books.find(b => b.id === bookId);
+                      return book ? (
+                        <img
+                          key={bookId}
+                          src={book.volumeInfo?.imageLinks?.thumbnail}
+                          alt=""
+                          className="list-thumb-img"
+                          style={{ zIndex: 3 - index }}
+                        />
+                      ) : null;
+                    })}
                   </div>
-                ))
-              ) : (
-                <p>No lists created yet.</p>
-              )}
-            </div>
+
+                  <h3>{list.name}</h3>
+                  <p>{list.books.length} books</p>
+
+                  <div className="list-actions">
+                    <button
+                      className="edit-list-btn"
+                      onClick={() => openEditListModal(list)}
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      className="delete-list-btn"
+                      onClick={() => handleDeleteList(list._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No lists created yet.</p>
+            )}
           </div>
         </div>
-    
-        {/* Create List Modal */}
-        <Modal
-          open={showCreateListModal}
-          onClose={closeCreateListModal}
-          className="review-modal"
+      </div>
+  
+      {/* Create List Modal */}
+      <Modal
+        open={showCreateListModal}
+        onClose={closeCreateListModal}
+        className="review-modal"
+      >
+        <Box
+          className={createListStep === 2
+            ? "review-modal-box large"
+            : "review-modal-box"}
+          onClick={(e) => e.stopPropagation()}
         >
-          <Box
-            className={createListStep === 2
-              ? "review-modal-box large"
-              : "review-modal-box"}
-            onClick={(e) => e.stopPropagation()}
-          >
-    
-            {createListStep === 1 ? (
-              <>
-                <h2 className="review-modal-title">Create New List</h2>
-    
-                <div className="modal-form-container">
-                  <div className="modal-field">
-                    <label className="modal-label">List Name</label>
-                    <input
-                      type="text"
-                      value={listName}
-                      onChange={(e) => setListName(e.target.value)}
-                      placeholder="Enter list name..."
-                      className="modal-input"
-                    />
-                  </div>
-    
-                  <div className="modal-field">
-                    <label className="modal-label">Privacy</label>
-    
-                    <div className="radio-group">
-                      <label className="radio-label">
-                        <input
-                          type="radio"
-                          value="private"
-                          checked={listPrivacy === "private"}
-                          onChange={(e) => setListPrivacy(e.target.value)}
-                        />
-                        <span>Private</span>
-                      </label>
-    
-                      <label className="radio-label">
-                        <input
-                          type="radio"
-                          value="public"
-                          checked={listPrivacy === "public"}
-                          onChange={(e) => setListPrivacy(e.target.value)}
-                        />
-                        <span>Public</span>
-                      </label>
-                    </div>
-                  </div>
-    
-                  <div className="modal-actions">
-                    <button
-                      type="button"
-                      className="cancel-btn"
-                      onClick={closeCreateListModal}
-                    >
-                      Cancel
-                    </button>
-    
-                    <button
-                      type="button"
-                      className="submit-btn"
-                      onClick={handleNextStep}
-                      disabled={!listName.trim()}
-                    >
-                      Next
-                    </button>
+  
+          {createListStep === 1 ? (
+            <>
+              <h2 className="review-modal-title">Create New List</h2>
+  
+              <div className="modal-form-container">
+                <div className="modal-field">
+                  <label className="modal-label">List Name</label>
+                  <input
+                    type="text"
+                    value={listName}
+                    onChange={(e) => setListName(e.target.value)}
+                    placeholder="Enter list name..."
+                    className="modal-input"
+                  />
+                </div>
+  
+                <div className="modal-field">
+                  <label className="modal-label">Privacy</label>
+  
+                  <div className="radio-group">
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        value="private"
+                        checked={listPrivacy === "private"}
+                        onChange={(e) => setListPrivacy(e.target.value)}
+                      />
+                      <span>Private</span>
+                    </label>
+  
+                    <label className="radio-label">
+                      <input
+                        type="radio"
+                        value="public"
+                        checked={listPrivacy === "public"}
+                        onChange={(e) => setListPrivacy(e.target.value)}
+                      />
+                      <span>Public</span>
+                    </label>
                   </div>
                 </div>
-              </>
-            ) : (
-              <>
-                <div className="modal-back" onClick={handleBackStep}>
-                  ← Back
-                </div>
-    
-                <h2 className="review-modal-title">
-                  Select Books for "{listName}"
-                </h2>
-    
-                <div className="book-selection-wrapper">
-                  <div className="book-selection-grid">
-                    {books.map(book => (
-                      <div
-                        key={book.id}
-                        onClick={() => toggleBookSelection(book.id)}
-                        className={`book-selection-item ${
-                          selectedBooks.has(book.id) ? "selected" : ""
-                        }`}
-                      >
-                        <img
-                          src={
-                            book.volumeInfo?.imageLinks?.thumbnail ||
-                            "https://via.placeholder.com/128x195?text=No+Cover"
-                          }
-                          alt={book.volumeInfo?.title}
-                          className="book-selection-img"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-    
+  
                 <div className="modal-actions">
                   <button
                     type="button"
@@ -465,102 +412,152 @@ const Profile = () => {
                   >
                     Cancel
                   </button>
-    
+  
                   <button
                     type="button"
                     className="submit-btn"
-                    onClick={handleCreateList}
+                    onClick={handleNextStep}
+                    disabled={!listName.trim()}
                   >
-                    Create List
+                    Next
                   </button>
                 </div>
-              </>
-            )}
-          </Box>
-        </Modal>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="modal-back" onClick={handleBackStep}>
+                ← Back
+              </div>
+  
+              <h2 className="review-modal-title">
+                Select Books for "{listName}"
+              </h2>
+  
+              <div className="book-selection-wrapper">
+                <div className="book-selection-grid">
+                  {books.map(book => (
+                    <div
+                      key={book.id}
+                      onClick={() => toggleBookSelection(book.id)}
+                      className={`book-selection-item ${
+                        selectedBooks.has(book.id) ? "selected" : ""
+                      }`}
+                    >
+                      <img
+                        src={
+                          book.volumeInfo?.imageLinks?.thumbnail ||
+                          "https://via.placeholder.com/128x195?text=No+Cover"
+                        }
+                        alt={book.volumeInfo?.title}
+                        className="book-selection-img"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+  
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={closeCreateListModal}
+                >
+                  Cancel
+                </button>
+  
+                <button
+                  type="button"
+                  className="submit-btn"
+                  onClick={handleCreateList}
+                >
+                  Create List
+                </button>
+              </div>
+            </>
+          )}
+        </Box>
+      </Modal>
 
-        <Modal
-  open={showEditListModal}
-  onClose={closeEditListModal}
-  className="review-modal"
->
-  <Box className="review-modal-box large">
+      <Modal
+        open={showEditListModal}
+        onClose={closeEditListModal}
+        className="review-modal"
+      >
+        <Box className="review-modal-box large">
+          <h2 className="review-modal-title">Edit List</h2>
 
-    <h2 className="review-modal-title">Edit List</h2>
-
-    <div className="modal-field">
-      <label className="modal-label">List Name</label>
-      <input
-        type="text"
-        value={editListName}
-        onChange={(e) => setEditListName(e.target.value)}
-        className="modal-input"
-      />
-    </div>
-
-    <div className="modal-field">
-      <label className="modal-label">Privacy</label>
-      <div className="radio-group">
-        <label className="radio-label">
-          <input
-            type="radio"
-            value="private"
-            checked={editListPrivacy === "private"}
-            onChange={(e) => setEditListPrivacy(e.target.value)}
-          />
-          <span>Private</span>
-        </label>
-
-        <label className="radio-label">
-          <input
-            type="radio"
-            value="public"
-            checked={editListPrivacy === "public"}
-            onChange={(e) => setEditListPrivacy(e.target.value)}
-          />
-          <span>Public</span>
-        </label>
-      </div>
-    </div>
-
-    <div className="book-selection-wrapper">
-      <div className="book-selection-grid">
-        {books.map(book => (
-          <div
-            key={book.id}
-            onClick={() => toggleEditBook(book.id)}
-            className={`book-selection-item ${
-              editSelectedBooks.has(book.id) ? "selected" : ""
-            }`}
-          >
-            <img
-              src={
-                book.volumeInfo?.imageLinks?.thumbnail ||
-                "https://via.placeholder.com/128x195?text=No+Cover"
-              }
-              alt=""
-              className="book-selection-img"
+          <div className="modal-field">
+            <label className="modal-label">List Name</label>
+            <input
+              type="text"
+              value={editListName}
+              onChange={(e) => setEditListName(e.target.value)}
+              className="modal-input"
             />
           </div>
-        ))}
-      </div>
+
+          <div className="modal-field">
+            <label className="modal-label">Privacy</label>
+            <div className="radio-group">
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  value="private"
+                  checked={editListPrivacy === "private"}
+                  onChange={(e) => setEditListPrivacy(e.target.value)}
+                />
+                <span>Private</span>
+              </label>
+
+              <label className="radio-label">
+                <input
+                  type="radio"
+                  value="public"
+                  checked={editListPrivacy === "public"}
+                  onChange={(e) => setEditListPrivacy(e.target.value)}
+                />
+                <span>Public</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="book-selection-wrapper">
+            <div className="book-selection-grid">
+              {books.map(book => (
+                <div
+                  key={book.id}
+                  onClick={() => toggleEditBook(book.id)}
+                  className={`book-selection-item ${
+                    editSelectedBooks.has(book.id) ? "selected" : ""
+                  }`}
+                >
+                  <img
+                    src={
+                      book.volumeInfo?.imageLinks?.thumbnail ||
+                      "https://via.placeholder.com/128x195?text=No+Cover"
+                    }
+                    alt=""
+                    className="book-selection-img"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="modal-actions">
+            <button className="cancel-btn" onClick={closeEditListModal}>
+              Cancel
+            </button>
+
+            <button className="submit-btn" onClick={handleUpdateList}>
+              Save Changes
+            </button>
+          </div>
+        </Box>
+      </Modal>
     </div>
-
-    <div className="modal-actions">
-      <button className="cancel-btn" onClick={closeEditListModal}>
-        Cancel
-      </button>
-
-      <button className="submit-btn" onClick={handleUpdateList}>
-        Save Changes
-      </button>
-    </div>
-
-  </Box>
-</Modal>
-    
-      </div>
-    );
+  );
 };
 
 export default Profile;
