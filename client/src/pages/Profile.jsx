@@ -12,6 +12,9 @@ import Box from '@mui/material/Box';
 import HalfwayBadge from "../assets/HalfwayBadge.svg";
 import JourneyComplete from "../assets/JourneyComplete.svg";
 import NewChapter from "../assets/NewChapter.svg";
+import FutureLibrarian from "../assets/FutureLibrarian.svg";
+import CriticInTheMaking from "../assets/CriticInTheMaking.svg";
+import { getBadges } from "../api";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -35,6 +38,18 @@ const Profile = () => {
   const [editListPrivacy, setEditListPrivacy] = useState("private");
   const [editListId, setEditListId] = useState(null);
 
+  // badge state 
+  const [badges, setBadges] = useState([]);
+  // badge mapping to svgs 
+  const badgeIcons = {
+    HALFWAY: HalfwayBadge,
+    FINISHED: JourneyComplete,
+    NEW_CHAPTER: NewChapter,
+    FUTURE_LIBRARIAN: FutureLibrarian,
+    CRITIC_IN_THE_MAKING: CriticInTheMaking,
+    NEW_CHAPTER: NewChapter,
+  };
+
   useEffect(() => {
     const fetchBookshelf = async () => {
       if (!email) return;
@@ -46,6 +61,17 @@ const Profile = () => {
 
   useEffect(() => {
     fetchLists();
+  }, [email]);
+
+  // fetch badge details 
+  useEffect(() => {
+    const fetchBadges = async () => {
+      if (!email) return;
+      const res = await getBadges(email);
+      setBadges(res.data.badges);
+    };
+
+    fetchBadges();
   }, [email]);
 
   useEffect(() => {
@@ -225,11 +251,19 @@ const Profile = () => {
             <h2 className="profile-username">{userName || "User"}</h2>
             <p className="profile-created">Joined: {formattedDate}</p>
             <p className="profile-followers">Friends: {friendCount}</p>
-    
             <div className="profile-badges-row">
-              <img src={HalfwayBadge} alt="Halfway Badge" className="badge-icon" />
-              <img src={JourneyComplete} alt="Journey Complete Badge" className="badge-icon" />
-              <img src={NewChapter} alt="New Chapter Badge" className="badge-icon" />
+              {badges.length === 0 ? (
+                <p>No badges yet</p>
+              ) : (
+                badges.map((badge, i) => (
+                  <img
+                    key={i}
+                    src={badgeIcons[badge.type]}
+                    className="badge-icon"
+                    alt={badge.type}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>
