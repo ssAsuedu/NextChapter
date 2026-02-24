@@ -31,7 +31,7 @@ const About = () => {
   const teamMembers = [
     { name: 'Shifa Sadaat', role: 'Backend' },
     { name: 'Tamara Grujicic', role: 'Frontend' },
-    { name: 'Tasnim Haque', role: 'UI/UX' },
+    { name: 'Tasnim Haque', role: 'Frontend & UI/UX' },
     { name: 'Maimouna Gaye', role: 'Backend' },
     { name: 'Diana Torres', role: 'Frontend' }
   ];
@@ -71,35 +71,36 @@ const About = () => {
             <MenuBookIcon className="feature-icon" />
             <h3>Smart Book Management</h3>
             <p>
-              Create wish lists, track your reading progress, and celebrate completed books with our
-              intuitive tracking system.
+              Track your reading, build wishlists, and celebrate finished books.
             </p>
+            <div className="card-line"></div>
           </div>
 
           <div className="feature-card">
             <GroupsIcon className="feature-icon" />
             <h3>Community Connection</h3>
             <p>
-              Join themed forums and share your reading journey with fellow book enthusiasts from around the globe.
+              Connect with readers and share your journey.
             </p>
+            <div className="card-line"></div>
           </div>
 
           <div className="feature-card">
             <AutoAwesomeIcon className="feature-icon" />
             <h3>Creative Expression</h3>
             <p>
-              Design mood boards, browse curated collections, and personalize your reading
-              experience with visual inspiration.
+              Show off your badges and make your profile uniquely yours.
             </p>
+            <div className="card-line"></div>
           </div>
 
           <div className="feature-card">
             <SearchIcon className="feature-icon" />
             <h3>Discover New Reads</h3>
             <p>
-              Explore millions of books through Google Books API, get personalized recommendations,
-              and find your next literary adventure.
+              Discover your next literary adventure with personalized suggestions.
             </p>
+            <div className="card-line"></div>
           </div>
         </div>
       </section>
@@ -122,6 +123,7 @@ const About = () => {
               </div>
               <h3>{member.name}</h3>
               <p>{member.role}</p>
+              <div className="card-line"></div>
             </div>
           ))}
         </div>

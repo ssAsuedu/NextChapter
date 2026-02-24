@@ -24,13 +24,13 @@
 .about-title {
   font-size: 3rem;
   font-weight: 700;
-  color: var(--hover);
+  color: var(--text-color);
   margin: 0 0 1rem 0;
 }
 
 .about-tagline {
   font-size: 1.25rem;
-  color: #555;
+  color: var(--secondary-color);
   margin: 0;
   max-width: 600px;
   margin: 0 auto;
@@ -47,7 +47,7 @@
 .section-heading {
   font-size: 2.2rem;
   font-weight: 700;
-  color: var(--hover);
+  color: var(--text-color);
   text-align: center;
   margin: 0 0 1.5rem 0;
 }
@@ -55,17 +55,18 @@
 /* ============ MISSION SECTION ============ */
 .mission-section {
   background: #fff;
+  
 }
 
 .mission-text {
-  max-width: 800px;
+  max-width: 700px;
   margin: 0 auto;
-  text-align: center;
+  text-align: left;
 }
 
 .mission-text p {
   font-size: 1.1rem;
-  color: #444;
+  color: var(--secondary-color);
   line-height: 1.8;
   margin: 0 0 1rem 0;
 }
@@ -109,6 +110,9 @@
   border: 1px solid var(--primary-color);
 }
 
+.feature-card:hover .card-line {
+  transform: scaleX(1); 
+}
 .feature-icon {
   font-size: 2.8rem !important;
   color: var(--primary-color);
@@ -118,17 +122,34 @@
 .feature-card h3 {
   font-size: 1.2rem;
   font-weight: 700;
-  color: var(--hover);
+  color: var(--text-color);
   margin: 0 0 0.75rem 0;
+  min-height: 40px; /* adds min-height of 40px to text so that all p text starts at the same line*/
 }
 
 .feature-card p {
   font-size: 0.95rem;
-  color: #555;
+  color: var(--secondary-color);
   line-height: 1.6;
   margin: 0;
+  text-align: left;
+  padding-top: 8px;
 }
 
+.card-line {
+  margin-top: 6px;
+  height: 3px;
+  border-radius: 2px;
+  background: linear-gradient(
+    90deg,
+    var(--primary-color) 0%,
+    var(--hover) 100%
+  );
+  
+  transform: scaleX(0);       /* hide the line initially*/
+  transform-origin: left;     /* grow the line from the left to the right */
+  transition: transform 0.5s ease; /* smooth animation */
+}
 /* ============ TEAM SECTION ============ */
 .team-section {
   background: #fff;
@@ -138,7 +159,7 @@
   font-size: 1.1rem;
   color: #444;
   line-height: 1.8;
-  text-align: center;
+  text-align: left;
   max-width: 800px;
   margin: 0 auto 2.5rem auto;
 }
@@ -160,9 +181,16 @@
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
+.team-card .card-line {
+  width: 100%;
+}
 .team-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 24px rgba(171, 124, 231, 0.15);
+}
+
+.team-card:hover .card-line {
+  transform: scaleX(1); 
 }
 
 .team-avatar {
@@ -190,7 +218,7 @@
 
 .team-card p {
   font-size: 0.9rem;
-  color: #777;
+  color: var(--secondary-color);
   margin: 0;
 }
 
@@ -222,6 +250,7 @@
   color: #444;
   line-height: 1.8;
   margin: 0;
+  text-align: left;
 }
 
 /* ============ CTA SECTION ============ */
@@ -234,7 +263,7 @@
 .about-cta h2 {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--hover);
+  color: var(--text-color);
   margin: 0 0 1rem 0;
 }
 

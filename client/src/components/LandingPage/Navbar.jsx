@@ -2,7 +2,10 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/LandingPage/Navbar.css";
-
+import MenuIcon from '@mui/icons-material/Menu'
+import CloseIcon from '@mui/icons-material/Close';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -76,7 +79,7 @@ const go = (path) => {
   };
 
   return (
-    <nav
+    <nav className="main-navbar"
       style={{
         height: menuOpen ? "auto" : "60px",
         boxShadow: "0 4px 12px rgba(171, 124, 231, 0.3)"
@@ -128,13 +131,7 @@ const go = (path) => {
             <li className="profile-link">
               
               <Link to="/profile">Profile</Link>
-
-              {/* <span className="material-symbols-outlined profile-caret">
-                keyboard_arrow_down
-              </span> */}
-
               <ul className="profile-dropdown">
-                <li><span onClick={() => navigate("/profile")}>Bookshelf</span></li>
                 <li><span onClick={() => navigate("/progress")}>Progress</span></li>
                 <li><span onClick={() => navigate("/reviews")}>Reviews</span></li>
                 <li><span onClick={() => navigate("/friends")}>Friends</span></li>
@@ -149,21 +146,14 @@ const go = (path) => {
                 className="mobile-dropdown-header"
                 onClick={() => setProfileOpen(prev => !prev)}
               >
-                <span>Profile</span>
+                <li><span onClick={() => navigate("/profile")}>Profile</span></li>
                 <span className="material-symbols-outlined">
-                  {profileOpen ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                  {profileOpen ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small"/>}
                 </span>
               </li>
 
               {profileOpen && (
                 <>
-                  <li className="mobile-dropdown-item">
-                    <span onClick={() => go("/profile")}>
-                      Go to Profile
-                    </span>
-                  </li>
-
-                  <li className="mobile-dropdown-item"><span onClick={() => go("/profile")}>Bookshelf</span></li>
                   <li className="mobile-dropdown-item"><span onClick={() => go("/progress")}>Progress</span></li>
                   <li className="mobile-dropdown-item"><span onClick={() => go("/reviews")}>Reviews</span></li>
                   <li className="mobile-dropdown-item"><span onClick={() => go("/friends")}>Friends</span></li>
@@ -172,11 +162,11 @@ const go = (path) => {
               )}
             </>
           )}
-          {/* <li><Link to="/privacyPolicy">Privacy Policy</Link></li> */}
         </ul>
         <div className="toggle-dropdown">
-          <button className="burger-drop" onClick={() => setMenuOpen(!menuOpen)}><span className="material-symbols-outlined menu">
-            {menuOpen ? "close" : "menu"}
+          <button className="burger-drop" onClick={() => setMenuOpen(!menuOpen)}><span className="material-symbols-outlined">
+            
+            {menuOpen ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
           </span></button>
         </div>
       </div>
