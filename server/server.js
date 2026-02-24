@@ -6,6 +6,7 @@ import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribu
 import User from "./models/User.js"; // Import the User model
 import Review from "./models/Review.js";
 import FriendRequest from "./models/FriendRequest.js";
+import List from "./models/List.js";
 
 dotenv.config();
 
@@ -149,6 +150,86 @@ app.get("/api/bookshelf/:email", async (req, res) => {
     res.json({ bookshelf: user.bookshelf });
   } catch (err) {
     res.status(500).json({ error: "Failed to get bookshelf" });
+  }
+});
+
+// Create a new list
+app.post("/api/lists", async (req, res) => {
+  const { email, name, privacy, books } = req.body;
+
+  if (!email || !name) {
+    return res.status(400).json({ error: "Email and list name are required" });
+  }
+
+  try {
+    const newList = new List({
+      email,
+      name,
+      privacy: privacy || "private",
+      books: books || []
+    });
+
+    await newList.save();
+
+    res.status(201).json({ message: "List created successfully", list: newList });
+  } catch (err) {
+    console.error("Create list error:", err);
+    res.status(500).json({ error: "Failed to create list" });
+  }
+});
+
+// Edit a list
+app.post("/api/lists/edit", async (req, res) => {
+  const { email, listId, name, privacy, books } = req.body;
+
+  try {
+    const list = await List.findOne({ _id: listId, email });
+
+    if (!list) {
+      return res.status(404).json({ error: "List not found for this user" });
+    }
+
+    if (name !== undefined) list.name = name;
+    if (privacy !== undefined) list.privacy = privacy;
+    if (books !== undefined) list.books = books;
+
+    await list.save();
+
+    res.json({
+      message: "List updated successfully",
+      list
+    });
+
+  } catch (err) {
+    console.error("Edit list error:", err);
+    res.status(500).json({ error: "Failed to edit list" });
+  }
+});
+
+// Delete a list
+app.delete("/api/lists/:id", async (req, res) => {
+  try {
+    const deletedList = await List.findByIdAndDelete(req.params.id);
+
+    if (!deletedList) {
+      return res.status(404).json({ error: "List not found" });
+    }
+
+    res.json({ message: "List deleted successfully" });
+  } catch (err) {
+    console.error("Delete list error:", err);
+    res.status(500).json({ error: "Failed to delete list" });
+  }
+});
+
+// Get all lists for a user
+app.get("/api/lists/:email", async (req, res) => {
+  try {
+    const lists = await List.find({ email: req.params.email }).sort({ createdAt: -1 });
+    res.json(lists);
+  } catch (err) {
+    console.error("Fetch lists error:", err);
+    res.status(500).json({ error: "Failed to fetch lists" });
   }
 });
 
