@@ -14,8 +14,10 @@ const BookCard = ({ info, volumeId }) => {
 
   const title = info.title || "No Title Available";
   const titleWords = title.split(" ");
-  const isLongTitle = titleWords.length > 10;
-  const shortTitle = isLongTitle ? titleWords.slice(0, 10).join(" ") + "..." : title;
+  const isLongTitle = titleWords.length > 8;
+  const shortTitle = isLongTitle
+    ? titleWords.slice(0, 8).join(" ") + "..."
+    : title;
 
   const handleSave = async (e) => {
     e.stopPropagation();
@@ -26,7 +28,7 @@ const BookCard = ({ info, volumeId }) => {
     try {
       await addBookToBookshelf({ email, volumeId });
       setSaved(true);
-      setBookshelf(prev => [...prev, volumeId]);
+      setBookshelf((prev) => [...prev, volumeId]);
     } catch {
       alert("Failed to save book.");
     }
@@ -36,7 +38,6 @@ const BookCard = ({ info, volumeId }) => {
     navigate(`/book/${volumeId}`);
   };
 
-  // Fetch user's bookshelf
   useEffect(() => {
     const fetchBookshelf = async () => {
       if (!email) return;
@@ -56,7 +57,6 @@ const BookCard = ({ info, volumeId }) => {
       onClick={handleClick}
       tabIndex={0}
       role="button"
-      style={{ cursor: "pointer" }}
     >
       <img
         src={info.imageLinks?.thumbnail || "/default-book.png"}
@@ -66,26 +66,24 @@ const BookCard = ({ info, volumeId }) => {
 
       <div className="title-author-wrapper">
         <h3 className="search-book-title">
-        {showFullTitle || !isLongTitle ? title : shortTitle}
-        {isLongTitle && (
-          <span
-            className="see-more-toggle"
-            onClick={(e) => {
-              e.stopPropagation();
-              setShowFullTitle(!showFullTitle);
-            }}
-          >
-           {/*   drop down for see more which shows the full title  */}
-            {showFullTitle ? "See less" : "See more"}
-          </span>
-        )}
-      </h3>
+          {showFullTitle || !isLongTitle ? title : shortTitle}
+          {isLongTitle && (
+            <span
+              className="see-more-toggle"
+              onClick={(e) => {
+                e.stopPropagation();
+                setShowFullTitle(!showFullTitle);
+              }}
+            >
+              {showFullTitle ? "See less" : "See more"}
+            </span>
+          )}
+        </h3>
 
-        <h4 className="search-book-authors">
-        {info.authors ? info.authors.join(", ") : "Unknown Author"}
-        </h4>
+        <p className="search-book-authors">
+          {info.authors ? info.authors.join(", ") : "Unknown Author"}
+        </p>
       </div>
-      
 
       <button
         className="search-save-btn"
