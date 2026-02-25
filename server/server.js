@@ -7,6 +7,7 @@ import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribu
 import User from "./models/User.js";
 import Review from "./models/Review.js";
 import FriendRequest from "./models/FriendRequest.js";
+import List from "./models/List.js";
 
 dotenv.config();
 
