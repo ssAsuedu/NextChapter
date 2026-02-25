@@ -121,3 +121,27 @@
     border-radius: 999px;
     white-space: nowrap;
   }
+
+  .hide-book-btn {
+  background-color: #ab7ce7;
+  color: white;
+  border: 2px solid #ab7ce7;
+  padding: 6px 14px;
+  border-radius: 4px;
+  margin-top: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.hide-book-btn:disabled {
+  background: #bbb;
+  border: 2px solid #bbb;
+  cursor: not-allowed;
+}
+
+.hide-book-btn:disabled {
+  background-color: #f4f4f4;
+  color: #333;
+  border: 2px solid #8561b4;
+}
