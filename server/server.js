@@ -2,8 +2,9 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
+import morgan from "morgan";
 import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from "amazon-cognito-identity-js";
-import User from "./models/User.js"; // Import the User model
+import User from "./models/User.js";
 import Review from "./models/Review.js";
 import FriendRequest from "./models/FriendRequest.js";
 
@@ -12,25 +13,72 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5050;
 
-// Middleware
-app.use(cors());
-app.use(express.json());
+// Trust proxy (HTTPS via LB) and middleware
+app.set("trust proxy", 1);
 
-// MongoDB Connection
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log("Connected to MongoDB Atlas"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+const allowedOrigins = (process.env.CORS_ORIGINS || process.env.CORS_ORIGIN || "")
+  .split(",")
+  .map(o => o.trim())
+  .filter(Boolean);
 
-// Cognito Configuration
-const poolData = {
-  UserPoolId: process.env.COGNITO_USER_POOL_ID, // Replace with your User Pool ID
-  ClientId: process.env.COGNITO_APP_CLIENT_ID,  // Replace with your App Client ID
+const corsOptions = {
+  origin: (origin, cb) => {
+    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
+    cb(new Error(`CORS blocked: ${origin}`));
+  },
+  credentials: true,
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization"
 };
+
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
+
+
+app.use(express.json());
+app.use(morgan("combined"));
+
+// MongoDB connection with env switch
+const isProd = process.env.NODE_ENV === "production";
+const mongoUri = isProd ? process.env.MONGO_PROD_URI : process.env.MONGO_URI;
+
+if (!mongoUri) {
+  console.error("Missing Mongo URI. Set MONGO_PROD_URI (prod) or MONGO_URI (dev).");
+  process.exit(1);
+}
+
+mongoose
+  .connect(mongoUri)
+  .then(() => {
+    const c = mongoose.connection;
+    console.log(`Mongo connected: env=${isProd ? "prod" : "dev"}, db=${c.name}, host=${c.host}`);
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  });
+
+// Cognito
+const poolData = isProd
+  ? { UserPoolId: process.env.COGNITO_USER_POOL_ID_PROD, ClientId: process.env.COGNITO_APP_CLIENT_ID_PROD }
+  : { UserPoolId: process.env.COGNITO_USER_POOL_ID, ClientId: process.env.COGNITO_APP_CLIENT_ID };
+
+if (!poolData.UserPoolId || !poolData.ClientId) {
+  console.error("Missing Cognito env vars for current environment.");
+  process.exit(1);
+}
 const userPool = new CognitoUserPool(poolData);
 
-// Sign-Up Route
+// Health
+app.get("/health/db", (req, res) => {
+  const c = mongoose.connection;
+  res.json({ env: isProd ? "prod" : "dev", db: c.name, host: c.host, readyState: c.readyState });
+});
+
+// Sign-Up
 app.post("/api/signup", (req, res) => {
   const { email, password, name } = req.body;
+  if (!email || !password || !name) return res.status(400).json({ error: "Missing fields" });
 
   const attributeList = [
     new CognitoUserAttribute({ Name: "email", Value: email }),
@@ -39,14 +87,12 @@ app.post("/api/signup", (req, res) => {
 
   userPool.signUp(email, password, attributeList, null, async (err, result) => {
     if (err) {
-      return res.status(400).json({ error: err.message });
+      console.error("Cognito signup error:", { code: err.code, message: err.message });
+      return res.status(400).json({ error: err.code || "BadRequest", message: err.message });
     }
-
     try {
-      // Add the user to MongoDB
       const newUser = new User({ name, email });
       await newUser.save();
-
       res.json({ message: "Sign-up successful and user added to database", user: result.user });
     } catch (dbError) {
       console.error("Error saving user to database:", dbError);
@@ -624,7 +670,7 @@ app.post("/api/users/change-password", async (req, res) => {
   });
 });
 
-// Start Server
-app.listen(PORT, () => {
+// Start server (single listen)
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server listening on port ${PORT}`);
 });
