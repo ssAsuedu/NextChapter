@@ -71,7 +71,7 @@
   margin: 0;
   font-size: 2.2rem;
   font-weight: 700;
-  color: #ab7ce7;
+  color: #6c3fc5;
   flex: 1;
 }
 
@@ -243,7 +243,7 @@
 }
 
 .bookinfo-reviews-header {
-  color: #ab7ce7;
+  color: #6c3fc5;
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 4px;
@@ -271,6 +271,50 @@
   color: #ab7ce7;
   font-size: 1.6rem;
   font-weight: 700;
+}
+
+.bookinfo-sort-container {
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bookinfo-sort-container label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+.bookinfo-sort-select {
+  padding: 0.5rem 0.75rem;
+  border: 2px solid #e6e0f8;
+  background-color: #faf8ff;
+  color: #6c3fc5;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: "Sen", sans-serif;
+}
+
+.bookinfo-sort-select:hover {
+  border-color: #6c3fc5;
+  background-color: #fff;
+}
+
+.bookinfo-sort-select:focus {
+  outline: none;
+  border-color: #6c3fc5;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(171, 124, 231, 0.1);
+}
+
+.bookinfo-sort-select option {
+  background-color: #fff;
+  color: #333;
+  padding: 8px;
 }
 
 .bookinfo-reviews-list {
@@ -316,7 +360,7 @@
 }
 
 .bookinfo-related-header {
-  color: #ab7ce7;
+  color: #6c3fc5;
   font-size: 1.6rem;
   font-weight: 700;
   margin-bottom: 4px;

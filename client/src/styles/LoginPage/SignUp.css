@@ -1,3 +1,6 @@
+* {
+  font-family:  'Sen', Arial, Helvetica, sans-serif !important;
+}
 .signup-page {
   display: flex;
   height: 100vh; /* Full height of the viewport */
@@ -17,7 +20,7 @@
   flex-direction: column;
   justify-content: center; /* Centers content vertically */
   align-items: center; /* Centers content horizontally */
-  background-color: #f4f4f4; /* Light gray background */
+  background-color: var(--background-color); /* Light gray background */
   padding: 20px;
   position: relative;
 }
@@ -29,7 +32,6 @@
 }
 
 .signup-form h1 {
-  font-family: "Crimson Text", serif;
   font-weight: 600;
   text-align: left;
   font-size: 2.5rem;
@@ -48,7 +50,6 @@
 }
 
 .login-redirect {
-  font-family: "Crimson Text", sans-serif;
   font-size: 18px;
   font-weight: 600;
   margin-top: 20px;
@@ -92,9 +93,10 @@
 }
 
 /* signup materialUI styles */
-
+.MuiFormHelperText-root.Mui-error {
+  color: var(--error-state) !important;
+}
 .form-textfield-label {
-  font-family: 'Crimson Text', serif !important;
   font-size: 18px !important;
 }
 
@@ -109,12 +111,11 @@
 
 .form-textfield-input {
   color: var(--text-color) !important;
-  font-family: 'Crimson Text', serif !important;
   font-size: 16px !important;
 }
 
 .form-textfield-input::placeholder {
-  color: #666666 !important;
+  color: var(--secondary) !important;
   opacity: 1 !important;
 }
 
@@ -140,7 +141,6 @@ input:-webkit-autofill {
 .signup {
   background-color: var(--hover) !important;
   color: #fff !important;
-  font-family: 'Crimson Text', serif !important;
   font-size: 17px !important;
   font-weight: 700 !important;
   padding: 10px !important;

@@ -1,5 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import '../styles/LandingPage/About.css';
 
 // MUI Icons (matching your Home page)
@@ -13,11 +15,23 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const About = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.hash) {
+      const element = document.querySelector(location.hash);
+      if (element) {
+        const yOffset = -50;
+        const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }
+  }, [location]);
 
   const teamMembers = [
     { name: 'Shifa Sadaat', role: 'Backend' },
     { name: 'Tamara Grujicic', role: 'Frontend' },
-    { name: 'Tasnim Haque', role: 'UI/UX' },
+    { name: 'Tasnim Haque', role: 'Frontend & UI/UX' },
     { name: 'Maimouna Gaye', role: 'Backend' },
     { name: 'Diana Torres', role: 'Frontend' }
   ];
@@ -33,7 +47,7 @@ const About = () => {
       </section>
 
       {/* Mission Section - NO BOOK ICON */}
-      <section className="about-section mission-section">
+      <section id="mission" className="about-section mission-section">
         <h2 className="section-heading">Our Mission</h2>
         <div className="mission-text">
           <p>
@@ -50,48 +64,49 @@ const About = () => {
       </section>
 
       {/* Features Section */}
-      <section className="about-section features-section">
+      <section id="what-we-offer" className="about-section features-section">
         <h2 className="section-heading">What We Offer</h2>
         <div className="features-grid">
           <div className="feature-card">
             <MenuBookIcon className="feature-icon" />
             <h3>Smart Book Management</h3>
             <p>
-              Create wish lists, track your reading progress, and celebrate completed books with our
-              intuitive tracking system.
+              Track your reading, build wishlists, and celebrate finished books.
             </p>
+            <div className="card-line"></div>
           </div>
 
           <div className="feature-card">
             <GroupsIcon className="feature-icon" />
             <h3>Community Connection</h3>
             <p>
-              Join themed forums and share your reading journey with fellow book enthusiasts from around the globe.
+              Connect with readers and share your journey.
             </p>
+            <div className="card-line"></div>
           </div>
 
           <div className="feature-card">
             <AutoAwesomeIcon className="feature-icon" />
             <h3>Creative Expression</h3>
             <p>
-              Design mood boards, browse curated collections, and personalize your reading
-              experience with visual inspiration.
+              Show off your badges and make your profile uniquely yours.
             </p>
+            <div className="card-line"></div>
           </div>
 
           <div className="feature-card">
             <SearchIcon className="feature-icon" />
             <h3>Discover New Reads</h3>
             <p>
-              Explore millions of books through Google Books API, get personalized recommendations,
-              and find your next literary adventure.
+              Discover your next literary adventure with personalized suggestions.
             </p>
+            <div className="card-line"></div>
           </div>
         </div>
       </section>
 
       {/* Team Section */}
-      <section className="about-section team-section">
+      <section id="team" className="about-section team-section">
         <h2 className="section-heading">Our Team</h2>
         <p className="team-intro">
           Next Chapter was created by a team of five passionate developers and book lovers as a
@@ -108,6 +123,7 @@ const About = () => {
               </div>
               <h3>{member.name}</h3>
               <p>{member.role}</p>
+              <div className="card-line"></div>
             </div>
           ))}
         </div>

@@ -6,6 +6,8 @@ import Button from "@mui/material/Button";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 
+const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+
 const Review = () => {
   const email = localStorage.getItem("userEmail");
   const [reviews, setReviews] = useState([]);
@@ -16,7 +18,7 @@ const Review = () => {
   const [hoverRating, setHoverRating] = useState(0);
   const [reviewText, setReviewText] = useState("");
   const [volumeOptions, setVolumeOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [openMenuIndex, setOpenMenuIndex] = useState(null);
   const [isEditMode, setIsEditMode] = useState(false);
   const [editingReview, setEditingReview] = useState(null);
@@ -24,6 +26,10 @@ const Review = () => {
   const [duplicateError, setDuplicateError] = useState(""); 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [reviewToDelete, setReviewToDelete] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortOption, setSortOption] = useState("date-desc");
+  const [titlesLoading, setTitlesLoading] = useState(true);
+  const [showAllReviewedModal, setShowAllReviewedModal] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,10 +53,14 @@ const Review = () => {
         ...reviews.map(r => r.volumeId)
       ]);
   
-      if (volumeIds.size === 0) return;
-  
+      if (volumeIds.size === 0) {
+        setTitlesLoading(false);
+        return;
+      }
+
+      setTitlesLoading(true);
       const promises = [...volumeIds].map(id =>
-        fetch(`https://www.googleapis.com/books/v1/volumes/${id}`)
+        fetch(`https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`)
           .then(res => res.json())
           .then(data => ({
             volumeId: id,
@@ -60,6 +70,7 @@ const Review = () => {
   
       const results = await Promise.all(promises);
       setVolumeOptions(results);
+      setTitlesLoading(false);
     };
   
     fetchTitles();
@@ -70,15 +81,80 @@ const Review = () => {
     return found ? found.title : volumeId;
   };
 
+  // Get available books (not yet reviewed)
+  const getAvailableBooks = () => {
+    const reviewedVolumeIds = new Set(reviews.map(r => r.volumeId));
+    return volumeOptions.filter(opt => 
+      bookshelf.includes(opt.volumeId) && !reviewedVolumeIds.has(opt.volumeId)
+    );
+  };
+
+  // Filter and sort reviews
+  const getFilteredAndSortedReviews = () => {
+    let filtered = reviews;
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter(review => {
+        const title = getTitleForReview(review.volumeId).toLowerCase();
+        return title.includes(query);
+      });
+    }
+
+    // Apply sort
+    const sorted = [...filtered];
+    switch (sortOption) {
+      case "date-desc":
+        sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        break;
+      case "date-asc":
+        sorted.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        break;
+      case "rating-desc":
+        sorted.sort((a, b) => b.rating - a.rating);
+        break;
+      case "rating-asc":
+        sorted.sort((a, b) => a.rating - b.rating);
+        break;
+      case "title-asc":
+        sorted.sort((a, b) => {
+          const titleA = getTitleForReview(a.volumeId).toLowerCase();
+          const titleB = getTitleForReview(b.volumeId).toLowerCase();
+          return titleA.localeCompare(titleB);
+        });
+        break;
+      case "title-desc":
+        sorted.sort((a, b) => {
+          const titleA = getTitleForReview(a.volumeId).toLowerCase();
+          const titleB = getTitleForReview(b.volumeId).toLowerCase();
+          return titleB.localeCompare(titleA);
+        });
+        break;
+      default:
+        break;
+    }
+
+    return sorted;
+  };
+
   const openModal = () => {
+    const availableBooks = getAvailableBooks();
+
+    if (availableBooks.length === 0) {
+      setShowAllReviewedModal(true); 
+      return;
+    }
+
     setIsEditMode(false);
     setEditingReview(null);
-    setSelectedVolume(bookshelf[0] || "");
+    setSelectedVolume(availableBooks[0]?.volumeId || "");
     setRating(0);
     setHoverRating(0);
     setReviewText("");
     setShowModal(true);
   };
+
   const closeModal = () => {
     setShowModal(false);
     setIsEditMode(false);
@@ -189,6 +265,9 @@ const Review = () => {
     setReviewToDelete(null);
   };
 
+  const availableBooks = getAvailableBooks();
+  const filteredAndSortedReviews = getFilteredAndSortedReviews();
+
   return (
     <div className="reviews-page">
       <ProfileNavbar />
@@ -203,13 +282,46 @@ const Review = () => {
             Add Review
           </Button>
         </div>
+
+        {/* Search and Sort Controls */}
+        {!loading && !titlesLoading && reviews.length > 0 && (
+          <div className="reviews-search-sort-controls">
+            <div className="reviews-search-wrapper">
+              <input
+                type="text"
+                placeholder="Search by book title..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="reviews-search-input"
+              />
+            </div>
+            <div className="reviews-sort-wrapper">
+              <label className="reviews-sort-label">Sort by:</label>
+              <select
+                value={sortOption}
+                onChange={(e) => setSortOption(e.target.value)}
+                className="reviews-sort-select"
+              >
+                <option value="date-desc">Most Recent</option>
+                <option value="date-asc">Least Recent</option>
+                <option value="rating-desc">Highest Rating</option>
+                <option value="rating-asc">Lowest Rating</option>
+                <option value="title-asc">Title (A to Z)</option>
+                <option value="title-desc">Title (Z to A)</option>
+              </select>
+            </div>
+          </div>
+        )}
+
         <div className="reviews-list">
-          {loading ? (
-            <p>Loading...</p>
+          {loading || titlesLoading ? (
+            <p>Loading reviews...</p>
           ) : reviews.length === 0 ? (
             <p>No reviews yet.</p>
+          ) : filteredAndSortedReviews.length === 0 ? (
+            <p>No reviews match your search.</p>
           ) : (
-            reviews.map((review, idx) => (
+            filteredAndSortedReviews.map((review, idx) => (
               <div className="review-card" key={review._id || idx}>
                 <button 
                   className="review-options-btn"
@@ -276,9 +388,17 @@ const Review = () => {
                   }}
                   disabled={isEditMode}
                 >
-                  {volumeOptions.map(opt => (
-                    <option key={opt.volumeId} value={opt.volumeId}>{opt.title}</option>
-                  ))}
+                  {isEditMode ? (
+                    volumeOptions
+                      .filter(opt => opt.volumeId === selectedVolume)
+                      .map(opt => (
+                        <option key={opt.volumeId} value={opt.volumeId}>{opt.title}</option>
+                      ))
+                  ) : (
+                    availableBooks.map(opt => (
+                      <option key={opt.volumeId} value={opt.volumeId}>{opt.title}</option>
+                    ))
+                  )}
                 </select>
               </div>
               <br />
@@ -339,7 +459,6 @@ const Review = () => {
             <p className="delete-modal-text">
               Are you sure you want to delete this review? This action cannot be undone.
             </p>
-
             <div className="delete-modal-actions">
               <button
                 className="cancel-btn"
@@ -352,6 +471,26 @@ const Review = () => {
                 onClick={confirmDeleteReview}
               >
                 Delete
+              </button>
+            </div>
+          </Box>
+        </Modal>
+        <Modal
+          open={showAllReviewedModal}
+          onClose={() => setShowAllReviewedModal(false)}
+          className="delete-modal"
+        >
+          <Box className="delete-modal-box" onClick={e => e.stopPropagation()}>
+            <h2 className="delete-modal-title">No Books to Review</h2>
+            <p className="delete-modal-text">
+              You have reviewed all the books in your bookshelf!
+            </p>
+            <div className="delete-modal-actions" style={{ justifyContent: 'center' }}>
+              <button
+                className="submit-btn"
+                onClick={() => setShowAllReviewedModal(false)}
+              >
+                OK
               </button>
             </div>
           </Box>

@@ -16,8 +16,6 @@
   padding: 40px 40px 32px 40px; 
   position: relative;
   box-sizing: border-box;
-  margin-left: 180px;
-  max-width: calc(100% - 180px);
 }
 
 .reviews-header {
@@ -32,7 +30,7 @@
 }
 
 .reviews-header h1 {
-  color: #ab7ce7;
+  color: #6c3fc5;
   font-size: 2.2rem;
   font-weight: 700;
   margin: 0;
@@ -59,6 +57,100 @@
 .reviews-add-btn:hover {
   background-color: #6c3fc5 !important;
   transform: scale(1.05) !important;
+}
+
+/* Search and Sort Controls */
+.reviews-search-sort-controls {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 100%;
+  max-width: 1500px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.reviews-search-wrapper {
+  flex: 1;
+  min-width: 250px;
+}
+
+.reviews-search-input {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  border: 2px solid #a99dcd;
+  background-color: #f0ecf7;
+  color: #333;
+  border-radius: 8px;
+  font-family: "Sen", sans-serif;
+  transition: all 0.2s ease;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.reviews-search-input:hover {
+  border-color: #6c3fc5;
+  background-color: #fff;
+}
+
+.reviews-search-input:focus {
+  border-color: #6c3fc5;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(171, 124, 231, 0.1);
+}
+
+.reviews-search-input::placeholder {
+  color: #000000; 
+  opacity: 0.7; 
+}
+
+.reviews-sort-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.reviews-sort-label {
+  font-weight: 500;
+  color: #555;
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.reviews-sort-select {
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  border: 2px solid #e6e0f8;
+  background-color: #faf8ff;
+  color: #6c3fc5;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: "Sen", sans-serif;
+  transition: all 0.2s ease;
+  outline: none;
+  min-width: 200px;
+  box-sizing: border-box;
+}
+
+.reviews-sort-select:hover {
+  border-color: #6c3fc5;
+  background-color: #fff;
+}
+
+.reviews-sort-select:focus {
+  border-color: #6c3fc5;
+  background-color: #fff;
+  box-shadow: 0 0 0 3px rgba(171, 124, 231, 0.1);
+}
+
+.reviews-sort-select option {
+  background-color: #fff;
+  color: #333;
+  padding: 8px;
 }
 
 .reviews-list {
@@ -443,6 +535,20 @@
   .reviews-add-btn {
     padding: 6px 18px !important;
     font-size: 0.9rem !important;
+  }
+
+  .reviews-search-sort-controls {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .reviews-search-wrapper,
+  .reviews-sort-wrapper {
+    width: 100%;
+  }
+
+  .reviews-sort-select {
+    width: 100%;
   }
 }
 

@@ -14,6 +14,14 @@ const userSchema = new mongoose.Schema({
       totalPages: Number,
     },
   ],
+  badges: [
+    {
+      type: { type: String, required: true },
+      // volumeid is optional for some badges, default to null 
+      volumeId: { type: String, default: null }, 
+      earnedAt: { type: Date, default: Date.now },
+    }
+  ],
   reviews: [
     {
       volumeId: String,

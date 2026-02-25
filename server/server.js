@@ -91,7 +91,12 @@ app.post("/api/signup", (req, res) => {
       return res.status(400).json({ error: err.code || "BadRequest", message: err.message });
     }
     try {
-      const newUser = new User({ name, email });
+      // Add the user to MongoDB and give the NewChapter badge
+      const newUser = new User({
+        name,
+        email,
+        badges: [{ type: "NEW_CHAPTER" }],
+      });
       await newUser.save();
       res.json({ message: "Sign-up successful and user added to database", user: result.user });
     } catch (dbError) {
@@ -165,6 +170,20 @@ app.post("/api/bookshelf/add", async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
     if (!user.bookshelf.includes(volumeId)) {
       user.bookshelf.push(volumeId);
+      // if user has more than 20 books in shelf, then they earn the future librarian badge 
+      if (user.bookshelf.length >= 20) {
+        const alreadyHas = (user.badges || []).some(
+          (b) => b.type === "FUTURE_LIBRARIAN"
+        );
+
+        if (!alreadyHas) {
+          user.badges = user.badges || [];
+          user.badges.push({
+            type: "FUTURE_LIBRARIAN",
+            earnedAt: new Date(),
+          });
+        }
+      }
       await user.save();
     }
     res.json({ message: "Book added to bookshelf", bookshelf: user.bookshelf });
@@ -198,6 +217,86 @@ app.get("/api/bookshelf/:email", async (req, res) => {
   }
 });
 
+// Create a new list
+app.post("/api/lists", async (req, res) => {
+    const { email, name, privacy, books } = req.body;
+  
+    if (!email || !name) {
+      return res.status(400).json({ error: "Email and list name are required" });
+    }
+  
+    try {
+      const newList = new List({
+        email,
+        name,
+        privacy: privacy || "private",
+        books: books || []
+      });
+  
+      await newList.save();
+  
+      res.status(201).json({ message: "List created successfully", list: newList });
+    } catch (err) {
+      console.error("Create list error:", err);
+      res.status(500).json({ error: "Failed to create list" });
+    }
+  });
+  
+  // Edit a list
+  app.post("/api/lists/edit", async (req, res) => {
+    const { email, listId, name, privacy, books } = req.body;
+  
+    try {
+      const list = await List.findOne({ _id: listId, email });
+  
+      if (!list) {
+        return res.status(404).json({ error: "List not found for this user" });
+      }
+  
+      if (name !== undefined) list.name = name;
+      if (privacy !== undefined) list.privacy = privacy;
+      if (books !== undefined) list.books = books;
+  
+      await list.save();
+  
+      res.json({
+        message: "List updated successfully",
+        list
+      });
+  
+    } catch (err) {
+      console.error("Edit list error:", err);
+      res.status(500).json({ error: "Failed to edit list" });
+    }
+  });
+  
+  // Delete a list
+  app.delete("/api/lists/:id", async (req, res) => {
+    try {
+      const deletedList = await List.findByIdAndDelete(req.params.id);
+  
+      if (!deletedList) {
+        return res.status(404).json({ error: "List not found" });
+      }
+  
+      res.json({ message: "List deleted successfully" });
+    } catch (err) {
+      console.error("Delete list error:", err);
+      res.status(500).json({ error: "Failed to delete list" });
+    }
+  });
+  
+  // Get all lists for a user
+  app.get("/api/lists/:email", async (req, res) => {
+    try {
+      const lists = await List.find({ email: req.params.email }).sort({ createdAt: -1 });
+      res.json(lists);
+    } catch (err) {
+      console.error("Fetch lists error:", err);
+      res.status(500).json({ error: "Failed to fetch lists" });
+    }
+  });
+
 // Get progress for all books
 app.get("/api/progress/:email", async (req, res) => {
   const user = await User.findOne({ email: req.params.email });
@@ -211,6 +310,9 @@ app.post("/api/progress/update", async (req, res) => {
   const user = await User.findOne({ email });
   if (!user) return res.status(404).json({ error: "User not found" });
 
+  const safeTotal = Math.max(0, Number(totalPages) || 0);
+  const safeCurrent = Math.max(0, Math.min(Number(currentPage) || 0, safeTotal));
+
   const idx = user.progress.findIndex((p) => p.volumeId === volumeId);
   if (idx > -1) {
     user.progress[idx].currentPage = currentPage;
@@ -218,8 +320,40 @@ app.post("/api/progress/update", async (req, res) => {
   } else {
     user.progress.push({ volumeId, currentPage, totalPages });
   }
+  // logic for the badges earend based on user progress are being handled here 
+  // below handles the logic for the halfway badge (it is limited to one halfway badge per book)
+  const percent = safeTotal > 0 ? safeCurrent / safeTotal : 0;
+
+  if (percent >= 0.5) {
+    const alreadyHas = (user.badges || []).some(
+      (b) => b.type === "HALFWAY" && b.volumeId === volumeId
+    );
+
+    if (!alreadyHas) {
+      user.badges = user.badges || [];
+      user.badges.push({ type: "HALFWAY", volumeId, earnedAt: new Date() });
+    }
+  }
+  // for finishing a book 
+  if (safeTotal > 0 && safeCurrent >= safeTotal) {
+    const alreadyFinished = (user.badges || []).some(
+      (b) => b.type === "FINISHED" && b.volumeId === volumeId
+    );
+
+    if (!alreadyFinished) {
+      user.badges = user.badges || [];
+      user.badges.push({ type: "FINISHED", volumeId, earnedAt: new Date() });
+    }
+  }
   await user.save();
-  res.json({ message: "Progress updated", progress: user.progress });
+  res.json({ message: "Progress updated", progress: user.progress, badges: user.badges, });
+});
+// logic to get all of the badges accosiated with a user account  
+app.get("/api/badges/:email", async (req, res) => {
+  const user = await User.findOne({ email: req.params.email });
+  if (!user) return res.status(404).json({ error: "User not found" });
+
+  res.json({ badges: user.badges || [] });
 });
 
 app.get("/api/reviews/:email", async (req, res) => {
@@ -244,6 +378,16 @@ app.post("/api/reviews/add", async (req, res) => {
     }
 
     user.reviews.push({ volumeId, rating, reviewText });
+
+    // critic in the making badge check, if the user has posted 10 reviews or more 
+    if ((user.reviews || []).length >= 10) {
+      const alreadyHas = (user.badges || []).some(b => b.type === "CRITIC_IN_THE_MAKING");
+      if (!alreadyHas) {
+        user.badges = user.badges || [];
+        user.badges.push({ type: "CRITIC_IN_THE_MAKING", earnedAt: new Date() });
+      }
+    }
+
     await user.save();
 
     const review = new Review({ email, name, volumeId, rating, reviewText });
@@ -668,6 +812,32 @@ app.post("/api/users/change-password", async (req, res) => {
       res.status(401).json({ error: err.message || "Authentication failed" });
     },
   });
+});
+
+// Get trending books (most-added to bookshelves across all users)
+app.get("/api/trending", async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 12;
+
+    // Aggregate: unwind all users' bookshelves, count occurrences of each volumeId
+    const trending = await User.aggregate([
+      { $unwind: "$bookshelf" },
+      { $group: { _id: "$bookshelf", count: { $sum: 1 } } },
+      { $sort: { count: -1 } },
+      { $limit: limit },
+    ]);
+
+    // Return array of { volumeId, count }
+    const results = trending.map((item) => ({
+      volumeId: item._id,
+      readers: item.count,
+    }));
+
+    res.json({ trending: results });
+  } catch (err) {
+    console.error("Error fetching trending books:", err);
+    res.status(500).json({ error: "Failed to fetch trending books" });
+  }
 });
 
 // Start server (single listen)

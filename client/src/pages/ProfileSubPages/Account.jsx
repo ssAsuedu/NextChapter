@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import "../../styles/ProfilePage/Account.css";
+import profileImage from "../../assets/profile2.svg";
 import ProfileNavbar from '../../components/ProfilePage/ProfileNavbar';
 import { getAllUsers, getFriends, updateUserName, changePassword } from '../../api';
-
+import { TextField, Button} from "@mui/material"
 
 const Account = () => {
   const email = localStorage.getItem("userEmail");
@@ -113,59 +114,44 @@ const Account = () => {
     <div className="account-page">
       <ProfileNavbar />
       <div className="account-info">
-        <h1 className="account-title">Account Information</h1>
-        <div className="account-info-row">
-          <strong>Name:</strong>
-          {editing ? (
-            <>
-              <input
-                className="edit-name-input"
-                value={newName}
-                onChange={e => setNewName(e.target.value)}
-                disabled={loading}
-              />
-              <button className="cancel-btn" onClick={() => { setEditing(false); setNewName(user.name); }} disabled={loading}>
-                Cancel
-              </button>
-              <button className="save-btn" onClick={handleNameChange} disabled={loading || !newName.trim()}>
-                Save
-              </button>
-            </>
-          ) : (
-            <>
-              <span style={{ marginLeft: 8 }}>{user.name}</span>
-              <button className="edit-btn" onClick={() => setEditing(true)}>Change Name</button>
-            </>
-          )}
+        <div className="info-display">
+          <img className="profile-logo account-img" src={profileImage} alt="Profile Icon"></img>
+          <div className="name-email-wrapper">
+            <p className="account-user"><strong>{user.name}</strong></p>
+            <p className="account-secondary email-text">{email}</p>
+            <p className="account-secondary member-text"><strong>Member Since:</strong> <span style={{ marginLeft: 0 }}>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}</span></p>
+            <p className="account-secondary friend-text"><strong>Number of Friends:</strong> <span style={{ marginLeft: 0 }}>{friendCount}</span></p>
+          </div>
+        </div>
+        
+        <h1 className="account-title">Edit Account Information</h1>
+        <hr className="account-separator"></hr>
+        <div className="row-info">
+          <h2>Name</h2>
+          <TextField className="name-input"
+            placeholder="Enter new name"
+            // value={newName}
+            onChange={e => setNewName(e.target.value)}
+            variant="outlined"
+          />
         </div>
         <hr className="account-separator" />
-        <div className="account-info-row">
-          <strong>Email:</strong>
-          <span style={{ marginLeft: 8 }}>{user.email}</span>
-        </div>
-        <hr className="account-separator" />
-        <div className="account-info-row">
-          <strong>Member Since:</strong>
-          <span style={{ marginLeft: 8 }}>{user.createdAt ? new Date(user.createdAt).toLocaleDateString() : "N/A"}</span>
-        </div>
-        <hr className="account-separator" />
-        <div className="account-info-row">
-          <strong>Number of Friends:</strong>
-          <span style={{ marginLeft: 8 }}>{friendCount}</span>
-        </div>
-        <hr className="account-separator" />
-        <div className="account-info-row">
-          <button className="edit-btn" onClick={() => setShowPasswordModal(true)}>
+        
+          <div className="account-info-buttons">
+            <button className="signup-button change-password" onClick={() => setShowPasswordModal(true)}>
             Change Password
           </button>
-        </div>
+          <button className="browse-button save-changes" onClick={(handleNameChange)}>Save Changes</button>
+          </div>
+        
         {passwordError && <div className="message error">{passwordError}</div>}
         {passwordSuccess && <div className="message success">{passwordSuccess}</div>}
         {showPasswordModal && (
           <div className="password-modal">
             <form onSubmit={handleChangePassword}>
               <h3>Change Password</h3>
-              <input
+              <div className="input-field-wrapper">
+                <input
                 type="password"
                 placeholder="Current Password"
                 value={oldPassword}
@@ -186,6 +172,8 @@ const Account = () => {
                 onChange={e => setConfirmPassword(e.target.value)}
                 required
               />
+              </div>
+              
               <div style={{ marginTop: "12px", alignItems: "center", display: "flex", justifyContent: "center", gap: "12px" }}>
               
                 <button
@@ -206,7 +194,9 @@ const Account = () => {
               </div>
             </form>
           </div>
+          
         )}
+        
       </div>
     </div>
   );

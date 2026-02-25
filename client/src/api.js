@@ -26,12 +26,32 @@ export const getBookshelf = async (email) => {
   return axios.get(`${API_BASE_URL}/bookshelf/${email}`);
 };
 
+export const createList = async ({ email, name, privacy, books }) => {
+    return axios.post(`${API_BASE_URL}/lists`, { email, name, privacy, books });
+  };
+  
+  export const deleteList = async (listId) => {
+    return axios.delete(`${API_BASE_URL}/lists/${listId}`);
+  };
+  
+  export const updateList = async ({ email, listId, name, privacy, books }) => {
+    return axios.post(`${API_BASE_URL}/lists/edit`, { email, listId, name, privacy, books });
+  };
+  
+  export const getUserLists = async (email) => {
+    return axios.get(`${API_BASE_URL}/lists/${email}`);
+  };
+
 export const getProgress = async (email) => {
   return axios.get(`${API_BASE_URL}/progress/${email}`);
 };
 
 export const updateProgress = async ({ email, volumeId, currentPage, totalPages }) => {
   return axios.post(`${API_BASE_URL}/progress/update`, { email, volumeId, currentPage, totalPages });
+};
+// code for getting all of a users badges 
+export const getBadges = async (email) => {
+  return axios.get(`${API_BASE_URL}/badges/${email}`);
 };
 
 export const getReviews = async (email) => {
@@ -119,6 +139,30 @@ export const checkFriendshipStatus = async ({ userEmail, otherUserEmail }) => {
   return axios.get(`${API_BASE_URL}/friends/status`, {
     params: { userEmail, otherUserEmail }
   });
+};
+
+// TRENDING BOOKS
+
+export const getTrendingBooks = async (limit = 12) => {
+  return axios.get(`${API_BASE_URL}/trending`, { params: { limit } });
+};
+
+// WISHLIST API CALLS
+
+export const getWishlist = async (email) => {
+  return axios.get(`${API_BASE_URL}/wishlist/${email}`);
+};
+
+export const addToWishlist = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/wishlist/add`, { email, volumeId });
+};
+
+export const removeFromWishlist = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/wishlist/remove`, { email, volumeId });
+};
+
+export const moveWishlistToBookshelf = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/wishlist/move-to-bookshelf`, { email, volumeId });
 };
 
 export const updateUserName = async ({ email, name }) => {

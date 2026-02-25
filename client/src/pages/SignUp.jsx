@@ -97,7 +97,7 @@ const SignUp = () => {
       {/* Left Half with Sign-Up Form */}
       <div className="signup-form">
         <div className="signup-form-content">
-          {!showConfirm && <img src={signUp} className="signup-svg"></img>}
+          {!showConfirm && <img src={signUp} alt="Picture of a form with two textfields and submit button." className="signup-svg"></img>}
           {!showConfirm && <h1>Create an Account</h1>}
           {!showConfirm ? (
           <>
@@ -201,7 +201,7 @@ const SignUp = () => {
         ) : (
           <>
             <h1>Confirm Your Email</h1>
-            <img src={confirmationImage} className="confirmation-svg"></img>
+            <img src={confirmationImage} alt = "Girl holding a phone with a checkmark icon indicating email confirmation." className="confirmation-svg"></img>
             <form onSubmit={handleConfirm} noValidate>
               <div>
                 <TextField
@@ -262,7 +262,7 @@ const SignUp = () => {
             </form>
           </>
         )}
-        <p className="login-redirect">Have an account already? <a href="/login">Login</a></p>
+        <p className="login-redirect">Already have an account?<a href="/login"> Login now</a></p>
       </div>
       </div>
       {/* Right Half with image */}
