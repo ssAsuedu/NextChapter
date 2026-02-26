@@ -8,7 +8,7 @@ import User from "./models/User.js";
 import Review from "./models/Review.js";
 import FriendRequest from "./models/FriendRequest.js";
 import List from "./models/List.js";
-
+import featureRoutes from "./models/featureRoutes.js";
 dotenv.config();
 
 const app = express();
@@ -32,12 +32,14 @@ const corsOptions = {
   allowedHeaders: "Content-Type,Authorization"
 };
 
-app.use(cors(corsOptions));
+//app.use(cors(corsOptions));
+app.use(cors());
 app.options(/.*/, cors(corsOptions));
 
 
 app.use(express.json());
 app.use(morgan("combined"));
+app.use("/api", featureRoutes);
 
 // MongoDB connection with env switch
 const isProd = process.env.NODE_ENV === "production";
@@ -814,32 +816,48 @@ app.post("/api/users/change-password", async (req, res) => {
     },
   });
 });
+// ============ TRENDING BOOKS ROUTE ============
+
+// Simple in-memory cache for trending (refreshes every 5 minutes)
+let trendingCache = null;
+let trendingCacheTime = 0;
+const TRENDING_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
 
 // Get trending books (most-added to bookshelves across all users)
 app.get("/api/trending", async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 12;
+    const now = Date.now();
+
+    // Return cached result if still fresh
+    if (trendingCache && (now - trendingCacheTime) < TRENDING_CACHE_TTL) {
+      return res.json({ trending: trendingCache.slice(0, limit) });
+    }
 
     // Aggregate: unwind all users' bookshelves, count occurrences of each volumeId
     const trending = await User.aggregate([
       { $unwind: "$bookshelf" },
       { $group: { _id: "$bookshelf", count: { $sum: 1 } } },
       { $sort: { count: -1 } },
-      { $limit: limit },
+      { $limit: 20 },
     ]);
 
-    // Return array of { volumeId, count }
     const results = trending.map((item) => ({
       volumeId: item._id,
       readers: item.count,
     }));
 
-    res.json({ trending: results });
+    // Update cache
+    trendingCache = results;
+    trendingCacheTime = now;
+
+    res.json({ trending: results.slice(0, limit) });
   } catch (err) {
     console.error("Error fetching trending books:", err);
     res.status(500).json({ error: "Failed to fetch trending books" });
   }
 });
+
 
 // Start server (single listen)
 app.listen(PORT, "0.0.0.0", () => {
