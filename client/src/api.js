@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "http://localhost:5050/api";
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:5050/api";
 
 export const signup = async ({ email, password, name }) => {
   return axios.post(`${API_BASE_URL}/signup`, { email, password, name });
@@ -25,6 +25,22 @@ export const deleteBookFromBookshelf = async ({ email, volumeId }) => {
 export const getBookshelf = async (email) => {
   return axios.get(`${API_BASE_URL}/bookshelf/${email}`);
 };
+
+export const createList = async ({ email, name, privacy, books }) => {
+    return axios.post(`${API_BASE_URL}/lists`, { email, name, privacy, books });
+  };
+  
+  export const deleteList = async (listId) => {
+    return axios.delete(`${API_BASE_URL}/lists/${listId}`);
+  };
+  
+  export const updateList = async ({ email, listId, name, privacy, books }) => {
+    return axios.post(`${API_BASE_URL}/lists/edit`, { email, listId, name, privacy, books });
+  };
+  
+  export const getUserLists = async (email) => {
+    return axios.get(`${API_BASE_URL}/lists/${email}`);
+  };
 
 export const getProgress = async (email) => {
   return axios.get(`${API_BASE_URL}/progress/${email}`);
@@ -74,9 +90,9 @@ export const searchUsers = async (searchQuery) => {
 
 // Send a friend request
 export const sendFriendRequest = async ({ senderEmail, receiverEmail }) => {
-  return axios.post(`${API_BASE_URL}/friends/request`, {
-    senderEmail,
-    receiverEmail
+  return axios.post(`${API_BASE_URL}/friends/request`, { 
+    senderEmail, 
+    receiverEmail 
   });
 };
 
@@ -92,16 +108,16 @@ export const getSentRequests = async (email) => {
 
 // Accept a friend request
 export const acceptFriendRequest = async ({ requestId, userEmail }) => {
-  return axios.post(`${API_BASE_URL}/friends/request/accept`, {
-    requestId,
-    userEmail
+  return axios.post(`${API_BASE_URL}/friends/request/accept`, { 
+    requestId, 
+    userEmail 
   });
 };
 
 // Reject/Cancel a friend request
 export const rejectFriendRequest = async ({ requestId }) => {
-  return axios.post(`${API_BASE_URL}/friends/request/reject`, {
-    requestId
+  return axios.post(`${API_BASE_URL}/friends/request/reject`, { 
+    requestId 
   });
 };
 
@@ -112,9 +128,9 @@ export const getFriends = async (email) => {
 
 // Remove a friend
 export const removeFriend = async ({ userEmail, friendEmail }) => {
-  return axios.post(`${API_BASE_URL}/friends/remove`, {
-    userEmail,
-    friendEmail
+  return axios.post(`${API_BASE_URL}/friends/remove`, { 
+    userEmail, 
+    friendEmail 
   });
 };
 
@@ -126,11 +142,13 @@ export const checkFriendshipStatus = async ({ userEmail, otherUserEmail }) => {
 };
 
 // TRENDING BOOKS
+
 export const getTrendingBooks = async (limit = 12) => {
   return axios.get(`${API_BASE_URL}/trending`, { params: { limit } });
 };
 
 // WISHLIST API CALLS
+
 export const getWishlist = async (email) => {
   return axios.get(`${API_BASE_URL}/wishlist/${email}`);
 };
@@ -154,7 +172,6 @@ export const updateUserName = async ({ email, name }) => {
 export const changePassword = async ({ email, oldPassword, newPassword }) => {
   return axios.post(`${API_BASE_URL}/users/change-password`, { email, oldPassword, newPassword });
 };
-
 // ============ STREAK API CALLS ============
 // Get streak data (current streak, longest streak, 90-day activity)
 export const getStreak = async (email) => {
