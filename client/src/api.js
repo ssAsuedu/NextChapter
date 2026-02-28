@@ -172,3 +172,55 @@ export const updateUserName = async ({ email, name }) => {
 export const changePassword = async ({ email, oldPassword, newPassword }) => {
   return axios.post(`${API_BASE_URL}/users/change-password`, { email, oldPassword, newPassword });
 };
+// ============ STREAK API CALLS ============
+// Get streak data (current streak, longest streak, 90-day activity)
+export const getStreak = async (email) => {
+  return axios.get(`${API_BASE_URL}/streak/${email}`);
+};
+
+// Log reading activity for today
+export const logReadingActivity = async ({ email }) => {
+  return axios.post(`${API_BASE_URL}/streak/log`, { email });
+};
+
+// Use a streak freeze
+export const useStreakFreeze = async ({ email }) => {
+  return axios.post(`${API_BASE_URL}/streak/freeze`, { email });
+};
+
+
+// BOOK JOURNAL API CALLS
+export const getJournalEntries = async (email, volumeId) => {
+  return axios.get(`${API_BASE_URL}/journal/${email}/${volumeId}`);
+};
+
+export const getAllJournalEntries = async (email, searchQuery) => {
+  const params = searchQuery ? { q: searchQuery } : {};
+  return axios.get(`${API_BASE_URL}/journal/${email}`, { params });
+};
+
+export const createJournalEntry = async ({ email, volumeId, title, content }) => {
+  return axios.post(`${API_BASE_URL}/journal/create`, { email, volumeId, title, content });
+};
+
+export const updateJournalEntry = async ({ email, entryId, title, content }) => {
+  return axios.post(`${API_BASE_URL}/journal/update`, { email, entryId, title, content });
+};
+
+export const deleteJournalEntry = async ({ email, entryId }) => {
+  return axios.post(`${API_BASE_URL}/journal/delete`, { email, entryId });
+};
+
+// MOOD FINDER API CALLS
+
+export const getAvailableMoods = async () => {
+  return axios.get(`${API_BASE_URL}/mood/moods`);
+};
+
+export const getBooksByMood = async (moodIds) => {
+  return axios.get(`${API_BASE_URL}/mood/books`, { params: { moods: moodIds.join(",") } });
+};
+
+export const getSurpriseMoods = async () => {
+  return axios.get(`${API_BASE_URL}/mood/surprise`);
+};

@@ -16,6 +16,7 @@ import Reviews from "./pages/ProfileSubPages/Reviews";
 import BookInfo from "./pages/BookInfo";
 import Friends from "./pages/ProfileSubPages/Friends";
 import Account from "./pages/ProfileSubPages/Account";
+import MoodFinder from "./pages/MoodFinder";
 const App = () => {
   return (
     <Router>
@@ -33,8 +34,9 @@ const App = () => {
         <Route path="/progress" element={<Progress />} />
         <Route path="/reviews" element={<Reviews />} />
         <Route path="/book/:volumeId" element={<BookInfo />} />
-          <Route path="/friends" element={<Friends />} />
-          <Route path="/account" element={<Account />} />
+        <Route path="/friends" element={<Friends />} />
+        <Route path="/account" element={<Account />} />
+        <Route path="/mood" element={<MoodFinder />} />
       </Routes>
       <Footer />
     </Router>
