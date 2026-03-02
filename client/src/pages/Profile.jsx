@@ -16,6 +16,7 @@ import NewChapter from "../assets/NewChapter.svg";
 import FutureLibrarian from "../assets/FutureLibrarian.svg";
 import CriticInTheMaking from "../assets/CriticInTheMaking.svg";
 import { getBadges } from "../api";
+import ReadingStreak from "../components/ProfilePage/ReadingStreak";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -115,7 +116,9 @@ const Profile = () => {
       try {
         const usersRes = await getAllUsers();
         const foundUser = usersRes.data.find(u => u.email === email);
-        if (foundUser) setCreatedAt(foundUser.createdAt);
+        if (foundUser) {
+          setCreatedAt(foundUser.createdAt);
+        }
         const friendsRes = await getFriends(email);
         setFriendCount(Array.isArray(friendsRes.data) ? friendsRes.data.length : 0);
       } catch (e) {
@@ -381,6 +384,11 @@ const Profile = () => {
         </div>
       </div>
 
+      {/* Reading Streak Tracker */}
+      <div className="profile-content">
+        <ReadingStreak />
+      </div>
+  
       {/* Main Content */}
       <div className="profile-content">
 

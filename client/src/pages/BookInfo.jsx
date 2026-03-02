@@ -6,7 +6,7 @@ import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { getBookReviews, getBookshelf, addBookToBookshelf, deleteBookFromBookshelf } from "../api";
-
+import BookJournal from "../components/ExplorePage/BookJournal";
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 const BookInfo = () => {
@@ -246,6 +246,7 @@ const BookInfo = () => {
               >
                 Add to Bookshelf
               </button>
+              
             )}
           </div>
           <div
@@ -380,6 +381,7 @@ const BookInfo = () => {
         </div>
       </div>
       </div>
+      <BookJournal volumeId={volumeId} />
       <hr className="bookinfo-section-separator" />
       {relatedBooks.length > 0 && (
         <div className="bookinfo-related-section">
