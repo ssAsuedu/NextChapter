@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBookshelf, getAllUsers, getFriends } from "../api";
 import { createList, getUserLists, deleteList, updateList} from "../api";
@@ -37,17 +37,20 @@ const Profile = () => {
   const [lists, setLists] = useState([]);
   const [showEditListModal, setShowEditListModal] = useState(false);
   const [editingList, setEditingList] = useState(null);
-  const [editSelectedBooks, setEditSelectedBooks] = useState([]); // ordered array
+  const [editSelectedBooks, setEditSelectedBooks] = useState([]);
   const [editListName, setEditListName] = useState("");
   const [editListPrivacy, setEditListPrivacy] = useState("private");
   const [editListDescription, setEditListDescription] = useState("");
   const [editListId, setEditListId] = useState(null);
+  const [editListStep, setEditListStep] = useState(1);
   const [openMenuListId, setOpenMenuListId] = useState(null);
 
-  // Detail view state
+  const editBookGridRef = useRef(null);
+  const scrollIntervalRef = useRef(null);
+
   const [selectedList, setSelectedList] = useState(null);
   const [detailSearch, setDetailSearch] = useState("");
-  const [detailSort, setDetailSort] = useState("custom"); // custom | title | author
+  const [detailSort, setDetailSort] = useState("custom");
   const [draggedBookId, setDraggedBookId] = useState(null);
   const [dragOverBookId, setDragOverBookId] = useState(null);
 
@@ -62,6 +65,40 @@ const Profile = () => {
     NEW_CHAPTER: NewChapter,
     FUTURE_LIBRARIAN: FutureLibrarian,
     CRITIC_IN_THE_MAKING: CriticInTheMaking,
+  };
+
+  const startAutoScroll = (direction) => {
+    if (scrollIntervalRef.current) return;
+    scrollIntervalRef.current = setInterval(() => {
+      const container = editBookGridRef.current;
+      if (container) {
+        container.scrollTop += direction === "up" ? -8 : 8;
+      }
+    }, 16);
+  };
+  
+  const stopAutoScroll = () => {
+    clearInterval(scrollIntervalRef.current);
+    scrollIntervalRef.current = null;
+  };
+  
+  const handleDragOverWithScroll = (e, bookId) => {
+    e.preventDefault();
+    setDragOverBookId(bookId);
+  
+    const container = editBookGridRef.current;
+    if (!container) return;
+  
+    const { top, bottom } = container.getBoundingClientRect();
+    const threshold = 80;
+  
+    if (e.clientY < top + threshold) {
+      startAutoScroll("up");
+    } else if (e.clientY > bottom - threshold) {
+      startAutoScroll("down");
+    } else {
+      stopAutoScroll();
+    }
   };
 
   useEffect(() => {
@@ -135,6 +172,10 @@ const Profile = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    return () => stopAutoScroll();
+  }, []);
+
   const fetchLists = async () => {
     if (!email) return;
     try {
@@ -146,7 +187,6 @@ const Profile = () => {
     }
   };
 
-  // ── Create List ──
   const openCreateListModal = () => {
     setShowCreateListModal(true);
     setCreateListStep(1);
@@ -194,7 +234,6 @@ const Profile = () => {
     }
   };
 
-  // ── Delete ──
   const handleDeleteList = (listId) => {
     setListToDelete(listId);
     setShowDeleteModal(true);
@@ -211,7 +250,6 @@ const Profile = () => {
     }
   };
 
-  // ── Update / Edit ──
   const handleUpdateList = async () => {
     try {
       await updateList({
@@ -223,7 +261,6 @@ const Profile = () => {
         books: editSelectedBooks,
       });
       await fetchLists();
-      // Refresh selectedList if it's the one being edited
       if (selectedList && selectedList._id === editListId) {
         setSelectedList(prev => ({
           ...prev,
@@ -247,12 +284,14 @@ const Profile = () => {
     setEditListDescription(list.description || "");
     setEditSelectedBooks(list.books);
     setEditListId(list._id);
+    setEditListStep(1);
     setShowEditListModal(true);
   };
 
   const closeEditListModal = () => {
     setShowEditListModal(false);
     setEditingList(null);
+    setEditListStep(1);
   };
 
   const toggleEditBook = (bookId) => {
@@ -263,7 +302,6 @@ const Profile = () => {
     );
   };
 
-  // ── Pin ──
   const handleTogglePin = async (list, e) => {
     e.stopPropagation();
     const currentlyPinned = list.pinned === true;
@@ -290,7 +328,6 @@ const Profile = () => {
     }
   };
 
-  // ── Detail View ──
   const openListDetail = (list) => {
     setSelectedList(list);
     setDetailSearch("");
@@ -299,7 +336,6 @@ const Profile = () => {
 
   const closeListDetail = () => setSelectedList(null);
 
-  // Drag-to-reorder within detail view
   const handleDragStart = (bookId) => setDraggedBookId(bookId);
 
   const handleDragOver = (e, bookId) => {
@@ -325,8 +361,6 @@ const Profile = () => {
     setDragOverBookId(null);
   };
 
-
-  // Sorted/filtered books for detail view
   const getDetailBooks = () => {
     if (!selectedList) return [];
     let listBooks = selectedList.books
@@ -353,7 +387,6 @@ const Profile = () => {
     return listBooks;
   };
 
-  // Sort lists: pinned first
   const sortedLists = [...lists].sort((a, b) => (b.pinned === true ? 1 : 0) - (a.pinned === true ? 1 : 0));
 
   const formattedDate = createdAt
@@ -431,8 +464,6 @@ const Profile = () => {
                       Pinned
                     </span>
                   )}
-
-                  {/* Three-dot options button */}
                   <button
                     className="list-options-btn"
                     onClick={(e) => {
@@ -521,8 +552,6 @@ const Profile = () => {
               )}
             </div>
           </div>
-
-          {/* Search & Sort Controls */}
           <div className="detail-controls">
             <input
               className="modal-input detail-search"
@@ -649,83 +678,105 @@ const Profile = () => {
 
       {/* ── Edit List Modal ── */}
       <Modal open={showEditListModal} onClose={closeEditListModal} className="review-modal">
-        <Box className="review-modal-box large">
-          <h2 className="review-modal-title">Edit List</h2>
-          <div className="modal-field">
-            <label className="modal-label">List Name</label>
-            <input type="text" value={editListName} onChange={(e) => setEditListName(e.target.value)} className="modal-input" />
-          </div>
-          <div className="modal-field">
-            <label className="modal-label">Description (optional)</label>
-            <textarea
-              value={editListDescription}
-              onChange={(e) => setEditListDescription(e.target.value)}
-              placeholder="What's this list about?"
-              className="modal-input modal-textarea"
-              rows={3}
-            />
-          </div>
-          <div className="modal-field">
-            <label className="modal-label">Privacy</label>
-            <div className="radio-group">
-              <label className="radio-label">
-                <input type="radio" value="private" checked={editListPrivacy === "private"} onChange={(e) => setEditListPrivacy(e.target.value)} />
-                <span>Private</span>
-              </label>
-              <label className="radio-label">
-                <input type="radio" value="public" checked={editListPrivacy === "public"} onChange={(e) => setEditListPrivacy(e.target.value)} />
-                <span>Public</span>
-              </label>
-            </div>
-          </div>
-          <div className="book-selection-wrapper">
-            <p className="drag-hint">✦ Drag to reorder · Click to add/remove</p>
-            <div className="book-selection-grid">
-              {/* First show selected books in order (draggable) */}
-              {Array.from(editSelectedBooks)
-                .map(id => books.find(b => b.id === id))
-                .filter(Boolean)
-                .map(book => (
-                  <div
-                    key={book.id}
-                    draggable
-                    onDragStart={() => handleDragStart(book.id)}
-                    onDragOver={(e) => handleDragOver(e, book.id)}
-                    onDrop={handleEditDrop}
-                    className={`book-selection-item selected ${dragOverBookId === book.id ? "drag-over" : ""}`}
-                  >
-                    <div className="drag-handle">⠿</div>
-                    <img
-                      src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x195?text=No+Cover"}
-                      alt={book.volumeInfo?.title}
-                      className="book-selection-img"
-                      onClick={() => toggleEditBook(book.id)}
-                    />
+        <Box
+          className={editListStep === 2 ? "review-modal-box large" : "review-modal-box"}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {editListStep === 1 ? (
+            <>
+              <h2 className="review-modal-title">Edit List</h2>
+              <div className="modal-form-container">
+                <div className="modal-field">
+                  <label className="modal-label">List Name</label>
+                  <input
+                    type="text"
+                    value={editListName}
+                    onChange={(e) => setEditListName(e.target.value)}
+                    className="modal-input"
+                  />
+                </div>
+                <div className="modal-field">
+                  <label className="modal-label">Description (optional)</label>
+                  <textarea
+                    value={editListDescription}
+                    onChange={(e) => setEditListDescription(e.target.value)}
+                    placeholder="What's this list about?"
+                    className="modal-input modal-textarea"
+                    rows={3}
+                  />
+                </div>
+                <div className="modal-field">
+                  <label className="modal-label">Privacy</label>
+                  <div className="radio-group">
+                    <label className="radio-label">
+                      <input type="radio" value="private" checked={editListPrivacy === "private"} onChange={(e) => setEditListPrivacy(e.target.value)} />
+                      <span>Private</span>
+                    </label>
+                    <label className="radio-label">
+                      <input type="radio" value="public" checked={editListPrivacy === "public"} onChange={(e) => setEditListPrivacy(e.target.value)} />
+                      <span>Public</span>
+                    </label>
                   </div>
-                ))}
-              {/* Then show unselected books */}
-              {books
-                .filter(b => !editSelectedBooks.includes(b.id))
-                .map(book => (
-                  <div
-                    key={book.id}
-                    onClick={() => toggleEditBook(book.id)}
-                    className="book-selection-item"
-                  >
-                    <img
-                      src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x195?text=No+Cover"}
-                      alt={book.volumeInfo?.title}
-                      className="book-selection-img"
-                    />
-                  </div>
-                ))}
+                </div>
+                <div className="modal-actions">
+                  <button className="cancel-btn" onClick={closeEditListModal}>Cancel</button>
+                  <button className="submit-btn" onClick={() => setEditListStep(2)} disabled={!editListName.trim()}>Next</button>
+                </div>
               </div>
-            </div>
-          <div className="modal-actions">
-            <button className="cancel-btn" onClick={closeEditListModal}>Cancel</button>
-            <button className="submit-btn" onClick={handleUpdateList}>Save Changes</button>
-          </div>
-        </Box>
+            </>
+          ) : (
+            <>
+              <div className="modal-back" onClick={() => setEditListStep(1)}>← Back</div>
+              <h2 className="review-modal-title">Edit Books for "{editListName}"</h2>
+              <div className="book-selection-wrapper" ref={editBookGridRef}>
+                <p className="drag-hint">✦ Drag to reorder · Click to add/remove</p>
+                <div className="book-selection-grid">
+                  {Array.from(editSelectedBooks)
+                    .map(id => books.find(b => b.id === id))
+                    .filter(Boolean)
+                    .map(book => (
+                      <div
+                        key={book.id}
+                        draggable
+                        onDragStart={() => handleDragStart(book.id)}
+                        onDragOver={(e) => handleDragOverWithScroll(e, book.id)}
+                        onDrop={() => { handleEditDrop(); stopAutoScroll(); }}
+                        onDragEnd={stopAutoScroll}
+                        className={`book-selection-item selected ${dragOverBookId === book.id ? "drag-over" : ""}`}
+                      >
+                        <div className="drag-handle">⠿</div>
+                        <img
+                          src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x195?text=No+Cover"}
+                          alt={book.volumeInfo?.title}
+                          className="book-selection-img"
+                          onClick={() => toggleEditBook(book.id)}
+                        />
+                      </div>
+                    ))}
+                  {books
+                    .filter(b => !editSelectedBooks.includes(b.id))
+                    .map(book => (
+                      <div
+                        key={book.id}
+                        onClick={() => toggleEditBook(book.id)}
+                        className="book-selection-item"
+                      >
+                        <img
+                          src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x195?text=No+Cover"}
+                          alt={book.volumeInfo?.title}
+                          className="book-selection-img"
+                        />
+                      </div>
+                    ))}
+                </div>
+              </div>
+              <div className="modal-actions">
+                <button className="cancel-btn" onClick={closeEditListModal}>Cancel</button>
+                <button className="submit-btn" onClick={handleUpdateList}>Save Changes</button>
+              </div>
+            </>
+          )}
+        </Box>        
       </Modal>
       {/* ── Delete Confirm Modal ── */}
       <Modal
