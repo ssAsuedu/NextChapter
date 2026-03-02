@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 import BookCard from "../components/ExplorePage/ExploreCard";
 import "../styles/ExplorePage/Explore.css";
 import { getBookshelf, addBookToBookshelf, getTrendingBooks } from "../api";
@@ -31,6 +32,7 @@ const Explore = () => {
   const [hiddenBooks, setHiddenBooks] = useState([]);
   const scrollRefs = useRef({});
   const email = localStorage.getItem("userEmail");
+  const navigate = useNavigate();
 
   // Fetch user's bookshelf once on mount
   useEffect(() => {
@@ -60,26 +62,23 @@ const Explore = () => {
           return;
         }
 
-        // Fetch book details from Google Books API for each trending volumeId
-        const bookDetails = [];
-        for (const item of trendingData) {
-          let book = getBookFromCache(item.volumeId);
-          if (book) {
-            bookDetails.push({ ...book, readers: item.readers });
-          } else {
+        // Fetch book details in parallel (no more sequential 200ms delays)
+        const bookDetails = await Promise.all(
+          trendingData.map(async (item) => {
+            const cached = getBookFromCache(item.volumeId);
+            if (cached) return { ...cached, readers: item.readers };
             try {
               const bookRes = await axios.get(
                 `https://www.googleapis.com/books/v1/volumes/${item.volumeId}?key=${GOOGLE_BOOKS_API_KEY}`
               );
               setBookInCache(item.volumeId, bookRes.data);
-              bookDetails.push({ ...bookRes.data, readers: item.readers });
-              await new Promise((r) => setTimeout(r, 200)); // throttle
+              return { ...bookRes.data, readers: item.readers };
             } catch {
-              // Skip books that fail to load
+              return null;
             }
-          }
-        }
-        setTrendingBooks(bookDetails);
+          })
+        );
+        setTrendingBooks(bookDetails.filter(Boolean));
       } catch {
         setTrendingBooks([]);
       }
@@ -175,6 +174,19 @@ const Explore = () => {
       aria-labelledby="explore-heading"
     >
       <h1 id="explore-heading">Explore Books</h1>
+
+      {/* Mood Finder CTA */}
+      <div className="mood-cta-banner">
+        <div className="mood-cta-text">
+          <span>Not sure what to read? Let your mood decide.</span>
+        </div>
+        <button
+          className="mood-cta-btn"
+          onClick={() => navigate("/mood")}
+        >
+          Explore Based on My Mood
+        </button>
+      </div>
 
       {/* ===== TRENDING SECTION ===== */}
       <div
