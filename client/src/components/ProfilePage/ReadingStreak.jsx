@@ -74,12 +74,11 @@ const ReadingStreak = () => {
 
     const weeks = [];
     let currentWeek = new Array(7).fill(null);
-    let currentWeekStart = null; // Track which Sun-Sat week we're in
+    let currentWeekStart = null;
 
-    // Helper: get the Sunday that starts the week containing dateStr
     const getWeekStart = (dateStr) => {
       const d = new Date(dateStr + "T00:00:00");
-      const day = d.getDay(); // 0=Sun
+      const day = d.getDay();
       d.setDate(d.getDate() - day);
       return d.toISOString().split("T")[0];
     };
@@ -88,7 +87,6 @@ const ReadingStreak = () => {
       const weekStart = getWeekStart(day.date);
       const dow = getDayOfWeek(day.date);
 
-      // If we've moved to a new week, push the old one and start fresh
       if (currentWeekStart !== null && weekStart !== currentWeekStart) {
         weeks.push(currentWeek);
         currentWeek = new Array(7).fill(null);
@@ -98,12 +96,10 @@ const ReadingStreak = () => {
       currentWeek[dow] = day;
     }
 
-    // Push the final week
     if (currentWeek.some((d) => d !== null)) {
       weeks.push(currentWeek);
     }
 
-    // Month labels positioned by week index
     const monthLabels = [];
     let lastMonth = "";
     weeks.forEach((week, weekIdx) => {
@@ -200,61 +196,64 @@ const ReadingStreak = () => {
       <div className="streak-heatmap-section">
         <h4 className="streak-heatmap-title">Last 90 Days</h4>
         <div className="streak-heatmap-scroll">
-          {/* Month labels */}
-          <div className="streak-heatmap-months" aria-hidden="true">
-            <div className="streak-heatmap-day-labels-spacer" />
-            {calendarData.weeks.map((_, weekIdx) => {
-              const label = calendarData.monthLabels.find((m) => m.weekIdx === weekIdx);
-              return (
-                <div key={weekIdx} className="streak-heatmap-month-slot">
-                  {label ? <span>{label.label}</span> : null}
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="streak-heatmap-grid">
-            <div className="streak-heatmap-day-labels" aria-hidden="true">
-              <span></span>
-              <span>M</span>
-              <span></span>
-              <span>W</span>
-              <span></span>
-              <span>F</span>
-              <span></span>
+          {/* Inner wrapper keeps months + grid + legend aligned as one unit */}
+          <div className="streak-heatmap-inner">
+            {/* Month labels */}
+            <div className="streak-heatmap-months" aria-hidden="true">
+              <div className="streak-heatmap-day-labels-spacer" />
+              {calendarData.weeks.map((_, weekIdx) => {
+                const label = calendarData.monthLabels.find((m) => m.weekIdx === weekIdx);
+                return (
+                  <div key={weekIdx} className="streak-heatmap-month-slot">
+                    {label ? <span>{label.label}</span> : null}
+                  </div>
+                );
+              })}
             </div>
 
-            <div className="streak-heatmap-cells">
-              {calendarData.weeks.map((week, weekIdx) => (
-                <div key={weekIdx} className="streak-heatmap-week">
-                  {week.map((day, dayIdx) => (
-                    <div
-                      key={dayIdx}
-                      className={`streak-heatmap-cell ${
-                        day === null
-                          ? "streak-heatmap-cell--empty"
-                          : day.active
-                          ? "streak-heatmap-cell--active"
-                          : "streak-heatmap-cell--inactive"
-                      }`}
-                      onMouseEnter={(e) => day && handleMouseEnter(day, e)}
-                      onMouseLeave={() => setHoveredDay(null)}
-                      tabIndex={day ? 0 : -1}
-                      role={day ? "gridcell" : "presentation"}
-                      aria-label={day ? `${day.date}: ${day.active ? "Active" : "No activity"}` : undefined}
-                    />
-                  ))}
-                </div>
-              ))}
-            </div>
-          </div>
+            <div className="streak-heatmap-grid">
+              <div className="streak-heatmap-day-labels" aria-hidden="true">
+                <span></span>
+                <span>M</span>
+                <span></span>
+                <span>W</span>
+                <span></span>
+                <span>F</span>
+                <span></span>
+              </div>
 
-          <div className="streak-heatmap-legend">
-            <span className="streak-heatmap-legend-text">Less</span>
-            <div className="streak-heatmap-cell streak-heatmap-cell--inactive" />
-            <div className="streak-heatmap-cell streak-heatmap-cell--active streak-heatmap-cell--low" />
-            <div className="streak-heatmap-cell streak-heatmap-cell--active" />
-            <span className="streak-heatmap-legend-text">More</span>
+              <div className="streak-heatmap-cells">
+                {calendarData.weeks.map((week, weekIdx) => (
+                  <div key={weekIdx} className="streak-heatmap-week">
+                    {week.map((day, dayIdx) => (
+                      <div
+                        key={dayIdx}
+                        className={`streak-heatmap-cell ${
+                          day === null
+                            ? "streak-heatmap-cell--empty"
+                            : day.active
+                            ? "streak-heatmap-cell--active"
+                            : "streak-heatmap-cell--inactive"
+                        }`}
+                        onMouseEnter={(e) => day && handleMouseEnter(day, e)}
+                        onMouseLeave={() => setHoveredDay(null)}
+                        tabIndex={day ? 0 : -1}
+                        role={day ? "gridcell" : "presentation"}
+                        aria-label={day ? `${day.date}: ${day.active ? "Active" : "No activity"}` : undefined}
+                      />
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="streak-heatmap-legend">
+              <span className="streak-heatmap-legend-text">Less</span>
+              <div className="streak-heatmap-cell streak-heatmap-cell--inactive" />
+              <div className="streak-heatmap-cell streak-heatmap-cell--active streak-heatmap-cell--low" />
+              <div className="streak-heatmap-cell streak-heatmap-cell--active" />
+              <span className="streak-heatmap-legend-text">More</span>
+            </div>
           </div>
         </div>
 

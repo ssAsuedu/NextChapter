@@ -7,7 +7,7 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
-import BookStaircase from "../../assets/bookstairs.svg"; // Import image
+import ReadingStreak from "../../components/ProfilePage/ReadingStreak";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -19,7 +19,6 @@ const Progress = () => {
   const [editIdx, setEditIdx] = useState(null);
   const [editPage, setEditPage] = useState(0);
 
-  // Fetch bookshelf and progress
   useEffect(() => {
     const fetchData = async () => {
       if (!email) return;
@@ -31,7 +30,6 @@ const Progress = () => {
     fetchData();
   }, [email]);
 
-  // Fetch book details for all bookshelf items
   useEffect(() => {
     const fetchBookDetails = async () => {
       if (bookshelf.length === 0) return;
@@ -44,7 +42,6 @@ const Progress = () => {
     fetchBookDetails();
   }, [bookshelf]);
 
-  // Helper: get progress for a volumeId, or default
   const getBookProgress = (volumeId, totalPages) => {
     const found = progress.find(p => p.volumeId === volumeId);
     return found
@@ -52,7 +49,6 @@ const Progress = () => {
       : { volumeId, currentPage: 0, totalPages: totalPages || 0 };
   };
 
-  // Calculate totals
   const totalRead = progress.filter(p => p.totalPages > 0 && p.currentPage === p.totalPages).length;
   const totalInProgress = progress.filter(p => p.totalPages > 0 && p.currentPage > 0 && p.currentPage < p.totalPages).length;
 
@@ -85,21 +81,20 @@ const Progress = () => {
   return (
     <div>
       <ProfileNavbar />
-      {/* Top Progress Section */}
+      {/* Top Section — title, streak tracker, stats all centered */}
       <div className="progress-top-section">
-        <div className="progress-top-left">
-          <img src={BookStaircase} alt="Book Staircase" className="progress-top-image" />
+        <h1 className="progress-title">Your Progress</h1>
+        <div className="progress-streak-wrapper">
+          <ReadingStreak />
         </div>
-        <div className="progress-top-right">
-          <h1 className="progress-title">Your Progress</h1>
-          <div className="progress-stats">
-            <div className="progress-stat-line">Total Books Read: {totalRead}</div>
-            <div className="progress-stat-line">Total In Progress: {totalInProgress}</div>
-          </div>
+        <div className="progress-stats">
+          <div className="progress-stat-line">Total Books Read: {totalRead}</div>
+          <div className="progress-stat-line">Total In Progress: {totalInProgress}</div>
         </div>
       </div>
+
+      {/* Book cards grid */}
       <div className="progress-page">
-     
         <div className="progress-list">
           {bookshelf.length === 0 ? (
             <p>No books in your bookshelf yet.</p>
