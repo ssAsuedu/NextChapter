@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import axios from "axios";
 import "../styles/SearchPage/Search.css";
 import BookCard from "../components/SearchPage/BookCard";
+import { getSearchFromCache, setSearchInCache } from "../../utils/apiCache";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -20,8 +21,24 @@ const Search = () => {
     setLoading(true);
 
     try {
+      // 1) check cache first
+      const cached = getSearchFromCache(query);
+      if (cached) {
+        setBooks(cached);
+        setSelectedGenre("");
+        const allGenres = cached.flatMap(
+          (b) => b.volumeInfo?.categories || []
+        );
+        setGenres([...new Set(allGenres)]);
+        setLoading(false);
+        return;
+      }
+
+      // 2) fallback to Google Books
       const response = await axios.get(
-        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
+        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+          query
+        )}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
       );
 
       const fetchedBooks = response.data.items || [];
@@ -32,6 +49,9 @@ const Search = () => {
         (b) => b.volumeInfo?.categories || []
       );
       setGenres([...new Set(allGenres)]);
+
+      // 3) store in cache
+      setSearchInCache(query, fetchedBooks);
     } catch (err) {
       setBooks([]);
       setGenres([]);
@@ -79,14 +99,18 @@ const Search = () => {
   const hasActiveFilters = selectedGenre || sortBy !== "relevance";
 
   return (
-    <div className="search-page">
+    <div className="search-page" aria-label="Book search page">
       {/* Search Header */}
       <div className="search-header">
         <h1>Discover Books</h1>
         <p className="search-subtitle">
           Search millions of books and find your next great read
         </p>
-        <form className="search-page-form" onSubmit={handleSearch}>
+        <form
+          className="search-page-form"
+          onSubmit={handleSearch}
+          aria-label="Search for books"
+        >
           <div className="search-input-wrapper">
             <svg
               className="search-icon"
@@ -109,9 +133,15 @@ const Search = () => {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="search-page-input"
+              aria-label="Search books by title, author, or keyword"
             />
           </div>
-          <button type="submit" className="browse-button" disabled={loading}>
+          <button
+            type="submit"
+            className="browse-button"
+            disabled={loading}
+            aria-label={loading ? "Searching for books" : "Search for books"}
+          >
             {loading ? "Searching..." : "Search"}
           </button>
         </form>
@@ -119,11 +149,15 @@ const Search = () => {
 
       {/* Main Content Area */}
       {books.length > 0 && (
-        <div className="search-content">
+        <div
+          className="search-content"
+          aria-label="Search results and filter options"
+        >
           {/* Mobile filter toggle */}
           <button
             className="filter-toggle-btn"
             onClick={() => setFiltersOpen(!filtersOpen)}
+            aria-label="Toggle search filters"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -145,11 +179,18 @@ const Search = () => {
           </button>
 
           {/* Filter Sidebar */}
-          <aside className={`filter-pane ${filtersOpen ? "open" : ""}`}>
+          <aside
+            className={`filter-pane ${filtersOpen ? "open" : ""}`}
+            aria-label="Search filters panel"
+          >
             <div className="filter-pane-header">
               <h3>Filters</h3>
               {hasActiveFilters && (
-                <button className="clear-filters-btn" onClick={clearFilters}>
+                <button
+                  className="clear-filters-btn"
+                  onClick={clearFilters}
+                  aria-label="Clear all filters"
+                >
                   Clear all
                 </button>
               )}
@@ -167,8 +208,11 @@ const Search = () => {
                 ].map((option) => (
                   <button
                     key={option.value}
-                    className={`filter-chip ${sortBy === option.value ? "active" : ""}`}
+                    className={`filter-chip ${
+                      sortBy === option.value ? "active" : ""
+                    }`}
                     onClick={() => setSortBy(option.value)}
+                    aria-label={`Sort results by ${option.label}`}
                   >
                     {option.label}
                   </button>
@@ -182,16 +226,26 @@ const Search = () => {
                 <h4 className="filter-label">Genre</h4>
                 <div className="filter-options">
                   <button
-                    className={`filter-chip ${!selectedGenre ? "active" : ""}`}
+                    className={`filter-chip ${
+                      !selectedGenre ? "active" : ""
+                    }`}
                     onClick={() => setSelectedGenre("")}
+                    aria-label="Show books from all genres"
                   >
                     All Genres
                   </button>
                   {genres.map((genre, idx) => (
                     <button
                       key={idx}
-                      className={`filter-chip ${selectedGenre === genre ? "active" : ""}`}
+                      className={`filter-chip ${
+                        selectedGenre === genre ? "active" : ""
+                      }`}
                       onClick={() => setSelectedGenre(genre)}
+                      aria-label={
+                        selectedGenre === genre
+                          ? `Filter by genre ${genre}, selected`
+                          : `Filter by genre ${genre}`
+                      }
                     >
                       {genre}
                     </button>
@@ -201,8 +255,12 @@ const Search = () => {
             )}
 
             {/* Results count */}
-            <div className="filter-results-count">
-              {filteredBooks.length} {filteredBooks.length === 1 ? "book" : "books"} found
+            <div
+              className="filter-results-count"
+              aria-label={`${filteredBooks.length} books found`}
+            >
+              {filteredBooks.length}{" "}
+              {filteredBooks.length === 1 ? "book" : "books"} found
             </div>
           </aside>
 
@@ -215,7 +273,10 @@ const Search = () => {
           )}
 
           {/* Books Grid */}
-          <div className="results-section">
+          <div
+            className="results-section"
+            aria-label="Books matching your search and filters"
+          >
             {filteredBooks.length > 0 ? (
               <div className="books-grid">
                 {filteredBooks.map((book) => (
@@ -231,7 +292,11 @@ const Search = () => {
                 <p className="no-results">
                   No books match your current filters.
                 </p>
-                <button className="clear-filters-link" onClick={clearFilters}>
+                <button
+                  className="clear-filters-link"
+                  onClick={clearFilters}
+                  aria-label="Clear filters to show all results"
+                >
                   Clear filters
                 </button>
               </div>
@@ -242,13 +307,16 @@ const Search = () => {
 
       {/* Empty / initial state */}
       {books.length === 0 && !loading && (
-        <p className="no-results">
+        <p
+          className="no-results"
+          aria-label="No search results or initial search state message"
+        >
           {query ? "No results found. Try a different search." : ""}
         </p>
       )}
 
       {loading && (
-        <div className="loading-container">
+        <div className="loading-container" aria-label="Searching for books">
           <div className="loading-spinner" />
           <p>Searching for books...</p>
         </div>
