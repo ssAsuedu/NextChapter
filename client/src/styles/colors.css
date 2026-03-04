@@ -8,3 +8,12 @@
   --error-state: #9d2323;
   /* Add more variables as needed */
 }
+
+[data-theme="dark"] {
+  /* Dark mode variants */
+  --background-color: #1f2938;
+  --primary-color: #c49cf0;
+  --text-color: #DED4F2;
+  --hover: #DED4F2;
+  --secondary-color: #D2D8E5;
+}
