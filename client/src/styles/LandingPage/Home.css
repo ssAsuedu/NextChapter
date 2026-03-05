@@ -116,7 +116,7 @@
 }
 
 .signup-button {
-  background-color: var(--background-color);
+  background-color: #f2f2f2;
   border: 1px solid #ccc;
   color: var(--secondary-color);
 }
@@ -336,12 +336,16 @@ h6 {
   background-color: var(--primary-color);
   color: var(--background-color);
 }
+:root[data-theme="dark"] .signup-button {
+  background-color: var(--background-color);
+}
 
 :root[data-theme="dark"] .browse-button:hover {
   background-color: var(--text-color);
 }
 :root[data-theme="dark"] .signup-button:hover {
   color: var(--background-color);
+  background-color: var(--text-color);
 }
 
 :root[data-theme="dark"] .trending-books-button {
@@ -367,6 +371,7 @@ h6 {
 :root[data-theme="dark"] .login-text a:hover {
   color: var(--text-color);
 }
+
 /* Responsive Design */
 
 @media (min-width: 320px) and (max-width: 600px) {
