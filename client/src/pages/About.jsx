@@ -187,7 +187,7 @@ const About = () => {
       </section>
 
       {/* Footer */}
-      <footer
+      {/* <div
         className="about-footer"
         aria-label="About page footer"
       >
@@ -197,7 +197,7 @@ const About = () => {
         <a href="/privacyPolicy" className="footer-link" aria-label="View our privacy policy">
           View our Privacy Policy
         </a>
-      </footer>
+      </div> */}
     </div>
   );
 };

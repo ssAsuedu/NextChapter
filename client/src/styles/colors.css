@@ -5,7 +5,9 @@
   --navbar-hover-bg: #ab7ce71f;
   --hover: #6c3fc5;
   --text-color: #4D2B91;
+  --filter-pane: #fafafa;
   --error-state: #9d2323;
+
   /* Add more variables as needed */
 }
 
@@ -15,5 +17,8 @@
   --primary-color: #c49cf0;
   --text-color: #DED4F2;
   --hover: #DED4F2;
+  --image-color: #3C106A;
   --secondary-color: #D2D8E5;
+  --error-state: #ff9898;
+  --filter-pane: #2a3748;
 }

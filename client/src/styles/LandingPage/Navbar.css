@@ -134,11 +134,11 @@ li a:hover {
   gap: 20px; /* Space between buttons */
 }
 
-.auth-signout{
-  background-color: var(--background-color);
+.auth-signout {
+  background-color: var(--hover);
   border: 1px solid #ccc;
   border-radius: 999px;
-  color: var(--secondary-color);
+  color: white;
 }
 
 .auth-signup {
@@ -160,7 +160,7 @@ li a:hover {
 }
 
 .auth-buttons button:hover {
-  background-color: var(--hover);
+  background-color: var(--text-color);
   color: white;
   transform: scale(1.07);
 }
@@ -168,7 +168,7 @@ li a:hover {
 .user-initial {
   width: 32px;
   height: 32px;
-  background: #007bff;
+  background: var(--primary-color);
   color: #fff;
   border-radius: 50%;
   display: flex;
@@ -199,6 +199,10 @@ li a:hover {
 }
 :root[data-theme="dark"] .auth-signup:hover {
   color: var(--background-color);
+}
+
+:root[data-theme="dark"] .auth-signout {
+  background-color: var(--primary-color);
 }
 
 @media (max-width: 768px) {

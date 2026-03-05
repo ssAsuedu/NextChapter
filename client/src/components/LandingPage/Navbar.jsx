@@ -6,7 +6,6 @@ import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import ThemeToggle from "../LandingPage/ThemeToggle";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -202,7 +201,6 @@ const go = (path) => {
             </Link>
           </>
         )}
-        <ThemeToggle />
       </div>
     </nav>
   );

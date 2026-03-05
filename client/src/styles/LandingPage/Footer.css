@@ -30,12 +30,11 @@ footer {
 .team-info {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 5px;
     padding: 0;
     margin: 0;
-   
-
 }
+
 .team-content {
     color: white;
     padding: 0;
@@ -67,12 +66,31 @@ footer {
     font-weight: 400;
     
 }
+.project-built {
+    color: var(--background-color);
+}
+
+.heart-icon {
+    font-size: 1rem !important;
+    color: var(--background-color);
+}
 
 .footer-links:hover {
     color: #F3F0FD;
     text-decoration: underline;
 }
 
+:root[data-theme="dark"] footer {
+    background-color: var(--primary-color);
+}
+
+:root[data-theme="dark"] .footer-header, .team-content, .footer-links {
+    color: var(--background-color);
+}
+
+:root[data-theme="dark"] .footer-links:hover {
+    color: var(--background-color);
+}
 
 @media (max-width: 600px) {
     footer {
