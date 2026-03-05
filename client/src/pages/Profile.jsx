@@ -16,7 +16,6 @@ import NewChapter from "../assets/NewChapter.svg";
 import FutureLibrarian from "../assets/FutureLibrarian.svg";
 import CriticInTheMaking from "../assets/CriticInTheMaking.svg";
 import { getBadges } from "../api";
-import ReadingStreak from "../components/ProfilePage/ReadingStreak";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -417,10 +416,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* Reading Streak Tracker */}
-      <div className="profile-content">
-        <ReadingStreak />
-      </div>
   
       {/* Main Content */}
       <div className="profile-content">
