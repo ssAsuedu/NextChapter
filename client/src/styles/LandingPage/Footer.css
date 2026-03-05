@@ -30,12 +30,11 @@ footer {
 .team-info {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 5px;
     padding: 0;
     margin: 0;
-   
-
 }
+
 .team-content {
     color: white;
     padding: 0;
@@ -67,6 +66,14 @@ footer {
     font-weight: 400;
     
 }
+.project-built {
+    color: var(--background-color);
+}
+
+.heart-icon {
+    font-size: 1rem !important;
+    color: var(--background-color);
+}
 
 .footer-links:hover {
     color: #F3F0FD;
@@ -82,7 +89,7 @@ footer {
 }
 
 :root[data-theme="dark"] .footer-links:hover {
-    color: var(--text-color);
+    color: var(--background-color);
 }
 
 @media (max-width: 600px) {
