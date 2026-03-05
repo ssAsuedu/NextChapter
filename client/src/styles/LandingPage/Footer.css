@@ -73,6 +73,17 @@ footer {
     text-decoration: underline;
 }
 
+:root[data-theme="dark"] footer {
+    background-color: var(--primary-color);
+}
+
+:root[data-theme="dark"] .footer-header, .team-content, .footer-links {
+    color: var(--background-color);
+}
+
+:root[data-theme="dark"] .footer-links:hover {
+    color: var(--text-color);
+}
 
 @media (max-width: 600px) {
     footer {

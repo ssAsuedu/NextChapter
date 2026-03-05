@@ -4,6 +4,7 @@ import profileImage from "../../assets/profile2.svg";
 import ProfileNavbar from '../../components/ProfilePage/ProfileNavbar';
 import { getAllUsers, getFriends, updateUserName, changePassword } from '../../api';
 import { TextField, Button} from "@mui/material"
+import ThemeToggle from "../../components/LandingPage/ThemeToggle";
 
 const Account = () => {
   const email = localStorage.getItem("userEmail");
@@ -258,7 +259,7 @@ const Account = () => {
           </div>
           
         )}
-        
+        <ThemeToggle />
       </div>
     </div>
   );

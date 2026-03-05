@@ -2,17 +2,10 @@ import React, {useEffect, useState} from "react";
 import '../../styles/LandingPage/ThemeToggle.css'
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
+import useLocalStorage from "use-local-storage";
 
 const ThemeToggle = () => {
-    const [isDark, setIsDark] = useState(false); //state variable that stores if its currently dark or light mode
-
-    useEffect(() => {
-        document.documentElement.setAttribute(
-            "data-theme",
-            isDark ? "dark" : "light" //if isDark = true, then set the data-theme to dark, otherwise, set it to light
-        )
-    })
-
+    const [isDark, setIsDark] = useLocalStorage("isDark", false); //use local storage that uses isDark state as key and false as the default value
     return (
         <button className="toggle-button"
         onClick={() => {

@@ -2,8 +2,9 @@
 
 .account-page {
   display: flex;
-  margin-top: 80px;
+  /* margin-top: 80px; */
   min-height: 100vh; 
+  background-color: var(--background-color);
 }
 
 .account-title{
@@ -58,7 +59,7 @@
   padding: 30px 100px 30px 100px;
   border-radius: 15px;
   border: 2px solid var(--primary-color);
-  
+  margin-top: 80px;
 }
 
 .account-info h1 {
@@ -103,7 +104,7 @@
 
 .required-field {
   margin-left: 5px;
-  color: red;
+  color: var(--error-state);
 }
 .name-input .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline {
   border-color: var(--text-color);
@@ -170,7 +171,9 @@
   display: flex;
   align-items: center;
   gap: 40px;
+  margin-top: 20px;
 }
+
 .password-modal {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -229,7 +232,7 @@
 }
 
 .error-styles {
-  color: red;
+  color: var(--error-state);
   display: block;
 }
 
@@ -240,6 +243,43 @@
   width: fit-content;
   padding: 10px;
   border-radius: 999px;
+}
+
+:root[data-theme="dark"] .name-input .MuiOutlinedInput-root fieldset{
+  border-color: var(--text-color);
+}
+
+:root[data-theme="dark"] .name-input .MuiOutlinedInput-input::placeholder {
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+:root[data-theme="dark"] .name-input .MuiOutlinedInput-input {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .password-modal input {
+  border-color: var(--primary-color);
+}
+
+:root[data-theme="dark"] .cancel-btn {
+  background-color: var(--background-color);
+  border: 1px solid #ccc;
+  color: var(--secondary-color);
+}
+
+:root[data-theme="dark"] .cancel-btn:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+:root[data-theme="dark"] .save-btn {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .save-btn:hover {
+  background-color: var(--text-color);
+  
 }
 
 @media (max-width: 600px) { /* responsive styles */
