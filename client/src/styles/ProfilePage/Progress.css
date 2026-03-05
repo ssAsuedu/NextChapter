@@ -1,9 +1,11 @@
 .progress-page {
   padding: 40px 32px 32px 32px;
+  padding: 40px 32px 32px 32px;
   background: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  align-items: center;
   align-items: center;
 }
 
@@ -37,46 +39,13 @@
 
 .progress-streak-wrapper {
   width: 100%;
-  max-width: 600px;
+  max-width: 680px;
   display: flex;
   justify-content: center;
 }
 
-/* Make the ReadingStreak component fill its wrapper */
 .progress-streak-wrapper > * {
   width: 100%;
-}
-
-/* ── Heatmap alignment overrides ──
-   These target common heatmap/grid structures inside ReadingStreak
-   to center the grid and keep the legend aligned beneath it.
-   Adjust selectors if your ReadingStreak uses different class names. */
-
-/* Center the entire heatmap calendar grid */
-.progress-streak-wrapper .streak-heatmap,
-.progress-streak-wrapper .heatmap-grid,
-.progress-streak-wrapper .streak-calendar {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-/* Make the SVG or table-based grid center itself */
-.progress-streak-wrapper svg,
-.progress-streak-wrapper table {
-  margin: 0 auto;
-  display: block;
-}
-
-/* Align the Less/More legend under the grid, not off to the right */
-.progress-streak-wrapper .streak-legend,
-.progress-streak-wrapper .heatmap-legend,
-.progress-streak-wrapper .legend {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin-top: 8px;
 }
 
 .progress-stats {
@@ -105,7 +74,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 16px;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
@@ -116,10 +85,16 @@
   box-sizing: border-box;
 }
 
+/*
+  Book image — do NOT force a fixed square size.
+  Use max-width to cap it and auto height to preserve
+  the natural aspect ratio of book covers.
+*/
 .progress-book-image {
-  width: 250px;
-  height: 250px;
-  object-fit: cover;
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
   border-radius: 6px;
   background: #eee;
 }
@@ -267,8 +242,7 @@
   }
 
   .progress-book-image {
-    width: 180px;
-    height: 180px;
+    max-width: 140px;
   }
 
   .progress-inputs {

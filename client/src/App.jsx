@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/LandingPage/ScrollToTop";
 import Navbar from "./components/LandingPage/Navbar";
+import ThemeToggle from "./components/LandingPage/ThemeToggle";
 import Footer from "./components/LandingPage/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -17,6 +18,8 @@ import BookInfo from "./pages/BookInfo";
 import Friends from "./pages/ProfileSubPages/Friends";
 import Account from "./pages/ProfileSubPages/Account";
 import MoodFinder from "./pages/MoodFinder";
+document.documentElement.setAttribute("data-theme", "light");
+
 const App = () => {
   return (
     <Router>
