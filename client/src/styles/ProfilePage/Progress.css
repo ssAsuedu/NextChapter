@@ -1,10 +1,10 @@
 .progress-page {
-  padding: 100px 32px 32px 32px;
+  padding: 40px 32px 32px 32px;
   background: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  align-items: center; /* Center children horizontally */
+  align-items: center;
 }
 
 .progress-page h1 {
@@ -16,9 +16,53 @@
   width: 100%;
 }
 
+/* ── Top Section: centered column — title → streak → stats ── */
+.progress-top-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  padding: 90px 32px 32px 32px;
+  background: #fff;
+  gap: 24px;
+}
+
+.progress-title {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+.progress-streak-wrapper {
+  width: 100%;
+  max-width: 680px;
+  display: flex;
+  justify-content: center;
+}
+
+.progress-streak-wrapper > * {
+  width: 100%;
+}
+
+.progress-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-stat-line {
+  font-size: 1.2rem;
+  color: #444;
+  font-weight: 500;
+}
+
+/* ── Book cards grid ── */
 .progress-list {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Two columns */
+  grid-template-columns: repeat(2, 1fr);
   gap: 32px;
   max-width: 900px;
   margin: 0 auto;
@@ -26,26 +70,29 @@
 
 .progress-book-card {
   display: flex;
-  flex-direction: column; /* stack image above text */
-  align-items: center; /* center everything */
-  gap: 16px; /* less vertical spacing than before */
-  gap: 24px;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
   background: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   padding: 24px;
-  align-items: center;
   width: 100%;
   min-width: 0;
   max-width: 700px;
-  /* Add this line */
   box-sizing: border-box;
 }
 
+/*
+  Book image — do NOT force a fixed square size.
+  Use max-width to cap it and auto height to preserve
+  the natural aspect ratio of book covers.
+*/
 .progress-book-image {
-  width: 250x;
-  height: 250 px;
-  object-fit: cover;
+  max-width: 180px;
+  width: 100%;
+  height: auto;
+  object-fit: contain;
   border-radius: 6px;
   background: #eee;
 }
@@ -96,7 +143,7 @@
 }
 
 .progress-inputs input[type="number"] {
-  background: #f4f4f4;      /* Light gray background */
+  background: #f4f4f4;
   border: 1px solid #ccc;
   border-radius: 4px;
   color: #222;
@@ -149,175 +196,116 @@
   text-align: center;
 }
 
-
-.progress-top-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-bottom: 0px;
-  padding: 90px 0 0 50px;      /* Increased top padding to shift down */
-  background: #fff;
-}
-
-.progress-top-left {
-  flex: 0 0 260px;          /* Slightly larger flex basis */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.progress-top-image {
-  width: 400px;             /* Enlarged image */
-  height: 400px;
-  object-fit: contain;
-  display: block;
-}
-
-.progress-top-right {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;      /* Center content horizontally */
-  justify-content: center;
-  padding-left: 0px;
-  text-align: center;       /* Center text */
-}
-
-.progress-title {
-  font-size: 2.5rem;
-  color: var(--primary-color);
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-
-.progress-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.progress-stat-line {
-  font-size: 1.2rem;
-  color: #444;
-  font-weight: 500;
-}
-
-/* adjust responsiveness for mobile view of the progress page*/
+/* ── Responsive: tablet ── */
 @media (max-width: 900px) {
- .progress-list {
-   grid-template-columns: 1fr;
-   max-width: 100%;
- }
+  .progress-list {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
 
- .progress-top-section {
-   flex-direction: column;
-   padding: 40px 16px 0 16px;
-   text-align: center;
- }
+  .progress-top-section {
+    padding: 40px 16px 24px 16px;
+  }
 
- .progress-top-left,
- .progress-top-right {
-   flex: unset;
-   width: 100%;
- }
+  .progress-title {
+    font-size: 2rem;
+  }
 
- .progress-top-image {
-   width: 70%;
-   max-width: 300px;
-   height: auto;
- }
-
- .progress-title {
-   font-size: 2rem;
- }
+  .progress-streak-wrapper {
+    max-width: 100%;
+  }
 }
 
+/* ── Responsive: mobile ── */
 @media (max-width: 600px) {
- .progress-page {
-   padding: 60px 16px 16px 16px;
- }
+  .progress-page {
+    padding: 24px 16px 16px 16px;
+  }
 
- .progress-page h1 {
-   font-size: 1.8rem;
- }
+  .progress-page h1 {
+    font-size: 1.8rem;
+  }
 
- .progress-book-card {
-   padding: 16px;
- }
+  .progress-top-section {
+    padding: 70px 16px 20px 16px;
+    gap: 16px;
+  }
 
- .progress-book-image {
-   width: 180px;
-   height: 180px;
- }
+  .progress-title {
+    font-size: 1.8rem;
+  }
 
- .progress-inputs {
-   flex-wrap: wrap;
-   justify-content: center;
- }
+  .progress-book-card {
+    padding: 16px;
+  }
 
- .progress-stat-line {
-   font-size: 1rem;
- }
+  .progress-book-image {
+    max-width: 140px;
+  }
 
- .profile-vertical-navbar {
-   position: fixed;
-   left: -200px;
-   top: 60px; /* pushes menu below the fixed top nav */
-   height: calc(100vh - 60px); /* fits screen below top nav */
-   width: 180px;
-   transition: left 0.3s ease;
-   z-index: 1000;
- }
+  .progress-inputs {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
- .profile-vertical-navbar.open {
-   left: 0;
- }
+  .progress-stat-line {
+    font-size: 1rem;
+  }
 
- /* blurred background overlay when the vertical nav bar is called */
- .overlay {
-   position: fixed;
-   top: 60px;
-   left: 0;
-   width: 100%;
-   height: calc(100vh - 60px);
-   background: rgba(0, 0, 0, 0.45);
-   backdrop-filter: blur(1px);
-   z-index: 900;
- }
+  .profile-vertical-navbar {
+    position: fixed;
+    left: -200px;
+    top: 60px;
+    height: calc(100vh - 60px);
+    width: 180px;
+    transition: left 0.3s ease;
+    z-index: 1000;
+  }
 
+  .profile-vertical-navbar.open {
+    left: 0;
+  }
+
+  .overlay {
+    position: fixed;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 60px);
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(1px);
+    z-index: 900;
+  }
 }
 
 /* hide hamburger by default (desktop) */
 .mobile-nav-toggle {
- display: none;
- position: fixed;
- bottom: 20px;
- left: 7px;
- background: transparent;
- border: none;
- padding: 0;
- cursor: pointer;
- z-index: 2000;
- width: 30px;
- height: 30px;
- flex-direction: column;
- justify-content: center;
- align-items: center;
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  left: 7px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  z-index: 2000;
+  width: 30px;
+  height: 30px;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-/* only show the hamburger on mobile */
 @media (max-width: 600px) {
- .mobile-nav-toggle {
-   display: flex;
- }
+  .mobile-nav-toggle {
+    display: flex;
+  }
 }
 
-/* black hamburger bars */
 .mobile-nav-toggle .bar {
- width: 22px;
- height: 2.5px;
- background-color: #000;
- margin: 3px 0;
- border-radius: 2px;
+  width: 22px;
+  height: 2.5px;
+  background-color: #000;
+  margin: 3px 0;
+  border-radius: 2px;
 }
