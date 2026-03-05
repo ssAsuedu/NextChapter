@@ -63,17 +63,17 @@ const Home = () => {
           <button className="about-button" aria-label="Learn more about the Next Chapter platform">
             <Book className="about-icon" />
             Platform
-            <h6>Our application empowers users to achieve their reading goals.</h6>
+            <h6 className="about-card-text">Our application empowers users to achieve their reading goals.</h6>
           </button>
           <button className="about-button" aria-label="Learn more about the team behind Next Chapter">
             <Team className="about-icon" />
             Team
-            <h6>Developed by a team of passionate readers who want to share their love for books.</h6>
+            <h6 className="about-card-text">Developed by a team of passionate readers who want to share their love for books.</h6>
           </button>
           <button className="about-button" aria-label="Learn more about the core values that drive the Next Chapter platform">
             <Values className="about-icon" />
             Values
-            <h6>Next Chapter is built on our core values of curiosity, connection, and self-improvement.</h6>
+            <h6 className="about-card-text">Next Chapter is built on our core values of curiosity, connection, and self-improvement.</h6>
           </button>
         </div>
         
@@ -82,7 +82,7 @@ const Home = () => {
       {/* Recommended Books Section */}
       <section className="recommended-books"   aria-labelledby="recommended-heading">
         <h4 id="recommended-heading">Books We Think You Might Love</h4>
-        <p>
+        <p className="login-text">
           Please <a href="/login" aria-label="Log in to your Next Chapter account">login</a> to see a collection of books we've selected that we think you'll enjoy!
         </p>
       </section>

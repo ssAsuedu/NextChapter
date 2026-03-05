@@ -133,12 +133,14 @@ li a:hover {
   align-items: center;
   gap: 20px; /* Space between buttons */
 }
+
 .auth-signout{
-  background-color: #f2f2f2;
+  background-color: var(--background-color);
   border: 1px solid #ccc;
   border-radius: 999px;
   color: var(--secondary-color);
 }
+
 .auth-signup {
   background-color: var(--primary-color);
   border-radius: 999px;
@@ -190,6 +192,13 @@ li a:hover {
 
 .toggle-dropdown {
   display: none;
+}
+
+:root[data-theme="dark"] .auth-login, .auth-signup {
+  color: var(--background-color);
+}
+:root[data-theme="dark"] .auth-signup:hover {
+  color: var(--background-color);
 }
 
 @media (max-width: 768px) {
