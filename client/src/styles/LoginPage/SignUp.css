@@ -154,6 +154,39 @@ input:-webkit-autofill {
   box-shadow: 0 4px 12px rgba(77, 43, 145, 0.25) !important;
 }
 
+:root[data-theme="dark"] .signup {
+  background-color: var(--primary-color) !important;
+  color: var(--background-color) !important;
+}
+
+:root[data-theme="dark"] .signup:hover {
+  background-color: var(--text-color) !important;
+}
+:root[data-theme="dark"] .form-textfield-label .MuiFormLabel-asterisk {
+  color: var(--error-state) !important;
+}
+
+:root[data-theme="dark"] .form-textfield-input::placeholder {
+  color: var(--text-color) !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme="dark"] .form-textfield-label {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .form-textfield-root .MuiOutlinedInput-notchedOutline {
+  border-color: var(--text-color) !important;
+}
+
+:root[data-theme="dark"] .login-redirect a {
+  text-decoration: underline;
+}
+
+:root[data-theme="dark"] .login-redirect a:hover {
+  color: white;
+}
+
 @media (max-width: 700px) {
   .signup-image, .signup-svg {
     display: none;

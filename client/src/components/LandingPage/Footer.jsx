@@ -1,8 +1,16 @@
 import React from "react";
 import '../../styles/LandingPage/Footer.css'
+import { useLocation } from "react-router-dom";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const Footer = () => {
+    const location = useLocation();
+    const hiddenRoute = ["/login", "/signup"];
+
+    if (hiddenRoute.includes(location.pathname)) {
+        return null;
+    }
+    
     return ( 
         <footer>
             <div className="content-wrapper">
