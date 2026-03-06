@@ -108,6 +108,30 @@
   transform: scale(1.07) !important;
   box-shadow: 0 4px 12px rgba(77, 43, 145, 0.25) !important;
 }
+
+:root[data-theme="dark"] .login {
+  background-color: var(--primary-color) !important;
+  color: var(--background-color) !important;
+}
+
+:root[data-theme="dark"] .login:hover {
+  background-color: var(--text-color) !important;
+}
+
+:root[data-theme="dark"] .account-creation a {
+  text-decoration: underline;
+}
+
+:root[data-theme="dark"] .account-creation a:hover {
+  color: white;
+}
+
+:root[data-theme="dark"] input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px var(--background-color) inset !important;
+  -webkit-text-fill-color: var(--text-color) !important;
+  caret-color: var(--text-color) !important;
+}
+
 @media (max-width: 700px) {
   .login-svg, .login-left, .login-image {
     display: none;
