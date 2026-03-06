@@ -866,3 +866,43 @@ app.get("/api/trending", async (req, res) => {
 app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server listening on port ${PORT}`);
 });
+
+
+const BADGE_POINTS = {
+  NEW_CHAPTER: 5,
+  HALFWAY: 10,
+  FINISHED: 25,
+  FUTURE_LIBRARIAN: 30,
+  CRITIC_IN_THE_MAKING: 20,
+};
+
+app.get("/api/leaderboard", async (req, res) => {
+  try {
+    const limit = Math.min(Number(req.query.limit) || 50, 200);
+
+    const users = await User.find({}, { name: 1, badges: 1, createdAt: 1 }).lean();
+
+    const leaderboard = users
+      .map((u) => {
+        const badges = u.badges || [];
+        const score = badges.reduce((sum, b) => sum + (BADGE_POINTS[b.type] || 0), 0);
+
+        return {
+          name: u.name,
+          score,
+          badgeCount: badges.length,
+          badgeBreakdown: badges.reduce((acc, b) => {
+            acc[b.type] = (acc[b.type] || 0) + 1;
+            return acc;
+          }, {}),
+        };
+      })
+      // sort by score then badgeCount
+      .sort((a, b) => b.score - a.score || b.badgeCount - a.badgeCount || a.name.localeCompare(b.name))
+      .slice(0, limit);
+
+    res.json({ leaderboard });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to load leaderboard" });
+  }
+});
