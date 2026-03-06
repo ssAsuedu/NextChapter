@@ -10,14 +10,14 @@
   width: 100%;
   overflow-x: hidden;
   font-family: 'Sen', Arial, Helvetica, sans-serif;
-  background-color: #fff;
+  background-color: var(--background-color);
 }
 
 /* ============ HERO SECTION ============ */
 .about-hero {
   width: 100%;
   padding: 140px 20px 80px;
-  background: linear-gradient(135deg, #f8f5ff 0%, #ffffff 100%);
+  background-color: var(--background-color);
   text-align: center;
 }
 
@@ -54,7 +54,7 @@
 
 /* ============ MISSION SECTION ============ */
 .mission-section {
-  background: #fff;
+  background-color: var(--background-color);
   
 }
 
@@ -77,7 +77,7 @@
 
 /* ============ FEATURES SECTION ============ */
 .features-section {
-  background: #f8f5ff;
+  background-color: var(--background-color);
   max-width: 100%;
   padding: 70px 20px;
 }
@@ -100,7 +100,7 @@
   padding: 32px 24px;
   text-align: center;
   border: 1px solid transparent;
-  box-shadow: 0 4px 16px rgba(171, 124, 231, 0.08);
+  box-shadow: 0 4px 16px #ab7ce714;
   transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
 }
 
@@ -152,12 +152,12 @@
 }
 /* ============ TEAM SECTION ============ */
 .team-section {
-  background: #fff;
+  background-color: var(--background-color);
 }
 
 .team-intro {
   font-size: 1.1rem;
-  color: #444;
+  color: var(--secondary-color);
   line-height: 1.8;
   text-align: left;
   max-width: 800px;
@@ -224,7 +224,7 @@
 
 /* ============ VISION SECTION ============ */
 .vision-section {
-  background: #f8f5ff;
+  background-color: var(--background-color);
   max-width: 100%;
   padding: 70px 20px;
 }
@@ -247,7 +247,7 @@
 
 .vision-content p {
   font-size: 1.1rem;
-  color: #444;
+  color: var(--secondary-color);
   line-height: 1.8;
   margin: 0;
   text-align: left;
@@ -257,7 +257,7 @@
 .about-cta {
   padding: 80px 20px;
   text-align: center;
-  background: #fff;
+  background-color: var(--background-color);
 }
 
 .about-cta h2 {
@@ -269,7 +269,7 @@
 
 .about-cta > p {
   font-size: 1.1rem;
-  color: #555;
+  color: var(--secondary-color);
   margin: 0 0 2rem 0;
 }
 
@@ -322,22 +322,17 @@
   padding: 40px 20px;
   text-align: center;
   border-top: 1px solid #f0f0f0;
-  background: #fff;
+  background-color: var(--background-color);
 }
 
 .about-footer p {
   font-size: 0.95rem;
-  color: #777;
+  color: var(--secondary-color);
   margin: 0 0 0.75rem 0;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-}
-
-.heart-icon {
-  font-size: 1rem !important;
-  color: var(--primary-color);
 }
 
 .footer-link {
@@ -352,6 +347,51 @@
   text-decoration: underline;
 }
 
+:root[data-theme="dark"] .feature-card, :root[data-theme="dark"] .team-card {
+  background-color: var(--text-color);
+}
+
+:root[data-theme="dark"] .feature-card h3, :root[data-theme="dark"] .team-card h3 {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .feature-card p, :root[data-theme="dark"] .team-card p {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .cta-primary {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .cta-primary:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+:root[data-theme="dark"] .cta-secondary {
+  background-color: var(--background-color);
+  color: var(--secondary-color);
+}
+
+:root[data-theme="dark"] .cta-secondary:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .card-line {
+  background: linear-gradient(
+    90deg,
+    var(--image-color) 0%,
+    var(--primary-color) 100%
+  );
+}
+
+:root[data-theme="dark"] .feature-icon {
+  color: var(--image-color);
+}
+
+:root[data-theme="dark"] .team-avatar {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--image-color) 100%);
+}
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */

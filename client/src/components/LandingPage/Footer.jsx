@@ -1,5 +1,7 @@
 import React from "react";
 import '../../styles/LandingPage/Footer.css'
+import FavoriteIcon from '@mui/icons-material/Favorite';
+
 const Footer = () => {
     return ( 
         <footer>
@@ -7,6 +9,7 @@ const Footer = () => {
                 <div className="team-info">
                     <p className="team-content name">Next Chapter</p> 
                     <p className="team-content description">Discover books, track your progress, and celebrate every chapter.</p>
+                    <p className="project-built">Built with <FavoriteIcon className="heart-icon" aria-hidden="true" /> using React, Node.js, Express, and MongoDB</p>
                 </div>
                 <div className="navigation-links">
                     <nav className="nav-sections">

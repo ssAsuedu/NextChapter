@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ScrollToTop from "./components/LandingPage/ScrollToTop";
 import Navbar from "./components/LandingPage/Navbar";
+import ThemeToggle from "./components/LandingPage/ThemeToggle";
 import Footer from "./components/LandingPage/Footer";
 import Home from "./pages/Home";
 import About from "./pages/About";
@@ -18,8 +19,19 @@ import Friends from "./pages/ProfileSubPages/Friends";
 import Account from "./pages/ProfileSubPages/Account";
 import MoodFinder from "./pages/MoodFinder";
 import Leaderboard from "./pages/ProfileSubPages/Leaderboard";
+import useLocalStorage from "use-local-storage";
+document.documentElement.setAttribute("data-theme", "light");
 
 const App = () => {
+  //add color theme logic in App.jsx because on every page load, it will store the theme
+  const [isDark] = useLocalStorage("isDark", false) 
+  useEffect(() => {
+        document.documentElement.setAttribute(
+            "data-theme",
+            isDark ? "dark" : "light" //if isDark = true, then set the data-theme to dark, otherwise, set it to light
+        )
+    }, [isDark]); //only run if isDark changes dependency, not on every render of the page
+
   return (
     <Router>
       <ScrollToTop />

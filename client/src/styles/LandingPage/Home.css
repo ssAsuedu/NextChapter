@@ -8,7 +8,7 @@
   padding-right: 24px;
   overflow-x: hidden;
   font-family:  'Sen', Arial, Helvetica, sans-serif;
-  background-color: #f2effc;
+  background-color: var(--background-color);
 }
 
 /* Hero Section */
@@ -183,7 +183,7 @@ section p {
   line-height: 1.8;
   margin-bottom: 20px;
   font-family: inherit;
-  color: var(--second-color);
+  color: var(--secondary-color);
 }
 
 section h3 {
@@ -262,14 +262,6 @@ h6 {
 .trending-books-content {
   display: flex;
   justify-content: space-between;
-  
-  /* width: 100vw;
-  height: 460px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  box-sizing: border-box; */
 }
 
 .trending-books-left {
@@ -340,6 +332,45 @@ h6 {
   display: block;
 }
   
+:root[data-theme="dark"] .browse-button {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+:root[data-theme="dark"] .signup-button {
+  background-color: var(--background-color);
+}
+
+:root[data-theme="dark"] .browse-button:hover {
+  background-color: var(--text-color);
+}
+:root[data-theme="dark"] .signup-button:hover {
+  color: var(--background-color);
+  background-color: var(--text-color);
+}
+
+:root[data-theme="dark"] .trending-books-button {
+   background-color: var(--primary-color);
+   color: var(--background-color);
+}
+:root[data-theme="dark"] .trending-books-button:hover {
+   background-color: var(--text-color);
+}
+
+:root[data-theme="dark"] .about-button {
+   background-color: var(--text-color);
+   color: var(--background-color);
+
+}
+:root[data-theme="dark"] .about-card-text {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .login-text a {
+  color: var(--primary-color);
+}
+:root[data-theme="dark"] .login-text a:hover {
+  color: var(--text-color);
+}
 
 /* Responsive Design */
 

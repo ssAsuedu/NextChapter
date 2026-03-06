@@ -37,9 +37,12 @@ const About = () => {
   ];
 
   return (
-    <div className="about-container">
+    <div className="about-container" aria-label="About Next Chapter page">
       {/* Hero Section */}
-      <section className="about-hero">
+      <section
+        className="about-hero"
+        aria-label="About Next Chapter hero section"
+      >
         <h1 className="about-title">About Next Chapter</h1>
         <p className="about-tagline">
           Reigniting the love and passion for reading, one page at a time.
@@ -47,7 +50,11 @@ const About = () => {
       </section>
 
       {/* Mission Section - NO BOOK ICON */}
-      <section id="mission" className="about-section mission-section">
+      <section
+        id="mission"
+        className="about-section mission-section"
+        aria-label="Our mission"
+      >
         <h2 className="section-heading">Our Mission</h2>
         <div className="mission-text">
           <p>
@@ -64,11 +71,15 @@ const About = () => {
       </section>
 
       {/* Features Section */}
-      <section id="what-we-offer" className="about-section features-section">
+      <section
+        id="what-we-offer"
+        className="about-section features-section"
+        aria-label="What we offer"
+      >
         <h2 className="section-heading">What We Offer</h2>
         <div className="features-grid">
-          <div className="feature-card">
-            <MenuBookIcon className="feature-icon" />
+          <div className="feature-card" aria-label="Feature: Smart book management">
+            <MenuBookIcon className="feature-icon" aria-hidden="true" />
             <h3>Smart Book Management</h3>
             <p>
               Track your reading, build wishlists, and celebrate finished books.
@@ -76,8 +87,8 @@ const About = () => {
             <div className="card-line"></div>
           </div>
 
-          <div className="feature-card">
-            <GroupsIcon className="feature-icon" />
+          <div className="feature-card" aria-label="Feature: Community connection">
+            <GroupsIcon className="feature-icon" aria-hidden="true" />
             <h3>Community Connection</h3>
             <p>
               Connect with readers and share your journey.
@@ -85,8 +96,8 @@ const About = () => {
             <div className="card-line"></div>
           </div>
 
-          <div className="feature-card">
-            <AutoAwesomeIcon className="feature-icon" />
+          <div className="feature-card" aria-label="Feature: Creative expression">
+            <AutoAwesomeIcon className="feature-icon" aria-hidden="true" />
             <h3>Creative Expression</h3>
             <p>
               Show off your badges and make your profile uniquely yours.
@@ -94,8 +105,8 @@ const About = () => {
             <div className="card-line"></div>
           </div>
 
-          <div className="feature-card">
-            <SearchIcon className="feature-icon" />
+          <div className="feature-card" aria-label="Feature: Discover new reads">
+            <SearchIcon className="feature-icon" aria-hidden="true" />
             <h3>Discover New Reads</h3>
             <p>
               Discover your next literary adventure with personalized suggestions.
@@ -106,7 +117,11 @@ const About = () => {
       </section>
 
       {/* Team Section */}
-      <section id="team" className="about-section team-section">
+      <section
+        id="team"
+        className="about-section team-section"
+        aria-label="Our team"
+      >
         <h2 className="section-heading">Our Team</h2>
         <p className="team-intro">
           Next Chapter was created by a team of five passionate developers and book lovers as a
@@ -115,11 +130,11 @@ const About = () => {
           the challenges modern readers face.
         </p>
 
-        <div className="team-grid">
+        <div className="team-grid" aria-label="Team members">
           {teamMembers.map((member, index) => (
-            <div key={index} className="team-card">
+            <div key={index} className="team-card" aria-label={`Team member ${member.name}, ${member.role}`}>
               <div className="team-avatar">
-                <PersonIcon className="avatar-icon" />
+                <PersonIcon className="avatar-icon" aria-hidden="true" />
               </div>
               <h3>{member.name}</h3>
               <p>{member.role}</p>
@@ -130,9 +145,12 @@ const About = () => {
       </section>
 
       {/* Vision Section */}
-      <section className="about-section vision-section">
+      <section
+        className="about-section vision-section"
+        aria-label="Our vision"
+      >
         <div className="vision-content">
-          <RocketLaunchIcon className="vision-icon" />
+          <RocketLaunchIcon className="vision-icon" aria-hidden="true" />
           <h2 className="section-heading">Our Vision</h2>
           <p>
             We envision a world where reading is celebrated as both a personal journey and a shared
@@ -144,24 +162,42 @@ const About = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="about-cta">
+      <section
+        className="about-cta"
+        aria-label="Call to action"
+      >
         <h2>Ready to Start Your Next Chapter?</h2>
         <p>Join our community of readers and transform the way you experience books.</p>
         <div className="cta-buttons">
-          <button className="cta-primary" onClick={() => navigate('/signup')}>
+          <button
+            className="cta-primary"
+            onClick={() => navigate('/signup')}
+            aria-label="Get started with Next Chapter"
+          >
             Get Started
           </button>
-          <button className="cta-secondary" onClick={() => navigate('/explore')}>
+          <button
+            className="cta-secondary"
+            onClick={() => navigate('/explore')}
+            aria-label="Browse books on Next Chapter"
+          >
             Browse Books
           </button>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="about-footer">
-        <p>Built with <FavoriteIcon className="heart-icon" /> using React, Node.js, Express, and MongoDB</p>
-        <a href="/privacyPolicy" className="footer-link">View our Privacy Policy</a>
-      </footer>
+      {/* <div
+        className="about-footer"
+        aria-label="About page footer"
+      >
+        <p>
+          Built with <FavoriteIcon className="heart-icon" aria-hidden="true" /> using React, Node.js, Express, and MongoDB
+        </p>
+        <a href="/privacyPolicy" className="footer-link" aria-label="View our privacy policy">
+          View our Privacy Policy
+        </a>
+      </div> */}
     </div>
   );
 };

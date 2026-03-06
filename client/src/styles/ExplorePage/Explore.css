@@ -1,29 +1,33 @@
 .explore-page {
-  max-width: 1100px;
+  /* max-width: 1100px; */
   margin: 0 auto;
   padding: 24px;
   padding-top: 100px; /* Add top padding to clear the navbar (64px navbar + 24px spacing) */
-  background: #ffffff;
-  border-radius: 12px;
+  background-color: var(--background-color);
 }
 
 .explore-page h1 {
   text-align: center;
   font-size: 2.2rem;
   font-family: "Sen", sans-serif;
-  color: #222;
+  color: var(--text-color);
+  font-weight: bold;
   margin-bottom: 40px;
 }
 
 .category-section {
+  margin: 0 auto;
+  margin-top: 25px;
+  max-width: 1100px;
   margin-bottom: 70px;
 }
 
 .category-title {
   font-size: 1.8rem;
-  color: #333;
+  color: var(--text-color);
   margin-bottom: 12px;
   margin-left: 36px;
+  font-weight: 600;
 }
 
 .category-scroll-wrapper {
@@ -102,6 +106,8 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    color: var(--text-color);
+    font-weight: 600;
   }
   
   .trending-card-wrapper {
@@ -114,7 +120,7 @@
   
   .trending-reader-count {
     font-size: 0.75rem;
-    color: #8561b4;
+    color: var(--primary-color);
     font-weight: 600;
     background: rgba(133, 97, 180, 0.1);
     padding: 2px 10px;
@@ -125,15 +131,15 @@
 /* ============ HIDE BOOK BUTTON ============ */
 
 .hide-book-btn {
-  background-color: #ab7ce7;
-  color: white;
-  border: 2px solid #ab7ce7;
+  background-color: #f2f2f2;
+  color: var(--secondary-color);
   padding: 6px 14px;
-  border-radius: 4px;
+  border-radius: 999px;
   margin-top: 8px;
   cursor: pointer;
   font-size: 14px;
   transition: all 0.3s ease;
+  width: 150px;
 }
 
 .hide-book-btn:disabled {
@@ -143,9 +149,9 @@
 }
 
 .hide-book-btn:hover:not(:disabled) {
-  background-color: #f4f4f4;
-  color: #333;
-  border: 2px solid #8561b4;
+  background-color: var(--text-color);
+  color: white;
+  transform: scale(1.07);
 }
 
 /* ============ MOOD CTA BANNER ============ */
@@ -158,9 +164,11 @@
   border: 1px solid #ede5ff;
   border-radius: 14px;
   padding: 20px 28px;
-  margin-bottom: 40px;
+  margin-bottom: 80px;
   gap: 16px;
   font-family: "Sen", sans-serif;
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
 .mood-cta-text {
@@ -168,7 +176,7 @@
   align-items: center;
   gap: 10px;
   font-size: 1.05rem;
-  color: #333;
+  color: var(--secondary-color);
   font-weight: 500;
 }
 
@@ -178,10 +186,10 @@
 
 .mood-cta-btn {
   padding: 10px 24px;
-  background: var(--primary-color, #222);
+  background: var(--hover);
   color: #fff;
   border: none;
-  border-radius: 10px;
+  border-radius: 999px;
   font-size: 0.95rem;
   font-weight: 600;
   font-family: "Sen", sans-serif;
@@ -191,8 +199,44 @@
 }
 
 .mood-cta-btn:hover {
-  opacity: 0.85;
+  background-color: var(--text-color);
   transform: translateY(-1px);
+}
+
+:root[data-theme="dark"] .mood-cta-text {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .mood-cta-btn {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .mood-cta-btn:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .hide-book-btn {
+  background-color: var(--background-color);
+}
+
+:root[data-theme="dark"] .hide-book-btn:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .mood-cta-banner {
+  background: linear-gradient(
+  135deg,
+  #1b1628 0%,
+  #261c3b 50%,
+  #1e1a40 100%
+  );
+}
+
+:root[data-theme="dark"] .trending-section {
+  background: #273445;
 }
 
 @media (max-width: 600px) {

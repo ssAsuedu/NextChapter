@@ -1,0 +1,19 @@
+.toggle-button {
+    border-radius: 999px;
+    margin-top: 25px;
+    background-color: var(--hover);
+}
+
+.toggle-button:hover {
+    background-color: var(--text-color);
+    transform: scale(1.07);
+}
+
+:root[data-theme="dark"] .toggle-button {
+    background-color: var(--primary-color);
+    color: var(--background-color);
+}
+
+:root[data-theme="dark"] .toggle-button:hover {
+    background-color: var(--text-color);
+}

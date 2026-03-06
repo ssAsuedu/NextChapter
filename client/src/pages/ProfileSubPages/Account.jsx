@@ -4,6 +4,7 @@ import profileImage from "../../assets/profile2.svg";
 import ProfileNavbar from '../../components/ProfilePage/ProfileNavbar';
 import { getAllUsers, getFriends, updateUserName, changePassword } from '../../api';
 import { TextField, Button} from "@mui/material"
+import ThemeToggle from "../../components/LandingPage/ThemeToggle";
 
 const Account = () => {
   const email = localStorage.getItem("userEmail");
@@ -18,8 +19,8 @@ const Account = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [passwordSuccess, setPasswordSuccess] = useState("");
+  const [passwordError, setPasswordError] = useState([]);
+  const [passwordSuccess, setPasswordSuccess] = useState();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -56,45 +57,72 @@ const Account = () => {
   // Password change handler
   const handleChangePassword = async (e) => {
     e.preventDefault();
-    setPasswordError("");
+    setPasswordError([]);
     setPasswordSuccess("");
+    const errorsList = []; //create an array that stores every possible error type
+    const specialSymbols = "!@#$%^&*"; //symbols that are acceptable in a password
+
     if (!oldPassword || !newPassword || !confirmPassword) {
-      setShowPasswordModal(false);  
+      setShowPasswordModal(true); // show modal when there are errors
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
-      setPasswordError("All fields are required.");
-      return;
+      errorsList[0] = "All fields are required."; //first error type is all fields are required
+      
+      
     }
     if (newPassword !== confirmPassword) {
-      setShowPasswordModal(false);
+      setShowPasswordModal(true); // show modal when there are errors
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");  
-      setPasswordError("New passwords do not match.");
-      return;
+      errorsList[1] = "New passwords do not match."; //second error type is passwords dont match
+      
     }
     if (newPassword.length < 8) {
-      setShowPasswordModal(false);
+      setShowPasswordModal(true); // show modal when there are errors
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");  
-      setPasswordError("Password must be at least 8 characters.");
+      errorsList[2] = "Password must be at least 8 characters."; //third error stype is that password must be 8 characters at least
+      
+    }
+    if (!/[A-Z]/.test(newPassword)) {
+      errorsList[3] = "Password must include at least one uppercase letter.";
+    }
+    
+    if (!/[0-9]/.test(newPassword)) {
+      errorsList[4] = "Password must include at least one number.";
+    }
+
+    if(!specialSymbols.split("").some(symbol => newPassword.includes(symbol))) {
+      errorsList[5] = "Password must include at least one special character !@#$%^&*.";
+    }
+
+    if (errorsList.length > 0) {
+      setPasswordError(errorsList);
+      setShowPasswordModal(true);
       return;
     }
     try {
       await changePassword({ email, oldPassword, newPassword }); // Use the API function here
-      setShowPasswordModal(false); // Hide modal first
+      setShowPasswordModal(true); // show modal when there are errors
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
       setPasswordSuccess("Password changed successfully!");
+      setPasswordError([]);
     } catch (err) {
-      setShowPasswordModal(false);
+      setShowPasswordModal(true);
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");    
-      setPasswordError(err.response?.data?.error || "Failed to change password.");
+      const apiError = err.response?.data?.error || "Failed to change password.";
+      setPasswordError(Array.isArray(apiError) ? apiError: [apiError]);
+    }
+
+    if (passwordSuccess != " ") {
+      setShowPasswordModal(true);
     }
   };
 
@@ -144,59 +172,94 @@ const Account = () => {
           <button className="browse-button save-changes" onClick={(handleNameChange)}>Save Changes</button>
           </div>
         
-        {passwordError && <div className="message error">{passwordError}</div>}
-        {passwordSuccess && <div className="message success">{passwordSuccess}</div>}
+        {/* {passwordError && <div className="error-styles">{passwordError}</div>} */}
+        
         {showPasswordModal && (
           <div className="password-modal">
             <form onSubmit={handleChangePassword}>
               <h3>Change Password</h3>
               <div className="input-field-wrapper">
-                <input
-                type="password"
-                placeholder="Current Password"
-                value={oldPassword}
-                onChange={e => setOldPassword(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="New Password"
-                value={newPassword}
-                onChange={e => setNewPassword(e.target.value)}
-                required
-              />
-              <input
-                type="password"
-                placeholder="Confirm New Password"
-                value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
-                required
-              />
+                <div className="label-and-input">
+                  <label className="input-label">
+                    Current Password<span className="required-field">*</span>
+                    </label>
+                  <input className="password-input"
+                    type="password"
+                    value={oldPassword}
+                    onChange={e => setOldPassword(e.target.value)}
+                    
+                    // error={!!passwordError}
+                  />
+                  {/* {passwordError && <div className="error-styles">{passwordError}</div>} */}
+                </div>
+                <div className="label-and-input">
+                  <label className="input-label">
+                    New Password<span className="required-field">*</span>
+                    </label>
+                    <input className="password-input"
+                      type="password"
+                      value={newPassword}
+                      onChange={e => setNewPassword(e.target.value)}
+                      // error={!!passwordError}
+                    />
+                    {passwordError.slice(2,6).map((err, idx) => ( //splits the array from indices 2-5, map creates a span for every error
+                      err ? <span key={idx} className="error-styles">{err}</span> : null //if an error exists, create a span for that indices error and display it. otherwise, don't display it. 
+                    ))}
+                </div>
+                
+                <div className="label-and-input">
+                  <label className="input-label">
+                      Confirm New Password<span className="required-field">*</span>
+                    </label>
+                    <input className="password-input"
+                      type="password"
+                      value={confirmPassword}
+                      onChange={e => setConfirmPassword(e.target.value)}
+                      // error={!!passwordError}
+                    />
+                    {/* {passwordError && <div className="error-styles">{passwordError}</div>} */}
+                </div>
+                <span className="error-styles">{passwordError[0]}</span>
+                {passwordSuccess && (<span className="success-styles">{passwordSuccess}</span>)}
               </div>
               
-              <div style={{ marginTop: "12px", alignItems: "center", display: "flex", justifyContent: "center", gap: "12px" }}>
-              
-                <button
-                  className="cancel-btn"
-                  type="button"
+              <div className="button-styles">
+                {!passwordSuccess ? ( //if the password is not successful, that means the user has not changed their password yet
+                  <>
+                    <button //display the cancel and save button when the password has not been changed yet
+                      className="cancel-btn"
+                      type="button"
+                      onClick={() => {
+                      setShowPasswordModal(false);
+                      setOldPassword("");
+                      setNewPassword("");
+                      setConfirmPassword("");
+                      setPasswordError([]);
+                      setPasswordSuccess("");
+                    }}
+                    >
+                    Cancel
+                    </button>
+                      <button className="save-btn" type="submit">Save</button>
+                  </>
+                ) : ( //otherwise, if the password change was successful, then create a button that will close the password modal when clicked on
+                  <button 
+                  className="close-btn" 
                   onClick={() => {
                     setShowPasswordModal(false);
-                    setOldPassword("");
-                    setNewPassword("");
-                    setConfirmPassword("");
-                    setPasswordError("");
                     setPasswordSuccess("");
                   }}
-                >
-                  Cancel
-                </button>
-                 <button className="save-btn" type="submit">Save</button>
+                  >
+                  Close
+                  </button>
+                )}
+                
               </div>
             </form>
           </div>
           
         )}
-        
+        <ThemeToggle />
       </div>
     </div>
   );
