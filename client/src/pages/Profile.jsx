@@ -15,6 +15,8 @@ import JourneyComplete from "../assets/JourneyComplete.svg";
 import NewChapter from "../assets/NewChapter.svg";
 import FutureLibrarian from "../assets/FutureLibrarian.svg";
 import CriticInTheMaking from "../assets/CriticInTheMaking.svg";
+import FirstConnection from "../assets/FirstConnection.svg";
+import ConversationStarter from "../assets/ConversationStarter.svg";
 import { getBadges } from "../api";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
@@ -64,6 +66,8 @@ const Profile = () => {
     NEW_CHAPTER: NewChapter,
     FUTURE_LIBRARIAN: FutureLibrarian,
     CRITIC_IN_THE_MAKING: CriticInTheMaking,
+    FIRST_CONNECTION: FirstConnection,
+    CONVERSATION_STARTER: ConversationStarter,
   };
 
   const startAutoScroll = (direction) => {
