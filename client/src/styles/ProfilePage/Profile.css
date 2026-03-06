@@ -147,8 +147,14 @@
 }
 
 .badge-icon {
-  width: 130px;
-  height: 130px;
+  width: 110px;
+  height: 110px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.badge-icon:hover {
+  transform: scale(1.15);
+  filter: drop-shadow(0 10px 20px rgba(171, 124, 231, 0.7));
 }
 
 .review-modal {

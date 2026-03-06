@@ -385,6 +385,24 @@ app.post("/api/reviews/add", async (req, res) => {
 
     user.reviews.push({ volumeId, rating, reviewText });
 
+    // conversation starter, be the first user to leave a review on a book 
+    const existingBookReview = await Review.findOne({ volumeId });
+
+    if (!existingBookReview) {
+      const alreadyHas = (user.badges || []).some(
+        (b) => b.type === "CONVERSATION_STARTER" && b.volumeId === volumeId
+      );
+
+      if (!alreadyHas) {
+        user.badges = user.badges || [];
+        user.badges.push({
+          type: "CONVERSATION_STARTER",
+          volumeId,
+          earnedAt: new Date(),
+        });
+      }
+    }
+
     // critic in the making badge check, if the user has posted 10 reviews or more 
     if ((user.reviews || []).length >= 10) {
       const alreadyHas = (user.badges || []).some(b => b.type === "CRITIC_IN_THE_MAKING");
@@ -653,7 +671,46 @@ app.post('/api/friends/request/accept', async (req, res) => {
       { email: request.receiverEmail },
       { $addToSet: { friends: request.senderEmail } }
     );
-    
+    // get the receiver and sender emails, this way the badge can be added for both parties 
+    const sender = await User.findOne({ email: request.senderEmail });
+    const receiver = await User.findOne({ email: request.receiverEmail });
+    if (!sender || !receiver) {
+      return res.status(404).json({ error: 'One or both users not found' });
+    }
+
+    // FIRST_CONNECTION badge for sender
+    if ((sender.friends || []).length >= 1) {
+      const senderHasBadge = (sender.badges || []).some(
+        (b) => b.type === 'FIRST_CONNECTION'
+      );
+
+      if (!senderHasBadge) {
+        sender.badges = sender.badges || [];
+        sender.badges.push({
+          type: 'FIRST_CONNECTION',
+          earnedAt: new Date(),
+        });
+      }
+    }
+
+    // FIRST_CONNECTION badge for receiver
+    if ((receiver.friends || []).length >= 1) {
+      const receiverHasBadge = (receiver.badges || []).some(
+        (b) => b.type === 'FIRST_CONNECTION'
+      );
+
+      if (!receiverHasBadge) {
+        receiver.badges = receiver.badges || [];
+        receiver.badges.push({
+          type: 'FIRST_CONNECTION',
+          earnedAt: new Date(),
+        });
+      }
+    }
+
+    await sender.save();
+    await receiver.save();
+
     res.status(200).json({ 
       message: 'Friend request accepted', 
       request 
@@ -874,6 +931,8 @@ const BADGE_POINTS = {
   FINISHED: 25,
   FUTURE_LIBRARIAN: 30,
   CRITIC_IN_THE_MAKING: 20,
+  FIRST_CONNECTION: 10,
+  CONVERSATION_STARTER: 15,
 };
 
 app.get("/api/leaderboard", async (req, res) => {
