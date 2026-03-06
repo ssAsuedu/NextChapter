@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import Modal from '@mui/material/Modal';
+import ErrorIcon from '@mui/icons-material/Error';
+
 import { 
   getAllUsers, 
   searchUsers, 
@@ -22,6 +25,10 @@ const Friends = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [friendToRemove, setFriendToRemove] = useState(null);
+  const[friendUsername, setFriendUsername] = useState(null);
 
   // Get current user email from localStorage
   const currentUserEmail = localStorage.getItem('userEmail') || '';
@@ -110,8 +117,6 @@ const Friends = () => {
 
       const response = await getAllUsers();
 
-
-
       // Filter out current user
       const filtered = response.data.filter(user => user.email !== currentUserEmail);
 
@@ -155,9 +160,6 @@ const Friends = () => {
         updateButtonState('request_sent');
       }
     } catch (error) {
-
-
-
       // Don't show error message at top if it's "Request already sent"
       const errorMsg = error.response?.data?.error || 'Failed to send request';
       if (!errorMsg.includes('already sent') && !errorMsg.includes('already exists')) {
@@ -185,7 +187,6 @@ const Friends = () => {
       loadRequests();
     } catch (error) {
 
-
       showMessage('Failed to accept request', 'error');
     }
   };
@@ -198,27 +199,42 @@ const Friends = () => {
       loadRequests();
     } catch (error) {
 
-
       showMessage('Failed to reject request', 'error');
     }
   };
 
-  const handleRemoveFriend = async (friendEmail) => {
-    if (!window.confirm('Are you sure you want to remove this friend?')) {
-      return;
-    }
+  const findUsername = async (userEmail) => {
+    const users = await searchUsers(userEmail); //axios searchUsers by email
 
+    const user = users.data.find(u => u.email === userEmail); //if this email exists, only retrieve the user with the same email as the parameter
+
+    return user ? user.name : null; //return this user's username if they exist, if not, then null
+    
+  }
+
+  const handleRemoveFriend = async (friendEmail) => { //when the remove button is pressed
+    setFriendToRemove(friendEmail); //set state variable of the friend's email to be removed
+
+    const user = await findUsername(friendEmail); //call findUsername function to retrieve friend's username
+
+    setFriendUsername(user); //set state variable to the friend's username
+    setShowDeleteModal(true); //show the delete modal
+
+  };
+
+  const friendRemoved = async () => { //when the confirm button in the delete modal is clicked
     try {
 
-      await removeFriend({ userEmail: currentUserEmail, friendEmail });
-      showMessage('Friend removed', 'success');
-      loadFriends();
+      await removeFriend({ userEmail: currentUserEmail, friendEmail: friendToRemove}); //call API to remove friend
+      showMessage('Friend removed', 'success'); //success message
+      loadFriends(); //load new friends list
+      
     } catch (error) {
-
-
-      showMessage('Failed to remove friend', 'error');
+      showMessage('Failed to remove friend', 'error'); //could not remove friend
     }
-  };
+
+    setShowDeleteModal(false); //hide delete modal now
+  }
 
   const showMessage = (text, type) => {
     setMessage({ text, type });
@@ -500,6 +516,32 @@ const Friends = () => {
           </div>
         </div>
       )}
+
+    {showDeleteModal && (
+      <div className="modal-overlay">
+        <div className="delete-modal">
+            <ErrorIcon className="delete-error" fontSize="large" />
+        <h2 className="delete-heading">Delete Friend</h2>
+        <p className="delete-text">Are you sure you want to remove <span className="friend-username">{friendUsername}</span> as a friend?</p>
+        <div className="button-gap">
+          <button className="cancel-request"
+          onClick={() => {
+            setShowDeleteModal(false);
+          }}
+          >
+          Cancel
+          </button>
+          <button className="confirm-request"
+          onClick={() => {
+            friendRemoved();
+          }}
+          >
+          Yes, remove.
+          </button>
+          </div>
+        </div>
+      </div>
+    )}
     </div>
     </div>
   );

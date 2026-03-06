@@ -7,13 +7,15 @@
    ============================================ */
 
 .friends-container {
-  max-width: 1000px;
+  /* max-width: 1000px; */
   margin: 0 auto;
   padding: 120px 20px 60px;
   background-color: #fff;
   min-height: 100vh;
   font-family: 'Sen', Arial, Helvetica, sans-serif;
+  background-color: var(--background-color);
 }
+
 
 /* ============ TITLE ============ */
 .friends-title {
@@ -94,6 +96,13 @@
   margin-bottom: 1.25rem;
 }
 
+.delete-heading {
+  color: var(--text-color);
+  font-weight: 600;
+  margin-bottom: 15px;
+  margin-top: 15px;
+}
+
 /* ============ SEARCH FORM ============ */
 .search-form {
   display: flex;
@@ -127,7 +136,7 @@
 /* ============ USER GRID ============ */
 .user-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
   margin-top: 1rem;
 }
@@ -143,6 +152,18 @@
   align-items: center;
   transition: all 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  width: 400px;
+}
+
+:root[data-theme="dark"] .user-card {
+  background-color: var(--filter-pane);
+}
+
+
+:root[data-theme="dark"] .user-card p {
+  color: var(--text-color);
+  font-style: italic;
+  opacity: 0.8;
 }
 
 .user-card:hover {
@@ -193,6 +214,14 @@ button:disabled {
   padding: 14px 28px;
 }
 
+:root[data-theme="dark"] .btn-search {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .btn-search:hover {
+  background-color: var(--text-color);
+}
+
 .btn-search:hover {
   background-color: #6c3fc5;
   transform: scale(1.03);
@@ -203,6 +232,13 @@ button:disabled {
   color: #fff;
 }
 
+:root[data-theme="dark"] .btn-add {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .btn-add:hover {
+  background-color: var(--text-color);
+}
 .btn-add:hover {
   background-color: #6c3fc5;
   transform: scale(1.05);
@@ -271,6 +307,11 @@ button:disabled {
   margin-top: 1rem;
 }
 
+:root[data-theme="dark"] .empty-state {
+  background-color: var(--filter-pane);
+  color: var(--text-color);
+  font-weight: 600;
+}
 /* ============ REQUESTS SECTION ============ */
 .requests-section {
   display: flex;
@@ -284,6 +325,96 @@ button:disabled {
   font-size: 0.95rem;
 }
 
+:root[data-theme="dark"] .find-friends p[style] {
+  color: var(--secondary-color) !important;
+  opacity: 0.9;
+  
+}
+/* ============ delete modal  ============ */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.delete-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: var(--background-color);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+
+.delete-error {
+  /* border: 2px solid #9d232360; */
+  border-radius: 999px;
+  color: var(--error-state);
+}
+
+.button-gap {
+  display: flex;
+  gap: 20px;
+}
+
+.confirm-request {
+  background-color: var(--hover);
+
+}
+
+:root[data-theme="dark"] .confirm-request {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .confirm-request:hover {
+  background-color: var(--text-color);
+}
+
+.confirm-request:hover {
+  background-color: var(--text-color);
+  transform: scale(1.07);
+}
+
+.cancel-request {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  color: var(--secondary-color);
+}
+
+:root[data-theme="dark"] .cancel-request {
+  background-color: var(--background-color);
+  color: var(--secondary-color);
+}
+
+:root[data-theme="dark"] .cancel-request:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+
+.cancel-request:hover {
+  transform: scale(1.07);
+  background-color: var(--text-color);
+  color: white;
+}
+
+.friend-username {
+  font-weight: bold;
+  font-style: italic;
+}
+
+.delete-text {
+  max-width: 300px;
+  text-align: center;
+  margin-bottom: 30px;
+  color: var(--secondary-color);
+}
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
