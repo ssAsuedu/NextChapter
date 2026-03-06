@@ -1,0 +1,131 @@
+.leaderboard-page {
+  width: 100%;
+  max-width: 1100px;
+  margin: 90px auto 40px;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.leaderboard-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.leaderboard-title {
+    font-family: "Sen", sans-serif;
+    font-size: 2 rem;
+    margin: 0;
+    color: var(--primary-color);
+}
+
+.leaderboard-subtitle {
+  margin: 6px 0 0;
+  color: #6b6b6b;
+  font-size: 0.95rem;
+}
+
+.leaderboard-card {
+  background: #ffffff;
+  border-radius: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border: 1px solid rgba(171, 124, 231, 0.18);
+  overflow: hidden;
+}
+
+.leaderboard-row {
+  display: grid;
+  grid-template-columns: 70px 1.3fr 0.7fr 120px;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1edf8;
+}
+
+.leaderboard-row:last-child {
+  border-bottom: none;
+}
+
+.leaderboard-rank {
+  font-weight: 800;
+  color: #8561b4;
+  font-size: 1.05rem;
+}
+
+.leaderboard-user {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.leaderboard-name {
+  font-weight: 700;
+  color: #232323;
+  font-size: 1rem;
+}
+
+.leaderboard-smalltext {
+  color: #7a7a7a;
+  font-size: 0.9rem;
+}
+
+.leaderboard-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.leaderboard-badge-oval {
+  font-size: 0.82rem;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(171, 124, 231, 0.12);
+  border: 1px solid rgba(171, 124, 231, 0.25);
+  color: #6a3fb0;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.leaderboard-score {
+  justify-self: end;
+  font-weight: 900;
+  font-size: 1.05rem;
+  color: #2b2b2b;
+}
+
+.leaderboard-empty {
+  padding: 22px;
+  color: #6b6b6b;
+}
+
+.leaderboard-loading {
+  padding: 22px;
+  color: #6b6b6b;
+}
+
+
+@media (max-width: 900px) {
+  .leaderboard-row {
+    grid-template-columns: 60px 1fr 110px;
+  }
+  .leaderboard-badges {
+    display: none; 
+  }
+}
+
+@media (max-width: 520px) {
+  .leaderboard-page {
+    margin-top: 80px;
+    padding: 16px;
+  }
+  .leaderboard-title {
+    font-size: 1.8rem;
+  }
+  .leaderboard-row {
+    grid-template-columns: 52px 1fr 90px;
+    padding: 12px 14px;
+  }
+}

@@ -17,6 +17,8 @@ import BookInfo from "./pages/BookInfo";
 import Friends from "./pages/ProfileSubPages/Friends";
 import Account from "./pages/ProfileSubPages/Account";
 import MoodFinder from "./pages/MoodFinder";
+import Leaderboard from "./pages/ProfileSubPages/Leaderboard";
+
 const App = () => {
   return (
     <Router>
@@ -37,6 +39,7 @@ const App = () => {
         <Route path="/friends" element={<Friends />} />
         <Route path="/account" element={<Account />} />
         <Route path="/mood" element={<MoodFinder />} />
+        <Route path="/leaderboard" element={<Leaderboard />} />
       </Routes>
       <Footer />
     </Router>

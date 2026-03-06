@@ -107,7 +107,6 @@ const go = (path) => {
 
           <li><Link to="/search">Search</Link></li>
           <li><Link to="/explore">Explore</Link></li>
-          {/* 👇 ADD THIS BLOCK RIGHT HERE */}
           {menuOpen && isMobile && !localStorage.getItem("token") && (
             <>
               <li className="mobile-auth">
@@ -137,6 +136,11 @@ const go = (path) => {
                 <li><span onClick={() => navigate("/friends")}>Friends</span></li>
                 <li><span onClick={() => navigate("/account")}>Account</span></li>
               </ul>
+            </li>
+          )}
+           {localStorage.getItem("token") && (
+            <li>
+              <Link to="/leaderboard">Leaderboard</Link>
             </li>
           )}
           {/* Mobile profile section */}
