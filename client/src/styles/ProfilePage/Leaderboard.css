@@ -1,9 +1,14 @@
+body {
+  background-color: var(--background-color);
+}
 .leaderboard-page {
   width: 100%;
   max-width: 1100px;
   margin: 90px auto 40px;
   padding: 24px;
   box-sizing: border-box;
+  min-height: 100vh;
+  background-color: var(--background-color);
 }
 
 .leaderboard-header {
@@ -15,15 +20,14 @@
 }
 
 .leaderboard-title {
-    font-family: "Sen", sans-serif;
     font-size: 2 rem;
     margin: 0;
-    color: var(--primary-color);
+    color: var(--text-color);
 }
 
 .leaderboard-subtitle {
   margin: 6px 0 0;
-  color: #6b6b6b;
+  color: var(--secondary-color);
   font-size: 0.95rem;
 }
 
@@ -35,17 +39,17 @@
   overflow: hidden;
 }
 
-.leaderboard-row {
+.leaderboard-wrapper {
   display: grid;
-  grid-template-columns: 70px 1.3fr 0.7fr 120px;
+  
+}
+.leaderboard-row {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 12px;
   padding: 14px 18px;
   border-bottom: 1px solid #f1edf8;
-}
-
-.leaderboard-row:last-child {
-  border-bottom: none;
+  
 }
 
 .leaderboard-rank {
@@ -56,18 +60,25 @@
 
 .leaderboard-user {
   display: flex;
+  align-items: center;
+  gap: 25px;
+  justify-content: space-between;
+}
+
+.leaderboard-text {
+  display: flex;
   flex-direction: column;
-  gap: 2px;
 }
 
 .leaderboard-name {
   font-weight: 700;
-  color: #232323;
+  color: var(--text-color);
   font-size: 1rem;
 }
 
 .leaderboard-smalltext {
-  color: #7a7a7a;
+  color: var(--secondary-color);
+  opacity: 0.8;
   font-size: 0.9rem;
 }
 
@@ -75,7 +86,7 @@
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  
 }
 
 .leaderboard-badge-oval {
@@ -106,6 +117,33 @@
   color: #6b6b6b;
 }
 
+:root[data-theme="dark"] .leaderboard-title {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .leaderboard-row {
+  background-color: var(--filter-pane);
+} 
+
+:root[data-theme="dark"] .leaderboard-smalltext {
+  color: var(--secondary-color);
+  opacity: 0.9;
+}
+
+:root[data-theme="dark"] .leaderboard-rank {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .leaderboard-badge-oval {
+  background: rgba(196, 156, 240, 0.18);
+  border: 1px solid rgba(196, 156, 240, 0.45);
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .leaderboard-score {
+  color: var(--text-color);
+  opacity: 0.8;
+}
 
 @media (max-width: 900px) {
   .leaderboard-row {
@@ -125,7 +163,7 @@
     font-size: 1.8rem;
   }
   .leaderboard-row {
-    grid-template-columns: 52px 1fr 90px;
+    
     padding: 12px 14px;
   }
 }

@@ -43,16 +43,19 @@ const Leaderboard = () => {
             <div className="leaderboard-empty">No users yet.</div>
           ) : (
             rows.map((u, i) => (
-              <div className="leaderboard-row" key={`${u.name}-${i}`}>
-                <div className="leaderboard-rank">#{i + 1}</div>
-
+              <div className="leaderboard-wrapper" key={`${u.name}-${i}`}> 
+                <div className="leaderboard-row">
                 <div className="leaderboard-user">
-                  <div className="leaderboard-name">{u.name}</div>
-                  <div className="leaderboard-smalltext">
-                    {u.badgeCount} badges
-                  </div>
+                  <div className="leaderboard-rank">
+                    <h2>#{i + 1}</h2>
+                    </div>
+                    <div className="leaderboard-text">
+                      <h3 className="leaderboard-name">{u.name}</h3>
+                      <p className="leaderboard-smalltext">
+                        {u.badgeCount} badges
+                      </p>
+                      </div> 
                 </div>
-
                 <div className="leaderboard-badges">
                   {u.badgeBreakdown
                     ? Object.entries(u.badgeBreakdown)
@@ -66,6 +69,7 @@ const Leaderboard = () => {
                 </div>
 
                 <div className="leaderboard-score">{u.score} pts</div>
+              </div>
               </div>
             ))
           )}
