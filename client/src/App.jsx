@@ -9,6 +9,7 @@ import About from "./pages/About";
 import Search from "./pages/Search";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import ConfirmEmail from "./pages/ConfirmEmail";
 import Profile from "./pages/Profile";
 import Explore from "./pages/Explore";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/search" element={<Search />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<SignUp />} />
+        <Route path="/confirm" element={<ConfirmEmail />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />

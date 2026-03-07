@@ -68,39 +68,21 @@ const SignUp = () => {
     setLoading(true);
     try {
       await signup({ email, password, name });
-      setShowConfirm(true);
+      //setShowConfirm(true);
+      navigate("/confirm", {state: {email}});
     } catch (err) {
       
     }
     setLoading(false);
   };
 
-  const handleConfirm = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    try {
-      const response = await confirmEmail({ email, code: confirmCode });
-      alert(response.data.message);
-      navigate("/login");
-    } catch (err) {
-      // alert("Confirmation failed: " + (err.response?.data?.error || "Unknown error"));
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        confirm: "Invalid confirmation code",
-      }));
-    }
-    setLoading(false);
-  };
-  
   return (
     <div className="signup-page">
       {/* Left Half with Sign-Up Form */}
       <div className="signup-form">
         <div className="signup-form-content">
-          {!showConfirm && <img src={signUp} alt="Picture of a form with two textfields and submit button." className="signup-svg"></img>}
-          {!showConfirm && <h1>Create an Account</h1>}
-          {!showConfirm ? (
-          <>
+          <img src={signUp} alt="Picture of a form with two textfields and submit button." className="signup-svg"></img>
+          <h1>Create an Account</h1>
             <form onSubmit={handleSignUp} noValidate>
               <div>
                 <TextField
@@ -197,71 +179,6 @@ const SignUp = () => {
                 {loading ? "Signing Up..." : "Sign Up"}
               </Button>
             </form>
-          </>
-        ) : (
-          <>
-            <h1>Confirm Your Email</h1>
-            <img src={confirmationImage} alt = "Girl holding a phone with a checkmark icon indicating email confirmation." className="confirmation-svg"></img>
-            <form onSubmit={handleConfirm} noValidate>
-              <div>
-                <TextField
-                  label="Email"
-                  type="email"
-                  variant="outlined"
-                  fullWidth
-                  value={email}
-                  disabled
-                  margin="normal"
-                  slotProps={{
-                    root: {
-                      className: 'form-textfield-root',
-                    },
-                    inputLabel: {
-                      className: 'form-textfield-label',
-                    },
-                    input: {
-                      className:'form-textfield-input',
-                    },
-                  }}
-                />
-              </div>
-              <div>
-                <TextField
-                  label="Confirmation Code"
-                  variant="outlined"
-                  fullWidth
-                  value={confirmCode}
-                  onChange={(e) => setConfirmCode(e.target.value)}
-                  error = {!!errors.confirm}
-                  helperText={errors.confirm}
-                  required
-                  margin="normal"
-                  slotProps={{
-                    root: {
-                      className: 'form-textfield-root',
-                    },
-                    inputLabel: {
-                      className: 'form-textfield-label',
-                    },
-                    input: {
-                      className:'form-textfield-input',
-                    },
-                  }}
-            />
-              </div>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                className = "signup"
-                disabled={loading}
-              >
-                {loading ? "Confirming..." : "Confirm Email"}
-              </Button>
-            </form>
-          </>
-        )}
         <p className="login-redirect">Already have an account?<a href="/login"> Login now</a></p>
       </div>
       </div>

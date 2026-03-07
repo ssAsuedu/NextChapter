@@ -5,7 +5,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const Footer = () => {
     const location = useLocation();
-    const hiddenRoute = ["/login", "/signup"];
+    const hiddenRoute = ["/login", "/signup", "/confirm"];
 
     if (hiddenRoute.includes(location.pathname)) {
         return null;
