@@ -33,6 +33,7 @@ const Login = () => {
 
     try {
       const response = await login({ email, password });
+      console.log(response.data)
       localStorage.setItem("token", response.data.token);
       if (response.data.user?.name) {
         localStorage.setItem("userName", response.data.user.name);
@@ -42,6 +43,11 @@ const Login = () => {
       navigate("/profile");
     } catch (err) {
       const errorMessage = err.response?.data?.error || "Email and password do not match.";
+      console.log(err.response?.data?.error);
+      if(err.response?.data?.error === "User is not confirmed.") {
+        
+        navigate("/confirm", {state: {email}})
+      }
         setErrors(prev => ({...prev, password: errorMessage}));
       
       // alert("Login failed: " + (err.response?.data?.error || "Unknown error"));

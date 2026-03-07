@@ -67,10 +67,10 @@ const go = (path) => {
   };
 
   //Hide the navigation bar on signup and login
-  if (location.pathname === "/login" || location.pathname === "/signup") {
+  if (location.pathname === "/login" || location.pathname === "/signup" || location.pathname === "/confirm") {
     return null;
   }
-
+  
   // Secure navigation to profile
   const handleProfileClick = () => {
     if (localStorage.getItem("token")) {
