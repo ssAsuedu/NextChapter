@@ -251,4 +251,19 @@
     width: 100%;
     text-align: center;
   }
+  /* make sure book width does not collapse in mobile view */
+  .category-scroll {
+    gap: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    flex-wrap: nowrap;
+    padding-bottom: 8px;
+  }
+
+  .book-card,
+  .category-book-card,
+  .explore-book-card {
+    flex-shrink: 0;
+    width: 140px;
+  }
 }

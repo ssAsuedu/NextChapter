@@ -279,13 +279,12 @@
     max-width: 100%;
   }
 
-  /* Switch to single column on mobile */
+
   .search-content {
     grid-template-columns: 1fr;
     gap: 0;
   }
 
-  /* Mobile filter toggle button */
   .filter-toggle-btn {
     display: flex;
     align-items: center;
@@ -300,27 +299,34 @@
     cursor: pointer;
     margin-bottom: 16px;
     width: fit-content;
+    position: relative;
+    z-index: 1;
   }
-
-  /* Slide-in sidebar on mobile */
+  /* instead of a vertical nav bar, the pane now reveals a modal with the corresponding book filters */
   .filter-pane {
     position: fixed;
-    top: 0;
-    left: -300px;
-    width: 280px;
-    height: 100vh;
-    z-index: 100;
-    border-radius: 0;
-    border: none;
-    border-right: 1px solid #eee;
-    background: white;
-    padding: 24px 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.96);
+    width: min(90vw, 360px);
+    max-height: 80vh;
     overflow-y: auto;
-    transition: left 0.3s ease;
+    z-index: 100;
+    border-radius: 16px;
+    border: 1px solid #eee;
+    /* use filter pane color on the modal to work with dark mode*/
+    background: var(--filter-pane);
+    padding: 20px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    visibility: hidden;
   }
 
   .filter-pane.open {
-    left: 0;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translate(-50%, -50%) scale(1);
   }
 
   .filter-overlay {
@@ -331,12 +337,35 @@
     z-index: 99;
   }
 
-  /* Grid adapts on mobile */
+  .filter-pane-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
   .books-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 14px;
   }
 }
+
+ .view-more-genres-btn {
+  background: none;
+  border: none;
+  color: var(--primary-color);
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-weight: 600;
+  padding: 0;
+  margin-top: 4px;
+  transition: color 0.2s;
+}
+
+.view-more-genres-btn:hover {
+  color: var(--hover);
+  text-decoration: underline;
+}
+
 
 :root[data-theme="dark"] .search-book-card {
   background-color: var(--filter-pane);

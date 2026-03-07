@@ -14,7 +14,8 @@ const Search = () => {
   const [genres, setGenres] = useState([]);
   const [sortBy, setSortBy] = useState("relevance");
   const [filtersOpen, setFiltersOpen] = useState(false);
-
+  // dropdown for more genre displays so that the pane and modal are not overwhelming
+  const [showAllGenres, setShowAllGenres] = useState(false);
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query) return;
@@ -94,9 +95,14 @@ const Search = () => {
   const clearFilters = () => {
     setSelectedGenre("");
     setSortBy("relevance");
+    // reset all genres to false
+    setShowAllGenres(false);
   };
 
   const hasActiveFilters = selectedGenre || sortBy !== "relevance";
+
+  const visibleGenres = showAllGenres ? genres : genres.slice(0, 3);
+  const hasMoreGenres = genres.length > 3;
 
   return (
     <div className="search-page" aria-label="Book search page">
@@ -234,7 +240,7 @@ const Search = () => {
                   >
                     All Genres
                   </button>
-                  {genres.map((genre, idx) => (
+                  {visibleGenres.map((genre, idx) => (
                     <button
                       key={idx}
                       className={`filter-chip ${
@@ -251,6 +257,16 @@ const Search = () => {
                     </button>
                   ))}
                 </div>
+                {/* button to manage the genre output in the filter pane and modal */}
+                {hasMoreGenres && (
+                  <button
+                    type="button"
+                    className="view-more-genres-btn"
+                    onClick={() => setShowAllGenres(!showAllGenres)}
+                  >
+                    {showAllGenres ? "Show less" : "Show more"}
+                  </button>
+                )}
               </div>
             )}
 
