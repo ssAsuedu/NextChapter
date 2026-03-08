@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
 import Modal from '@mui/material/Modal';
 import ErrorIcon from '@mui/icons-material/Error';
 
@@ -32,6 +33,7 @@ const Friends = () => {
 
   // Get current user email from localStorage
   const currentUserEmail = localStorage.getItem('userEmail') || '';
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -393,7 +395,11 @@ const Friends = () => {
           ) : (
             <div className="user-grid">
               {friends.map(friend => (
-                <div key={friend.email} className="user-card">
+                <div key={friend.email} 
+                  className="user-card"
+                  onClick={() => navigate(`/friend/${encodeURIComponent(friend.email)}`)}
+                  style={{ cursor: "pointer" }}
+                >
                   <div className="user-info">
                     <h3>{friend.name}</h3>
                     <p>{friend.email}</p>

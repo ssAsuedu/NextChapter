@@ -1,5 +1,6 @@
 @import url('../colors.css');
 .profile-page {
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -770,4 +771,45 @@
 
 .delete-btn:hover {
   background: #b71c1c;
+}
+
+.friend-profile-loading {
+  padding: 80px 32px;
+  font-family: "Sen", sans-serif;
+  color: #888;
+}
+
+.friend-no-lists {
+  color: #888;
+  font-family: "Sen", sans-serif;
+  font-size: 1rem;
+  margin-top: 8px;
+}
+
+.detail-empty {
+  text-align: center;
+  color: #888;
+  font-family: "Sen", sans-serif;
+  grid-column: 1 / -1;
+}
+
+.detail-book-item {
+  cursor: pointer;
+}
+
+.friend-profile-back {
+  position: absolute;
+  top: 100px;
+  left: 35px;
+  font-family: "Sen", sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: #6c3fc5;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  z-index: 1;
+}
+
+.friend-profile-back:hover {
+  color: #ab7ce7;
 }
