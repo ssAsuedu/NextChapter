@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getAllUsers, getFriends, getUserLists, getBadges } from "../api";
+import { getAllUsers, getFriends, getUserLists, getBadges, getBookshelf, addBookToBookshelf } from "../api";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
@@ -22,7 +22,6 @@ const FriendProfile = () => {
   const email = decodeURIComponent(userEmail);
   const navigate = useNavigate();
   const currentUserEmail = localStorage.getItem("userEmail");
-
   const [friendInfo, setFriendInfo] = useState(null);
   const [friendCount, setFriendCount] = useState(0);
   const [lists, setLists] = useState([]);
@@ -31,7 +30,7 @@ const FriendProfile = () => {
   const [detailSearch, setDetailSearch] = useState("");
   const [detailSort, setDetailSort] = useState("custom");
   const [loading, setLoading] = useState(true);
-
+  const [userBookshelf, setUserBookshelf] = useState([]);
   const [badges, setBadges] = useState([]);
   const badgeIcons = {
     HALFWAY: HalfwayBadge,
@@ -42,6 +41,17 @@ const FriendProfile = () => {
     FIRST_CONNECTION: FirstConnection,
     CONVERSATION_STARTER: ConversationStarter,
   };
+  
+  useEffect(() => {
+    const fetchUserBookshelf = async () => {
+      if (!currentUserEmail) return;
+      try {
+        const res = await getBookshelf(currentUserEmail);
+        setUserBookshelf(res.data.bookshelf || []);
+      } catch (e) {}
+    };
+    fetchUserBookshelf();
+  }, [currentUserEmail]);
 
   useEffect(() => {
     const fetchBadges = async () => {
@@ -144,6 +154,13 @@ const FriendProfile = () => {
     return listBooks;
   };
 
+  const handleAddToLibrary = async (bookId) => {
+    try {
+      await addBookToBookshelf({ email: currentUserEmail, bookId });
+      setUserBookshelf(prev => [...prev, bookId]);
+    } catch (e) {}
+  };
+
   const formattedDate = friendInfo?.createdAt
     ? new Date(friendInfo.createdAt).toLocaleDateString(undefined, {
         year: "numeric", month: "long", day: "numeric"
@@ -169,7 +186,7 @@ const FriendProfile = () => {
       <div className="friend-profile-back" onClick={() => navigate("/friends")}>
           ← Back to Friends
       </div>
-      
+
       {/* Profile Header */}
       <div className="profile-top-section">
         <div className="profile-logo-container">
@@ -305,6 +322,16 @@ const FriendProfile = () => {
                       <p className="detail-book-title">{book.volumeInfo?.title}</p>
                       <p className="detail-book-author">{book.volumeInfo?.authors?.join(", ")}</p>
                     </div>
+                    <button
+                      className={`add-to-library-btn ${userBookshelf.includes(book.id) ? "saved" : ""}`}
+                      disabled={userBookshelf.includes(book.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleAddToLibrary(book.id);
+                      }}
+                    >
+                      {userBookshelf.includes(book.id) ? "Saved" : "Add to Library"}
+                    </button>
                   </div>
                 ))
               ) : (

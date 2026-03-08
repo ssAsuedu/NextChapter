@@ -813,3 +813,30 @@
 .friend-profile-back:hover {
   color: #ab7ce7;
 }
+
+.add-to-library-btn {
+  margin-left: auto;
+  margin-right: 5px;
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: none;
+  background: #ab7ce7;
+  color: #fff;
+  font-family: "Sen", sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.add-to-library-btn:hover:not(:disabled) {
+  background: #6c3fc5;
+  transform: scale(1.05);
+}
+
+.add-to-library-btn.saved {
+  background: #d0d0d0;
+  color: #888;
+  cursor: default;
+}
