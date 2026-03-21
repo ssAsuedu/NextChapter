@@ -19,6 +19,7 @@ import BookInfo from "./pages/BookInfo";
 import Friends from "./pages/ProfileSubPages/Friends";
 import Account from "./pages/ProfileSubPages/Account";
 import MoodFinder from "./pages/MoodFinder";
+import FriendProfile from "./pages/FriendProfile";
 import Leaderboard from "./pages/ProfileSubPages/Leaderboard";
 import useLocalStorage from "use-local-storage";
 document.documentElement.setAttribute("data-theme", "light");
@@ -54,6 +55,7 @@ const App = () => {
         <Route path="/account" element={<Account />} />
         <Route path="/mood" element={<MoodFinder />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
+        <Route path="/friend/:userEmail" element={<FriendProfile />} />
       </Routes>
       <Footer />
     </Router>
