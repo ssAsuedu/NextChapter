@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getMessages } from "../../api";
 import "../../styles/LandingPage/Navbar.css";
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close';
@@ -10,16 +11,19 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 const Navbar = () => {
   const navigate = useNavigate();
   const userName = localStorage.getItem("userName");
+  const email = localStorage.getItem("userEmail");
   const userInitial = userName ? userName.charAt(0).toUpperCase() : null;
   const location = window.location;
   const [menuOpen, setMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
-const go = (path) => {
-  navigate(path);
-  setMenuOpen(false); // close the mobile menu after clicking
-};
+  const go = (path) => {
+    navigate(path);
+    setMenuOpen(false); // close the mobile menu after clicking
+  };
+
   // Handle Sign Out
   const handleSignOut = () => {
     localStorage.removeItem("token"); // Remove the token from localStorage
@@ -28,16 +32,6 @@ const go = (path) => {
     navigate("/"); // Redirect to the home page
   };
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth >= 768) {
-  //       setMenuOpen(false);
-  //     }
-  //   };
-    
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // })
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth < 768;
@@ -49,12 +43,33 @@ const go = (path) => {
       }
     };
 
-  // set correct value on first load too
-  handleResize();
+    // set correct value on first load too
+    handleResize();
 
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  useEffect(() => {
+    const fetchUnread = async () => {
+      if (!email) return;
+  
+      try {
+        const res = await getMessages(email);
+  
+        const unread = res.data.messages.filter(
+          (msg) => msg.unread === "unread"
+        ).length;
+  
+        setUnreadCount(unread);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    fetchUnread();
+  }, [email]);
+
   const scrollToSection = (hash) => {
     if (window.location.pathname !== "/about") { //check the current page location
       navigate(`/about${hash}`); //if the user isnt on the about page already, navigate them there with React Router's navigate
@@ -174,9 +189,23 @@ const go = (path) => {
           </span></button>
         </div>
       </div>
+      {!menuOpen && (
+        <div className="nav-message-icon mobile-only" onClick={() => navigate("/messages")}>
+          <svg width="30" height="30" viewBox="0 0 22 22" fill="none">
+            <path d="M11 2C6.03 2 2 5.69 2 10.2c0 2.6 1.35 4.93 3.47 6.43L4.5 20l3.8-1.9C9.36 18.36 10.17 18.4 11 18.4c4.97 0 9-3.69 9-8.2C20 5.69 15.97 2 11 2Z" fill="#c4a5e8" stroke="#a97dd4" stroke-width="1"/>
+          </svg>
+          {unreadCount > 0 && <span className="nav-message-badge">{unreadCount}</span>}
+        </div>
+      )}
       <div className="auth-buttons">
         {localStorage.getItem("token") ? (
           <>
+            <div className="nav-message-icon" onClick={() => navigate("/messages")}>
+              <svg width="30" height="30" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M11 2C6.03 2 2 5.69 2 10.2c0 2.6 1.35 4.93 3.47 6.43L4.5 20l3.8-1.9C9.36 18.36 10.17 18.4 11 18.4c4.97 0 9-3.69 9-8.2C20 5.69 15.97 2 11 2Z" fill="#c4a5e8" stroke="#a97dd4" stroke-width="1"/>
+              </svg>
+              {unreadCount > 0 && <span className="nav-message-badge">{unreadCount}</span>}
+            </div>
             {userInitial && (
               <div
                 className="user-initial"
