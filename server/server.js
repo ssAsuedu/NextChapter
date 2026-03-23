@@ -939,7 +939,7 @@ app.get("/api/leaderboard", async (req, res) => {
   try {
     const limit = Math.min(Number(req.query.limit) || 50, 200);
 
-    const users = await User.find({}, { name: 1, badges: 1, createdAt: 1 }).lean();
+    const users = await User.find({}, { name: 1, email: 1, badges: 1, createdAt: 1 }).lean();
 
     const leaderboard = users
       .map((u) => {
@@ -948,6 +948,7 @@ app.get("/api/leaderboard", async (req, res) => {
 
         return {
           name: u.name,
+          email: u.email,
           score,
           badgeCount: badges.length,
           badgeBreakdown: badges.reduce((acc, b) => {
