@@ -1,0 +1,5 @@
+:root[data-theme="dark"] .MuiOutlinedInput-input.Mui-disabled  { /* target the textfield for the disabled email field*/
+    color: var(--hover) !important;
+    -webkit-text-fill-color: var(--hover) !important;
+    opacity: 0.7 !important;
+}
