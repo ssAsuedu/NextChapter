@@ -4,7 +4,7 @@
 
 .streak-container {
   width: 100%;
-  max-width: 680px;
+  max-width: 800px;
   margin: 0 auto 24px auto;
   background: #fff;
   border-radius: 12px;
@@ -12,6 +12,10 @@
   padding: 20px 24px;
   font-family: "Sen", Arial, Helvetica, sans-serif;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme="dark"] .streak-container {
+  background-color: var(--filter-pane);
 }
 
 /* --- Header --- */
@@ -54,13 +58,13 @@
 .streak-title {
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--primary-color, #222);
+  color: var(--text-color);
   margin: 0;
   font-family: inherit;
 }
 
 .streak-motivational {
-  font-size: 0.85rem;
+  font-size: 0.90rem;
   color: var(--secondary-color, #666);
   margin: 0;
   line-height: 1.4;
@@ -107,7 +111,7 @@
 }
 
 .streak-stat__label {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: var(--secondary-color, #666);
   font-weight: 500;
   text-transform: uppercase;
@@ -128,9 +132,9 @@
 }
 
 .streak-heatmap-title {
-  font-size: 0.85rem;
+  font-size: 20px;
   font-weight: 600;
-  color: var(--primary-color, #222);
+  color: var(--text-color, #222);
   margin: 0 0 10px 0;
   text-align: center;
 }
@@ -152,8 +156,20 @@
 /* Month labels row — uses flex to align with week columns */
 .streak-heatmap-months {
   display: flex;
-  gap: 2px;
+  gap: 5px;
   margin-bottom: 3px;
+}
+
+:root[data-theme="dark"] .streak-heatmap-month-slot {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .streak-heatmap-day-labels span {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .streak-heatmap-legend-text {
+  color: var(--text-color);
 }
 
 .streak-heatmap-day-labels-spacer {
@@ -164,8 +180,8 @@
 .streak-heatmap-month-slot {
   width: 11px;
   flex-shrink: 0;
-  font-size: 0.6rem;
-  color: #888;
+  font-size: 15px;
+  color: #585858;
   white-space: nowrap;
   overflow: visible;
 }
@@ -188,8 +204,8 @@
 
 .streak-heatmap-day-labels span {
   height: 11px;
-  font-size: 0.55rem;
-  color: #999;
+  font-size: 15px;
+  color: #585858;
   display: flex;
   align-items: center;
   line-height: 1;
@@ -208,11 +224,15 @@
 }
 
 .streak-heatmap-cell {
-  width: 11px;
-  height: 11px;
+  width: 25px;
+  height: 25px;
   border-radius: 2px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: default;
+}
+
+:root[data-theme="dark"] .streak-heatmap-cell--inactive {
+  background: var(--background-color);
 }
 
 .streak-heatmap-cell:focus-visible {
@@ -258,12 +278,12 @@
 }
 
 .streak-heatmap-legend .streak-heatmap-cell {
-  width: 9px;
-  height: 9px;
+  width: 13px;
+  height: 13px;
 }
 
 .streak-heatmap-legend-text {
-  font-size: 0.6rem;
+  font-size: 13px;
   color: #999;
   margin: 0 3px;
 }
@@ -309,6 +329,10 @@
   border: 1px solid #d4e8ff;
 }
 
+:root[data-theme="dark"] .streak-freeze-section {
+  background-color: #243141;
+
+}
 .streak-freeze-info {
   display: flex;
   align-items: center;
@@ -322,14 +346,14 @@
 }
 
 .streak-freeze-title {
-  font-size: 0.8rem;
+  font-size: 16px;
   font-weight: 600;
-  color: var(--primary-color, #222);
+  color: var(--text-color, #222);
   margin: 0;
 }
 
 .streak-freeze-desc {
-  font-size: 0.7rem;
+  font-size: 13px;
   color: var(--secondary-color, #666);
   margin: 1px 0 0 0;
 }
@@ -337,10 +361,10 @@
 .streak-freeze-btn {
   padding: 6px 14px;
   background: #4A9FD6;
-  color: #fff;
+  color: #000000;
   border: none;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 14px;
   font-weight: 600;
   font-family: "Sen", Arial, Helvetica, sans-serif;
   cursor: pointer;
@@ -420,11 +444,11 @@
   }
 
   .streak-title {
-    font-size: 1rem;
+    font-size: 20px;
   }
 
   .streak-motivational {
-    font-size: 0.78rem;
+    font-size: 15px;
     padding-left: 0;
   }
 
@@ -438,7 +462,7 @@
   }
 
   .streak-stat__label {
-    font-size: 0.6rem;
+    font-size: 11px;
   }
 
   .streak-stat-divider {
@@ -446,8 +470,8 @@
   }
 
   .streak-heatmap-cell {
-    width: 9px;
-    height: 9px;
+    width: 15px;
+    height: 15px;
   }
 
   .streak-heatmap-cells {

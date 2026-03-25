@@ -167,7 +167,7 @@ const ReadingStreak = () => {
               </defs>
             </svg>
           </div>
-          <h3 className="streak-title">Reading Streak</h3>
+          <h2 className="streak-title">Reading Streak</h2>
         </div>
         <p className="streak-motivational" role="status" aria-live="polite">
           {getMotivationalMessage(currentStreak)}
