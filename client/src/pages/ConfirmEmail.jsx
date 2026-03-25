@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {confirmEmail } from "../api";
 import confirmationImage from "../assets/confirmation.svg";
 import { TextField, Button } from "@mui/material";
+import "../styles/LoginPage/ConfirmEmail.css";
 
 const ConfirmEmail = () => {
     const location = useLocation();
@@ -11,13 +12,14 @@ const ConfirmEmail = () => {
     const [errors, setErrors] = useState({});
 
     const email = location.state?.email || "";
-    
+    const navigate = useNavigate();
+
     const handleConfirm = async (e) => {
         e.preventDefault();
             setLoading(true);
             try {
               const response = await confirmEmail({ email, code: confirmCode });
-              // alert(response.data.message);
+              alert(response.data.message);
               navigate("/login");
             } catch (err) {
               // alert("Confirmation failed: " + (err.response?.data?.error || "Unknown error"));
