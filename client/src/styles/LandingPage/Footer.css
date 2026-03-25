@@ -92,10 +92,10 @@ footer {
     color: var(--background-color);
 }
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
     footer {
         width: 100%;
-        padding: 2.5rem 1rem;
+        padding: 1.5rem 1rem;
     }
 
     .desktop-only {
@@ -119,23 +119,26 @@ footer {
 
     .footer-links {
         font-size: 14px;
-        
+        padding-left: 0;
+        margin-left: 0;
     }
 
     .team-info {
         flex-direction: column;
         justify-content: center;
-        
+        width: 450px;
     }
 
     .nav-sections {
         gap: 25px;
+        width: 450px;
     }
 
     .content-wrapper {
         flex-direction: column;
         gap: 20px;
-        
+        align-items: center;
+        text-align: left;
     }
 
     .discover-section, .about-us-section, .profile-section, .support-section {
@@ -143,9 +146,9 @@ footer {
     }
 }
 
-@media (width: 768px) {
+@media (min-width: 768px) and (max-width: 1200px) {
     footer {
-        padding: 2.5rem 2rem;
+        padding: 1.5rem 2rem;
     }
     .description {
         max-width: 300px;
@@ -164,5 +167,11 @@ footer {
     }
     .content-wrapper {
         gap: 35px;
+    }
+}
+
+@media (min-width: 1200px) {
+    footer {
+        padding: 3rem 4rem;
     }
 }
