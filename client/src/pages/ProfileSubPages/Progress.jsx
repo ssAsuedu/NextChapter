@@ -129,11 +129,14 @@ const Progress = () => {
                   role="listitem"
                   aria-label={`${book.volumeInfo.title}, ${percent}% complete`}
                 >
-                  <img
-                    src={book.volumeInfo.imageLinks?.thumbnail || "/default-book.png"}
-                    alt={`Cover of ${book.volumeInfo.title}`}
-                    className="progress-book-image"
-                  />
+                  <div className="left-side">
+                    <img
+                      src={book.volumeInfo.imageLinks?.thumbnail || "/default-book.png"}
+                      alt={`Cover of ${book.volumeInfo.title}`}
+                      className="progress-book-image"
+                    />
+                    </div>
+                    <div className="right-side">
                   <div className="progress-book-info">
                     <h3>{book.volumeInfo.title}</h3>
                     <p>{book.volumeInfo.authors?.join(", ")}</p>
@@ -214,22 +217,22 @@ const Progress = () => {
                           <span aria-label={`Page ${p.currentPage} of ${totalPages || "unknown"}`}>
                             Page: {p.currentPage} / {totalPages || "?"}
                           </span>
-                          <button
-                            className="progress-edit-btn"
-                            onClick={() => handleEditClick(idx, p.currentPage)}
-                            aria-label={`Update progress for ${book.volumeInfo.title}`}
-                          >
-                            Update
-                          </button>
                         </>
                       )}
                     </div>
-
+                    <button
+                        className="progress-edit-btn"
+                        onClick={() => handleEditClick(idx, p.currentPage)}
+                        aria-label={`Update progress for ${book.volumeInfo.title}`}
+                    >
+                    Update
+                    </button>
                     <div className="progress-percent" aria-hidden="true">
                       {percent}% complete
                     </div>
                   </div>
-                </div>
+                  </div>
+                  </div>
               );
             })
           )}
