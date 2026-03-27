@@ -17,9 +17,11 @@ const Home = () => {
         <div className="hero-content">
           <div className="left-side-hero">
             <h1 id="hero-heading">Discover Worlds Between Pages</h1>
-            <h6><DoneAllIcon aria-hidden="true" /> Explore New Books and Connect with Friends</h6>
-            <h6><DoneAllIcon aria-hidden="true" /> Track Your Progress and Earn Badges</h6>
-            <h6><DoneAllIcon aria-hidden="true" /> Leave Ratings and View Recommendations</h6>
+            <div className="hero-list">
+              <p><DoneAllIcon aria-hidden="true" /> Explore New Books and Connect with Friends</p>
+              <p><DoneAllIcon aria-hidden="true" /> Track Your Progress and Earn Badges</p>
+              <p><DoneAllIcon aria-hidden="true" /> Leave Ratings and View Recommendations</p>
+            </div>
             <div className="group-buttons">
               <button className="browse-button" onClick={() => navigate("/explore")}  aria-label="Browse books on the Explore page">Browse Books</button>
               <button className="signup-button" onClick={() => navigate("/signup") } aria-label="Sign up for a Next Chapter account">Get Started</button>
@@ -58,7 +60,9 @@ const Home = () => {
       </section>
       {/* About Section */}
       <section className="about">
-        <h3 className="values-title">Learn More About Next Chapter's Mission</h3>
+        <div className="about-left">
+          <h3 className="values-title">Learn More About Next Chapter's Mission</h3>
+        </div>
         <div className="about-wrapper">
           <button className="about-button" aria-label="Learn more about the Next Chapter platform">
             <Book className="about-icon" />
