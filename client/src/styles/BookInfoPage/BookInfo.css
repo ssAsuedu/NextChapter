@@ -237,9 +237,10 @@
   transform: none;     
 }
 
+/* ── Reviews wrapper — match .bookinfo-main width ── */
 .bookinfo-reviews-wrapper {
   width: 80%;
-  max-width: 1100px;
+  max-width: 1800px;
 }
 
 .bookinfo-reviews-header {
