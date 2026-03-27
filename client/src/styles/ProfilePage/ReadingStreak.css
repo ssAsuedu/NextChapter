@@ -5,7 +5,7 @@
 
 .rs-container {
   width: 100%;
-  max-width: 680px;
+  max-width: 800px;
   margin: 0 auto 24px auto;
   background: #fff;
   border-radius: 12px;
@@ -13,6 +13,10 @@
   padding: 20px 24px;
   font-family: "Sen", Arial, Helvetica, sans-serif;
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
+}
+
+:root[data-theme="dark"] .streak-container {
+  background-color: var(--filter-pane);
 }
 
 /* --- Header --- */
@@ -55,7 +59,7 @@
 .rs-title {
   font-size: 1.15rem;
   font-weight: 600;
-  color: var(--primary-color, #222);
+  color: var(--text-color);
   margin: 0;
   font-family: inherit;
 }
@@ -123,7 +127,7 @@
 .rs-heatmap-title {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--primary-color, #222);
+  color: var(--text-color, #222);
   margin: 0 0 10px 0;
   text-align: center;
 }
@@ -319,7 +323,7 @@
 .rs-freeze-title {
   font-size: 0.8rem;
   font-weight: 600;
-  color: var(--primary-color, #222);
+  color: var(--text-color, #222);
   margin: 0;
 }
 
@@ -332,10 +336,10 @@
 .rs-freeze-btn {
   padding: 6px 14px;
   background: #4A9FD6;
-  color: #fff;
+  color: #000000;
   border: none;
   border-radius: 6px;
-  font-size: 0.75rem;
+  font-size: 14px;
   font-weight: 600;
   font-family: "Sen", Arial, Helvetica, sans-serif;
   cursor: pointer;
