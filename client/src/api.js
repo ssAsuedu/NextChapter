@@ -240,6 +240,6 @@ export const getMessages = async (email) => {
   return axios.get(`${API_BASE_URL}/messages/${email}`);
 };
 
-export const markMessagesAsRead = async (email) => {
-  return axios.post(`${API_BASE_URL}/messages/read`, { email });
+export const markMessagesAsRead = async (email, senderEmail) => {
+  return axios.post(`${API_BASE_URL}/messages/read`, { email, senderEmail });
 };

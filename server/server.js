@@ -872,12 +872,12 @@ app.get("/api/messages/:email", async (req, res) => {
 
 app.post("/api/messages/read", async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, senderEmail } = req.body;
 
-    await Message.updateMany(
-      { receiver: email, unread: "unread" },
-      { unread: "read" }
-    );
+    const query = { receiver: email, unread: "unread" };
+    if (senderEmail) query.sender = senderEmail;
+
+    await Message.updateMany(query, { unread: "read" });
 
     res.json({ message: "Messages marked as read" });
   } catch (err) {
