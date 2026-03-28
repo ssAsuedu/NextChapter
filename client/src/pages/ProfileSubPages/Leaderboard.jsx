@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { getLeaderboard } from "../../api";
+import { getLeaderboard, getFriends } from "../../api";
 import "../../styles/ProfilePage/Leaderboard.css";
 import ProfileNavbar from "../../components/ProfilePage/ProfileNavbar";
+
 
 const Leaderboard = () => {
   const [rows, setRows] = useState([]);
   const [limit, setLimit] = useState(50);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-
+  const currentUserEmail = localStorage.getItem("userEmail") || "";
+  // add states to show friends only in the leaderboard upon toggle 
+  const [showFriendsOnly, setShowFriendsOnly] = useState(false);
+  const [friends, setFriends] = useState([]);
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -22,6 +26,31 @@ const Leaderboard = () => {
     load();
   }, [limit]);
 
+  useEffect(() => {
+    const loadFriends = async () => {
+      try {
+        if (!currentUserEmail) return;
+
+        const response = await getFriends(currentUserEmail); // ← NEW API call
+        setFriends(response.data || []); // ← NEW
+      } catch (err) {
+        console.error("Error loading friends:", err);
+      }
+    };
+
+    loadFriends();
+  }, [currentUserEmail]);
+
+  const filteredRows = showFriendsOnly
+      ? rows.filter((u) =>
+        friends.some(
+          (friend) =>
+            friend.email?.trim().toLowerCase() ===
+            u.email?.trim().toLowerCase()
+        )
+      )
+    : rows;
+
   return (
     <div>
       <ProfileNavbar />
@@ -33,16 +62,36 @@ const Leaderboard = () => {
             <p className="leaderboard-subtitle">
               Points are earned from badges across the app.
             </p>
+             <div className="leaderboard-toggle">
+              <input
+                type="checkbox"
+                className="leaderboard-toggle-checkbox"
+                id="leaderboardToggle"
+                checked={showFriendsOnly}
+                onChange={() => setShowFriendsOnly((prev) => !prev)}
+              />
+              <label
+                className="leaderboard-toggle-label"
+                htmlFor="leaderboardToggle"
+              >
+                <span className="leaderboard-toggle-inner" />
+                <span className="leaderboard-toggle-switch" />
+              </label>
+
+              <span className="leaderboard-toggle-text">
+                {showFriendsOnly ? "Friends Only" : "All Users"}
+              </span>
+            </div>
           </div>
         </div>
 
         <div className="leaderboard-card">
           {loading ? (
             <div className="leaderboard-loading">Loading...</div>
-          ) : rows.length === 0 ? (
+          ) : filteredRows.length === 0 ? (
             <div className="leaderboard-empty">No users yet.</div>
           ) : (
-            rows.map((u, i) => (
+            filteredRows.map((u, i) => (
               <div className="leaderboard-wrapper" key={`${u.name}-${i}`}> 
                 <div className="leaderboard-row">
                 <div className="leaderboard-user">

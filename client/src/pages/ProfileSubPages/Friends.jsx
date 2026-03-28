@@ -96,8 +96,17 @@ const Friends = () => {
 
 
       // Filter out current user
-      const filtered = response.data.filter(user => user.email !== currentUserEmail);
+      // const filtered = response.data.filter(user => user.email !== currentUserEmail);
 
+      const filtered = response.data.filter(user => {
+        if (user.email === currentUserEmail) return false;
+
+        const isFriend = friends.some(f => f.email === user.email); //find friends that the current user is friends with
+        const isPending = pendingRequests.some(req => req.senderInfo?.email === user.email); //find pending friend requests
+        const isSent = sentRequests.some(req => req.receiverInfo?.email === user.email); //find sent friend requests
+
+        return !isFriend && !isPending && !isSent; //only return users in the search that aren't current, pending, or sent friends
+      })
       setSearchResults(filtered);
 
       if (filtered.length === 0) {
@@ -120,7 +129,16 @@ const Friends = () => {
       const response = await getAllUsers();
 
       // Filter out current user
-      const filtered = response.data.filter(user => user.email !== currentUserEmail);
+      // const filtered = response.data.filter(user => user.email !== currentUserEmail);
+      const filtered = response.data.filter(user => {
+        if (user.email === currentUserEmail) return false;
+
+        const isFriend = friends.some(f => f.email === user.email); //find friends that the current user is friends with
+        const isPending = pendingRequests.some(req => req.senderInfo?.email === user.email); //find pending friend requests
+        const isSent = sentRequests.some(req => req.receiverInfo?.email === user.email); //find sent friend requests
+
+        return !isFriend && !isPending && !isSent; //only return users in the search that aren't current, pending, or sent friends
+      })
 
       setSearchResults(filtered);
 
@@ -405,7 +423,10 @@ const Friends = () => {
                     <p>{friend.email}</p>
                   </div>
                   <button 
-                    onClick={() => handleRemoveFriend(friend.email)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveFriend(friend.email);
+                    }}
                     className="btn-remove"
                   >
                     Remove
@@ -433,7 +454,7 @@ const Friends = () => {
           </form>
 
           {loading ? (
-            <p>Loading users from database...</p>
+            <p className="loading-text">Loading users from database...</p>
           ) : searchResults.length === 0 ? (
             <p className="empty-state">
               {searchQuery 
@@ -470,7 +491,7 @@ const Friends = () => {
             ) : (
               <div className="user-grid">
                 {pendingRequests.map(request => (
-                  <div key={request._id} className="user-card">
+                  <div key={request._id} className="user-card pending">
                     <div className="user-info">
                       <h3>{request.senderInfo?.name}</h3>
                       <p>{request.senderInfo?.email}</p>
