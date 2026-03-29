@@ -102,7 +102,7 @@ const Navbar = () => {
 
   return (
     <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
-      <div className="navbar-content">
+      <div className={`navbar-content ${scrolled ? 'scrolled-content' : ''}`}>
         <IconButton className={`menu-btn ${menuOpen ? 'open' : ''}`} aria-label="menu" onClick={() => setMenuOpen(!menuOpen)}>
             <MenuIcon />
           </IconButton>
@@ -163,6 +163,12 @@ const Navbar = () => {
         {isAuthenticated ? ( //if logged in
           userInitial && (
             <div className={`logged-in ${menuOpen ? 'open' : ''}`}>
+              <div className="nav-message-icon" onClick={() => navigate("/messages")}>
+                <svg width="30" height="30" viewBox="0 0 22 22" fill="none">
+                  <path d="M11 2C6.03 2 2 5.69 2 10.2c0 2.6 1.35 4.93 3.47 6.43L4.5 20l3.8-1.9C9.36 18.36 10.17 18.4 11 18.4c4.97 0 9-3.69 9-8.2C20 5.69 15.97 2 11 2Z"/>
+                </svg>
+                {unreadCount > 0 && <span className="nav-message-badge">{unreadCount}</span>}
+              </div>
               <div
               className={`user-initial ${scrolled ? 'bg-scroll' : 'not-scroll'}`}
               title={userName}
@@ -175,12 +181,6 @@ const Navbar = () => {
               aria-label="Go to profile"
             >
               {userInitial}
-            </div>
-            <div className="nav-message-icon" onClick={() => navigate("/messages")}>
-              <svg width="30" height="30" viewBox="0 0 22 22" fill="none">
-              <path d="M11 2C6.03 2 2 5.69 2 10.2c0 2.6 1.35 4.93 3.47 6.43L4.5 20l3.8-1.9C9.36 18.36 10.17 18.4 11 18.4c4.97 0 9-3.69 9-8.2C20 5.69 15.97 2 11 2Z"/>
-              </svg>
-              {unreadCount > 0 && <span className="nav-message-badge">{unreadCount}</span>}
             </div>
             <button onClick={handleSignOut} className={`auth-signout ${scrolled ? 'signout-nav' : 'not-scroll'}`}>Sign Out</button>
             </div>
