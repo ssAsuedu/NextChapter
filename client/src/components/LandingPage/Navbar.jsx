@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../styles/LandingPage/Navbar.css";
 import MenuIcon from '@mui/icons-material/Menu'
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { IconButton } from '@mui/material';
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -13,13 +14,35 @@ const Navbar = () => {
   const userInitial = userName ? userName.charAt(0).toUpperCase() : null;
   const location = window.location;
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
-  const [profileOpen, setProfileOpen] = useState(false);
+  const token = localStorage.getItem("token") //check to see if user is logged in
+  const isAuthenticated = !!token; //true -> user is logged in. false -> user is not logged in
 
-const go = (path) => {
-  navigate(path);
-  setMenuOpen(false); // close the mobile menu after clicking
-};
+
+  const [scrolled, setScrolled] = useState(false);
+  const [dropDown, setDropDown] = useState(false);
+  const [profileDrop, setProfileDrop] = useState(false);
+
+  const changeBackground = () => {
+    if (window.scrollY >= 80 && window.innerWidth > 768) {
+      setScrolled(true);
+    }
+    else {
+      setScrolled(false);
+    }
+  }
+
+  useEffect(() => {  //runs once on mount and cleanup runs on unmount
+    window.addEventListener('scroll', changeBackground); //add scroll listener once
+
+    return () => {
+      window.removeEventListener('scroll', changeBackground); //cleanup when component unmounts, prevents memory leaks
+    };
+  }, [])
+
+  const go = (path) => {
+    navigate(path);
+    setMenuOpen(false); // close the mobile menu after clicking
+  };
   // Handle Sign Out
   const handleSignOut = () => {
     localStorage.removeItem("token"); // Remove the token from localStorage
@@ -28,37 +51,14 @@ const go = (path) => {
     navigate("/"); // Redirect to the home page
   };
 
-  // useEffect(() => {
-  //   const handleResize = () => {
-  //     if (window.innerWidth >= 768) {
-  //       setMenuOpen(false);
-  //     }
-  //   };
-    
-  //   window.addEventListener("resize", handleResize);
-  //   return () => window.removeEventListener("resize", handleResize);
-  // })
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 768;
-      setIsMobile(mobile);
-
-      if (!mobile) {
-        setMenuOpen(false);
-        setProfileOpen(false);
-      }
-    };
-
-  // set correct value on first load too
-  handleResize();
-
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-  const scrollToSection = (hash) => {
+  const scrollToSection = (hash) => { //hash = id element
     if (window.location.pathname !== "/about") { //check the current page location
-      navigate(`/about${hash}`); //if the user isnt on the about page already, navigate them there with React Router's navigate
+      navigate(`/about${hash || ""}`); //if the user isnt on the about page already, navigate them there with React Router's navigate
     } else {
+      if (!hash) {
+        window.scrollTo({top: 0, behavior: "smooth"});
+        return;
+      }
       const element = document.querySelector(hash); //if user is already on about
       if (element) { //scroll smoothly to that section
         element.scrollIntoView({ behavior: "smooth" });
@@ -79,135 +79,98 @@ const go = (path) => {
   };
 
   return (
-    <nav className="main-navbar"
-      style={{
-        height: menuOpen ? "auto" : "60px",
-        boxShadow: "0 4px 12px rgba(171, 124, 231, 0.3)"
-      }}
-    >
-      <div className="space-between">
-        <ul className={menuOpen ? "nav-links open" : "nav-links"}>
-          <li><Link to="/">Home</Link></li>
-          <li className="about-link">
-            <Link to="/about">About</Link>
-            <span className="material-symbols-outlined dropdown">
-            </span>
-            <ul className="dropdown">
-              <li>
-                <span onClick={() => scrollToSection("#mission")}>Our Mission</span>
-              </li>
-              <li>
-                <span onClick={() => scrollToSection("#what-we-offer")}>What We Offer</span>
-              </li>
-              <li>
-                <span onClick={() => scrollToSection("#team")}>Our Team</span>
-              </li>
-            </ul>
-          </li>
-
-          <li><Link to="/search">Search</Link></li>
-          <li><Link to="/explore">Explore</Link></li>
-          {menuOpen && isMobile && !localStorage.getItem("token") && (
-            <>
-              <li className="mobile-auth">
-                <Link to="/login" onClick={() => setMenuOpen(false)}>Login</Link>
-              </li>
-              <li className="mobile-auth">
-                <Link to="/signup" onClick={() => setMenuOpen(false)}>Sign Up</Link>
-              </li>
-            </>
-          )}
-
-          {menuOpen && isMobile && localStorage.getItem("token") && (
-            <li className="mobile-auth">
-              <span onClick={() => { handleSignOut(); setMenuOpen(false); }}>
-                Sign Out
-              </span>
-            </li>
-          )}
-          {/*add a new profile button to the main nav bar to get rid of ambiguity and the vertical nav bar*/}
-          {localStorage.getItem("token") && (
-            <li className="profile-link">
-              
-              <Link to="/profile">Profile</Link>
-              <ul className="profile-dropdown">
-                <li><span onClick={() => navigate("/progress")}>Progress</span></li>
-                <li><span onClick={() => navigate("/reviews")}>Reviews</span></li>
-                <li><span onClick={() => navigate("/friends")}>Friends</span></li>
-                <li><span onClick={() => navigate("/account")}>Account</span></li>
-              </ul>
-            </li>
-          )}
-           {localStorage.getItem("token") && (
-            <li>
-              <Link to="/leaderboard">Leaderboard</Link>
-            </li>
-          )}
-          {/* Mobile profile section */}
-          {localStorage.getItem("token") && menuOpen && isMobile && (
-            <>
-              <li
-                className="mobile-dropdown-header"
-                onClick={() => setProfileOpen(prev => !prev)}
-              >
-                <li><span onClick={() => navigate("/profile")}>Profile</span></li>
-                <span className="material-symbols-outlined">
-                  {profileOpen ? <KeyboardArrowUpIcon fontSize="small" /> : <KeyboardArrowDownIcon fontSize="small"/>}
-                </span>
-              </li>
-
-              {profileOpen && (
-                <>
-                  <li className="mobile-dropdown-item"><span onClick={() => go("/progress")}>Progress</span></li>
-                  <li className="mobile-dropdown-item"><span onClick={() => go("/reviews")}>Reviews</span></li>
-                  <li className="mobile-dropdown-item"><span onClick={() => go("/friends")}>Friends</span></li>
-                  <li className="mobile-dropdown-item"><span onClick={() => go("/account")}>Account</span></li>
-                </>
+    <nav className={`navbar ${scrolled ? 'scrolled' : ''}`}>
+      <div className="navbar-content">
+        <IconButton className={`menu-btn ${menuOpen ? 'open' : ''}`} aria-label="menu" onClick={() => setMenuOpen(!menuOpen)}>
+            <MenuIcon />
+          </IconButton>
+        <ul className={`left ${menuOpen ? 'open' : ''}`}>
+          <li className=""><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/">Home</Link></li>
+          <div className={`about-nav ${scrolled ? 'about-scrolled' : 'not-scroll'}`}>
+            <div className="about-name-arrow">
+              <li className="about-arrow"><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/about">About</Link></li>
+              {dropDown ? (
+                <KeyboardArrowDownIcon className={`carrot ${scrolled ? 'nav-scrolled' : 'carrot'}`} onClick={() => setDropDown(false)}/>
+              ) : (
+                <KeyboardArrowUpIcon className={`carrot ${scrolled ? 'nav-scrolled' : 'carrot'}`} onClick={() => setDropDown(!dropDown)}/>
               )}
-            </>
-          )}
-        </ul>
-        <div className="toggle-dropdown">
-          <button className="burger-drop" onClick={() => setMenuOpen(!menuOpen)}><span className="material-symbols-outlined">
-            
-            {menuOpen ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
-          </span></button>
-        </div>
-      </div>
-      <div className="auth-buttons">
-        {localStorage.getItem("token") ? (
-          <>
-            {userInitial && (
-              <div
-                className="user-initial"
-                title={userName}
-                onClick={handleProfileClick}
-                style={{ cursor: "pointer" }}
-                tabIndex={0}
-                role="button"
-                aria-label="Go to profile"
-                onKeyDown={e => {
-                  if (e.key === "Enter" || e.key === " ") handleProfileClick();
-                }}
-              >
-                {userInitial}
+            </div>
+            {dropDown && (
+              <div className="dropdown-links">
+                <ul>
+                  <li className="about-links"><span className="link-text" onClick={() => scrollToSection("#mission")}>Our Mission</span></li>
+                  <li className="about-links"><span className="link-text" onClick={() => scrollToSection("#what-we-offer")}>What We Offer</span></li>
+                  <li className="about-links"><span className="link-text" onClick={() => scrollToSection("#team")}>Our Team</span></li>
+                </ul>
               </div>
             )}
-            <button onClick={handleSignOut} className="auth-signout">Sign Out</button>
-          </>
-        ) : (
-          <>
+            </div>
+          <li className=""><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/search">Search</Link></li>
+          <li className=""><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/explore">Explore</Link></li>
+          {isAuthenticated ? (
+            <>
+            <div className="profile-nav">
+              <div className="profile-name-arrow">
+                <li className="profile-arrow"><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/profile">Profile</Link>
+                  {profileDrop ? (
+                    <KeyboardArrowDownIcon className={`carrot ${scrolled ? 'nav-scrolled' : 'carrot'}`} onClick={() => setProfileDrop(false)}/>
+                  ) : (
+                    <KeyboardArrowUpIcon className={`carrot ${scrolled ? 'nav-scrolled' : 'carrot'}`} onClick={() => setProfileDrop(!profileDrop)}/>
+                  )}
+                </li>
+              </div>
+              {profileDrop && (
+              <div className="dropdown-links">
+                <ul>
+                  <li className="profile-links"><span className="link-text" onClick={() => go("/progress")}>Progress</span></li>
+                  <li className="profile-links"><span className="link-text" onClick={() => go("/reviews")}>Reviews</span></li>
+                  <li className="profile-links"><span className="link-text" onClick={() => go("/friends")}>Friends</span></li>
+                  <li className="profile-links"><span className="link-text" onClick={() => go("/account")}>Account</span></li>
+                </ul>
+              </div>
+            )}
+            </div>
+            
+            <li className=""><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/leaderboard">Leaderboard</Link></li>
+            </>
+          ) : (
+            null
+          )}
+      </ul>
+      <ul className="right">
+        {isAuthenticated ? ( //if logged in
+          userInitial && (
+            <div className={`logged-in ${menuOpen ? 'open' : ''}`}>
+              <div
+              className={`user-initial ${scrolled ? 'bg-scroll' : 'not-scroll'}`}
+              title={userName}
+              onClick={handleProfileClick}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleProfileClick(); 
+              }}
+              role="button"
+              tabIndex={0}
+              aria-label="Go to profile"
+            >
+              {userInitial}
+            </div>
+            <button onClick={handleSignOut} className={`auth-signout ${scrolled ? 'signout-nav' : 'not-scroll'}`}>Sign Out</button>
+            </div>
+          )
+        ) : ( //not logged in
+          <div className={`new-user ${menuOpen ? 'open' : ''}`}>
             <Link to="/signup">
-              <button className="auth-signup">Sign Up</button>
-            </Link>
-            <Link to="/login">
-              <button className="auth-login">Login</button>
-            </Link>
-          </>
+               <button className={`auth-signup ${scrolled ? 'signup-nav' : 'not-scroll'}`}>Sign Up</button>
+             </Link>
+             <Link to="/login">
+               <button className={`auth-login ${scrolled ? 'login-nav' : 'not-scroll'}`}>Login</button>
+             </Link>
+          </div>
         )}
+      </ul>
       </div>
     </nav>
-  );
+  )
 };
 
 export default Navbar;
