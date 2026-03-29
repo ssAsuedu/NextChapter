@@ -22,7 +22,6 @@ import MoodFinder from "./pages/MoodFinder";
 import FriendProfile from "./pages/FriendProfile";
 import Leaderboard from "./pages/ProfileSubPages/Leaderboard";
 import useLocalStorage from "use-local-storage";
-import Messages from "./pages/Messages";
 document.documentElement.setAttribute("data-theme", "light");
 
 const App = () => {
@@ -57,7 +56,6 @@ const App = () => {
         <Route path="/mood" element={<MoodFinder />} />
         <Route path="/leaderboard" element={<Leaderboard />} />
         <Route path="/friend/:userEmail" element={<FriendProfile />} />
-        <Route path="/messages" element={<Messages />} />
       </Routes>
       <Footer />
     </Router>

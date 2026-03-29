@@ -1,9 +1,8 @@
 @import url('../colors.css');
 
 /* ============ READING STREAK COMPONENT ============ */
-/* All classes use "rs-" prefix to avoid inheritance collisions */
 
-.rs-container {
+.streak-container {
   width: 100%;
   max-width: 800px;
   margin: 0 auto 24px auto;
@@ -20,18 +19,18 @@
 }
 
 /* --- Header --- */
-.rs-header {
+.streak-header {
   margin-bottom: 16px;
 }
 
-.rs-title-row {
+.streak-title-row {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 4px;
 }
 
-.rs-flame-wrapper {
+.streak-flame-wrapper {
   width: 22px;
   height: 28px;
   display: flex;
@@ -39,24 +38,24 @@
   justify-content: center;
 }
 
-.rs-flame {
+.streak-flame {
   width: 20px;
   height: 26px;
   transition: filter 0.3s ease;
 }
 
-.rs-flame--active {
+.streak-flame--active {
   filter: drop-shadow(0 0 4px rgba(255, 107, 53, 0.5));
-  animation: rs-flame-flicker 2s ease-in-out infinite alternate;
+  animation: flame-flicker 2s ease-in-out infinite alternate;
 }
 
-@keyframes rs-flame-flicker {
-  0%   { transform: scale(1) rotate(0deg); }
-  50%  { transform: scale(1.05) rotate(1deg); }
+@keyframes flame-flicker {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.05) rotate(1deg); }
   100% { transform: scale(0.98) rotate(-1deg); }
 }
 
-.rs-title {
+.streak-title {
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--text-color);
@@ -64,8 +63,8 @@
   font-family: inherit;
 }
 
-.rs-motivational {
-  font-size: 0.85rem;
+.streak-motivational {
+  font-size: 0.90rem;
   color: var(--secondary-color, #666);
   margin: 0;
   line-height: 1.4;
@@ -73,7 +72,7 @@
 }
 
 /* --- Streak Counters --- */
-.rs-counters {
+.streak-counters {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -84,7 +83,7 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
-.rs-stat {
+.streak-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -92,26 +91,34 @@
   padding: 0 12px;
 }
 
-.rs-stat__number {
+.streak-stat__number {
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 1;
   margin-bottom: 2px;
 }
 
-.rs-stat--current .rs-stat__number { color: #F7931A; }
-.rs-stat--longest .rs-stat__number { color: var(--primary-color, #222); }
-.rs-stat--total   .rs-stat__number { color: #4CAF50; }
+.streak-stat--current .streak-stat__number {
+  color: #F7931A;
+}
 
-.rs-stat__label {
-  font-size: 0.7rem;
+.streak-stat--longest .streak-stat__number {
+  color: var(--primary-color, #222);
+}
+
+.streak-stat--total .streak-stat__number {
+  color: #4CAF50;
+}
+
+.streak-stat__label {
+  font-size: 0.8rem;
   color: var(--secondary-color, #666);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
 
-.rs-stat-divider {
+.streak-stat-divider {
   width: 1px;
   height: 32px;
   background: #e8e8e8;
@@ -119,20 +126,20 @@
 }
 
 /* --- Heatmap Section --- */
-.rs-heatmap-section {
+.streak-heatmap-section {
   position: relative;
   margin-bottom: 16px;
 }
 
-.rs-heatmap-title {
-  font-size: 0.85rem;
+.streak-heatmap-title {
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-color, #222);
   margin: 0 0 10px 0;
   text-align: center;
 }
 
-.rs-heatmap-scroll {
+.streak-heatmap-scroll {
   overflow-x: auto;
   padding-bottom: 4px;
   display: flex;
@@ -140,142 +147,156 @@
   align-items: center;
 }
 
-.rs-heatmap-inner {
+/* Inner wrapper to keep months, grid, and legend the same width */
+.streak-heatmap-inner {
   display: inline-flex;
   flex-direction: column;
 }
 
+/* Month labels row — uses flex to align with week columns */
+.streak-heatmap-months {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 3px;
+}
+
+:root[data-theme="dark"] .streak-heatmap-month-slot {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .streak-heatmap-day-labels span {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .streak-heatmap-legend-text {
+  color: var(--text-color);
+}
+
+.streak-heatmap-day-labels-spacer {
+  width: 22px;
+  flex-shrink: 0;
+}
+
+.streak-heatmap-month-slot {
+  width: 11px;
+  flex-shrink: 0;
+  font-size: 15px;
+  color: #585858;
+  white-space: nowrap;
+  overflow: visible;
+}
+
 /* Grid container */
-.rs-heatmap-grid {
+.streak-heatmap-grid {
   display: flex;
   gap: 0;
 }
 
 /* Day-of-week labels */
-.rs-heatmap-day-labels {
+.streak-heatmap-day-labels {
   display: flex;
   flex-direction: column;
-  gap: 3px;
-  margin-right: 6px;
+  gap: 2px;
+  margin-right: 4px;
   flex-shrink: 0;
-  width: 20px;
-  /* Push down to align with cells, leaving room for month labels above */
-  padding-top: 20px;
+  width: 18px;
 }
 
-.rs-heatmap-day-labels span {
-  height: 14px;
-  font-size: 0.65rem;
-  color: #999;
+.streak-heatmap-day-labels span {
+  height: 11px;
+  font-size: 15px;
+  color: #585858;
   display: flex;
   align-items: center;
   line-height: 1;
 }
 
-/*
-  Wrapper around month-labels + cells.
-  Month labels are absolutely positioned above the cells grid.
-*/
-.rs-heatmap-cells-wrapper {
-  position: relative;
-  /* Top padding makes room for the month labels row */
-  padding-top: 20px;
-}
-
-/* Month labels — positioned absolutely so they never fight for slot width */
-.rs-heatmap-months-row {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 18px;
-  pointer-events: none;
-}
-
-.rs-month-label {
-  position: absolute;
-  top: 0;
-  font-size: 0.7rem;
-  font-weight: 500;
-  color: #888;
-  white-space: nowrap;
-  line-height: 1;
-}
-
-/* Cells grid — BIGGER cells: 14px desktop */
-.rs-heatmap-cells {
+/* Cells grid */
+.streak-heatmap-cells {
   display: flex;
-  gap: 3px;
+  gap: 2px;
 }
 
-.rs-heatmap-week {
+.streak-heatmap-week {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 2px;
 }
 
-.rs-heatmap-cell {
-  width: 14px;
-  height: 14px;
-  border-radius: 3px;
+.streak-heatmap-cell {
+  width: 25px;
+  height: 25px;
+  border-radius: 2px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: default;
 }
 
-.rs-heatmap-cell:focus-visible {
+:root[data-theme="dark"] .streak-heatmap-cell--inactive {
+  background: var(--background-color);
+}
+
+.streak-heatmap-cell:focus-visible {
   outline: 2px solid #4A90D9;
   outline-offset: 1px;
 }
 
-.rs-heatmap-cell--empty    { background: transparent; }
-.rs-heatmap-cell--inactive { background: #EBEDF0; }
-.rs-heatmap-cell--active   { background: #2D8A4E; }
+.streak-heatmap-cell--empty {
+  background: transparent;
+}
 
-.rs-heatmap-cell--active.rs-heatmap-cell--low {
+.streak-heatmap-cell--inactive {
+  background: #EBEDF0;
+}
+
+.streak-heatmap-cell--active {
+  background: #2D8A4E;
+}
+
+.streak-heatmap-cell--active.streak-heatmap-cell--low {
   background: #9BE9A8;
 }
 
-.rs-heatmap-cell--active:hover,
-.rs-heatmap-cell--active:focus-visible {
+.streak-heatmap-cell--active:hover,
+.streak-heatmap-cell--active:focus-visible {
   transform: scale(1.3);
   box-shadow: 0 0 3px rgba(45, 138, 78, 0.4);
 }
 
-.rs-heatmap-cell--inactive:hover,
-.rs-heatmap-cell--inactive:focus-visible {
+.streak-heatmap-cell--inactive:hover,
+.streak-heatmap-cell--inactive:focus-visible {
   transform: scale(1.3);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Legend */
-.rs-heatmap-legend {
+/* Legend — aligned to the right edge of the grid, not the card */
+.streak-heatmap-legend {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 3px;
   justify-content: flex-end;
-  margin-top: 10px;
+  margin-top: 8px;
 }
 
-.rs-heatmap-legend .rs-heatmap-cell {
-  width: 10px;
-  height: 10px;
+.streak-heatmap-legend .streak-heatmap-cell {
+  width: 13px;
+  height: 13px;
 }
 
-.rs-heatmap-legend-text {
-  font-size: 0.65rem;
+.streak-heatmap-legend-text {
+  font-size: 13px;
   color: #999;
   margin: 0 3px;
 }
 
 /* Tooltip */
-.rs-tooltip {
+.streak-tooltip {
   position: fixed;
   transform: translate(-50%, -100%);
   background: #24292e;
   color: #fff;
   padding: 5px 8px;
   border-radius: 5px;
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -286,7 +307,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.rs-tooltip::after {
+.streak-tooltip::after {
   content: "";
   position: absolute;
   bottom: -4px;
@@ -298,7 +319,7 @@
 }
 
 /* --- Streak Freeze Section --- */
-.rs-freeze-section {
+.streak-freeze-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -308,32 +329,36 @@
   border: 1px solid #d4e8ff;
 }
 
-.rs-freeze-info {
+:root[data-theme="dark"] .streak-freeze-section {
+  background-color: #243141;
+
+}
+.streak-freeze-info {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.rs-freeze-icon {
+.streak-freeze-icon {
   width: 22px;
   height: 22px;
   flex-shrink: 0;
 }
 
-.rs-freeze-title {
-  font-size: 0.8rem;
+.streak-freeze-title {
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-color, #222);
   margin: 0;
 }
 
-.rs-freeze-desc {
-  font-size: 0.7rem;
+.streak-freeze-desc {
+  font-size: 13px;
   color: var(--secondary-color, #666);
   margin: 1px 0 0 0;
 }
 
-.rs-freeze-btn {
+.streak-freeze-btn {
   padding: 6px 14px;
   background: #4A9FD6;
   color: #000000;
@@ -347,28 +372,28 @@
   white-space: nowrap;
 }
 
-.rs-freeze-btn:hover {
+.streak-freeze-btn:hover {
   background: #3A8BC2;
   transform: translateY(-1px);
 }
 
-.rs-freeze-btn:active {
+.streak-freeze-btn:active {
   transform: translateY(0);
 }
 
-.rs-freeze-btn:disabled {
+.streak-freeze-btn:disabled {
   background: #b0cfe0;
   cursor: not-allowed;
   transform: none;
 }
 
-.rs-freeze-btn:focus-visible {
+.streak-freeze-btn:focus-visible {
   outline: 2px solid #4A90D9;
   outline-offset: 2px;
 }
 
 /* --- Loading State --- */
-.rs-loading {
+.streak-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -377,26 +402,26 @@
   gap: 12px;
 }
 
-.rs-loading p {
+.streak-loading p {
   font-size: 0.8rem;
   color: #888;
   margin: 0;
 }
 
-.rs-loading-pulse {
+.streak-loading-pulse {
   width: 28px;
   height: 28px;
   border-radius: 50%;
   background: #F7931A;
-  animation: rs-pulse 1.2s ease-in-out infinite;
+  animation: streak-pulse 1.2s ease-in-out infinite;
 }
 
-@keyframes rs-pulse {
+@keyframes streak-pulse {
   0%, 100% { transform: scale(0.8); opacity: 0.5; }
-  50%      { transform: scale(1.1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 1; }
 }
 
-.rs-error {
+.streak-error {
   text-align: center;
   color: #888;
   padding: 24px 0;
@@ -406,82 +431,69 @@
 /* ============ RESPONSIVE ============ */
 
 @media (min-width: 768px) {
-  .rs-stat__number {
+  .streak-stat__number {
     font-size: 2rem;
   }
 }
 
 @media (max-width: 600px) {
-  .rs-container {
+  .streak-container {
     padding: 16px 14px;
     border-radius: 10px;
     margin: 0 auto 16px auto;
   }
 
-  .rs-title {
-    font-size: 1rem;
+  .streak-title {
+    font-size: 20px;
   }
 
-  .rs-motivational {
-    font-size: 0.78rem;
+  .streak-motivational {
+    font-size: 15px;
     padding-left: 0;
   }
 
-  .rs-counters {
+  .streak-counters {
     padding: 10px 0;
     margin-bottom: 12px;
   }
 
-  .rs-stat__number {
+  .streak-stat__number {
     font-size: 1.4rem;
   }
 
-  .rs-stat__label {
-    font-size: 0.6rem;
+  .streak-stat__label {
+    font-size: 11px;
   }
 
-  .rs-stat-divider {
+  .streak-stat-divider {
     height: 24px;
   }
 
-  /* Mobile cells: 11px (still bigger than the old 9px) */
-  .rs-heatmap-cell {
-    width: 11px;
-    height: 11px;
-    border-radius: 2px;
+  .streak-heatmap-cell {
+    width: 15px;
+    height: 15px;
   }
 
-  .rs-heatmap-cells {
-    gap: 2px;
+  .streak-heatmap-cells {
+    gap: 1px;
   }
 
-  .rs-heatmap-week {
-    gap: 2px;
+  .streak-heatmap-week {
+    gap: 1px;
   }
 
-  .rs-heatmap-day-labels span {
-    height: 11px;
-    font-size: 0.55rem;
+  .streak-heatmap-month-slot {
+    width: 9px;
   }
 
-  .rs-heatmap-day-labels {
-    gap: 2px;
-    margin-right: 4px;
-    width: 18px;
-  }
-
-  .rs-month-label {
-    font-size: 0.6rem;
-  }
-
-  .rs-freeze-section {
+  .streak-freeze-section {
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
     padding: 10px 12px;
   }
 
-  .rs-freeze-btn {
+  .streak-freeze-btn {
     width: 100%;
     text-align: center;
   }

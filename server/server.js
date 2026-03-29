@@ -9,7 +9,6 @@ import Review from "./models/Review.js";
 import FriendRequest from "./models/FriendRequest.js";
 import List from "./models/List.js";
 import featureRoutes from "./models/featureRoutes.js";
-import Message from "./models/Message.js";
 dotenv.config();
 
 const app = express();
@@ -830,58 +829,6 @@ app.get('/api/friends/status', async (req, res) => {
   } catch (error) {
     console.error('Error checking friendship status:', error);
     res.status(500).json({ error: 'Failed to check friendship status' });
-  }
-});
-
-app.post("/api/messages/send", async (req, res) => {
-  try {
-    const { senderEmail, receiverEmail, volumeId, title } = req.body;
-
-    if (!senderEmail || !receiverEmail || !volumeId || !title) {
-      return res.status(400).json({ error: "Missing fields" });
-    }
-
-    const newMessage = new Message({
-      sender: senderEmail,
-      receiver: receiverEmail,
-      volumeId,
-      title,
-      messageText: `Hi! I think you should give this book a try: ${title}`,
-      unread: "unread",
-    });
-
-    await newMessage.save();
-
-    res.status(201).json({ message: "Message sent", data: newMessage });
-  } catch (err) {
-    console.error("Send message error:", err);
-    res.status(500).json({ error: "Failed to send message" });
-  }
-});
-
-app.get("/api/messages/:email", async (req, res) => {
-  try {
-    const messages = await Message.find({ receiver: req.params.email })
-      .sort({ sentAt: -1 });
-
-    res.json({ messages });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to fetch messages" });
-  }
-});
-
-app.post("/api/messages/read", async (req, res) => {
-  try {
-    const { email, senderEmail } = req.body;
-
-    const query = { receiver: email, unread: "unread" };
-    if (senderEmail) query.sender = senderEmail;
-
-    await Message.updateMany(query, { unread: "read" });
-
-    res.json({ message: "Messages marked as read" });
-  } catch (err) {
-    res.status(500).json({ error: "Failed to update messages" });
   }
 });
 
