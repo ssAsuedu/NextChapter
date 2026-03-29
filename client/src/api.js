@@ -229,3 +229,17 @@ export const getSurpriseMoods = async () => {
 export const getLeaderboard = async (limit = 50) => {
   return axios.get(`${API_BASE_URL}/leaderboard`, { params: { limit } });
 };
+
+// MESSAGES API CALLS
+
+export const sendMessage = async ({ senderEmail, receiverEmail, volumeId, title }) => {
+  return axios.post(`${API_BASE_URL}/messages/send`, { senderEmail, receiverEmail, volumeId, title });
+};
+
+export const getMessages = async (email) => {
+  return axios.get(`${API_BASE_URL}/messages/${email}`);
+};
+
+export const markMessagesAsRead = async (email, senderEmail) => {
+  return axios.post(`${API_BASE_URL}/messages/read`, { email, senderEmail });
+};

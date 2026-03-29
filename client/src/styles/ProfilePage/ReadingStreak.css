@@ -1,8 +1,9 @@
 @import url('../colors.css');
 
 /* ============ READING STREAK COMPONENT ============ */
+/* All classes use "rs-" prefix to avoid inheritance collisions */
 
-.streak-container {
+.rs-container {
   width: 100%;
   max-width: 800px;
   margin: 0 auto 24px auto;
@@ -19,18 +20,18 @@
 }
 
 /* --- Header --- */
-.streak-header {
+.rs-header {
   margin-bottom: 16px;
 }
 
-.streak-title-row {
+.rs-title-row {
   display: flex;
   align-items: center;
   gap: 8px;
   margin-bottom: 4px;
 }
 
-.streak-flame-wrapper {
+.rs-flame-wrapper {
   width: 22px;
   height: 28px;
   display: flex;
@@ -38,24 +39,24 @@
   justify-content: center;
 }
 
-.streak-flame {
+.rs-flame {
   width: 20px;
   height: 26px;
   transition: filter 0.3s ease;
 }
 
-.streak-flame--active {
+.rs-flame--active {
   filter: drop-shadow(0 0 4px rgba(255, 107, 53, 0.5));
-  animation: flame-flicker 2s ease-in-out infinite alternate;
+  animation: rs-flame-flicker 2s ease-in-out infinite alternate;
 }
 
-@keyframes flame-flicker {
-  0% { transform: scale(1) rotate(0deg); }
-  50% { transform: scale(1.05) rotate(1deg); }
+@keyframes rs-flame-flicker {
+  0%   { transform: scale(1) rotate(0deg); }
+  50%  { transform: scale(1.05) rotate(1deg); }
   100% { transform: scale(0.98) rotate(-1deg); }
 }
 
-.streak-title {
+.rs-title {
   font-size: 1.15rem;
   font-weight: 600;
   color: var(--text-color);
@@ -63,8 +64,8 @@
   font-family: inherit;
 }
 
-.streak-motivational {
-  font-size: 0.90rem;
+.rs-motivational {
+  font-size: 0.85rem;
   color: var(--secondary-color, #666);
   margin: 0;
   line-height: 1.4;
@@ -72,7 +73,7 @@
 }
 
 /* --- Streak Counters --- */
-.streak-counters {
+.rs-counters {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,7 +84,7 @@
   border-bottom: 1px solid #f0f0f0;
 }
 
-.streak-stat {
+.rs-stat {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -91,34 +92,26 @@
   padding: 0 12px;
 }
 
-.streak-stat__number {
+.rs-stat__number {
   font-size: 1.8rem;
   font-weight: 700;
   line-height: 1;
   margin-bottom: 2px;
 }
 
-.streak-stat--current .streak-stat__number {
-  color: #F7931A;
-}
+.rs-stat--current .rs-stat__number { color: #F7931A; }
+.rs-stat--longest .rs-stat__number { color: var(--primary-color, #222); }
+.rs-stat--total   .rs-stat__number { color: #4CAF50; }
 
-.streak-stat--longest .streak-stat__number {
-  color: var(--primary-color, #222);
-}
-
-.streak-stat--total .streak-stat__number {
-  color: #4CAF50;
-}
-
-.streak-stat__label {
-  font-size: 0.8rem;
+.rs-stat__label {
+  font-size: 0.7rem;
   color: var(--secondary-color, #666);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.4px;
 }
 
-.streak-stat-divider {
+.rs-stat-divider {
   width: 1px;
   height: 32px;
   background: #e8e8e8;
@@ -126,20 +119,20 @@
 }
 
 /* --- Heatmap Section --- */
-.streak-heatmap-section {
+.rs-heatmap-section {
   position: relative;
   margin-bottom: 16px;
 }
 
-.streak-heatmap-title {
-  font-size: 20px;
+.rs-heatmap-title {
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--text-color, #222);
   margin: 0 0 10px 0;
   text-align: center;
 }
 
-.streak-heatmap-scroll {
+.rs-heatmap-scroll {
   overflow-x: auto;
   padding-bottom: 4px;
   display: flex;
@@ -147,156 +140,142 @@
   align-items: center;
 }
 
-/* Inner wrapper to keep months, grid, and legend the same width */
-.streak-heatmap-inner {
+.rs-heatmap-inner {
   display: inline-flex;
   flex-direction: column;
 }
 
-/* Month labels row — uses flex to align with week columns */
-.streak-heatmap-months {
-  display: flex;
-  gap: 5px;
-  margin-bottom: 3px;
-}
-
-:root[data-theme="dark"] .streak-heatmap-month-slot {
-  color: var(--text-color);
-}
-
-:root[data-theme="dark"] .streak-heatmap-day-labels span {
-  color: var(--text-color);
-}
-
-:root[data-theme="dark"] .streak-heatmap-legend-text {
-  color: var(--text-color);
-}
-
-.streak-heatmap-day-labels-spacer {
-  width: 22px;
-  flex-shrink: 0;
-}
-
-.streak-heatmap-month-slot {
-  width: 11px;
-  flex-shrink: 0;
-  font-size: 15px;
-  color: #585858;
-  white-space: nowrap;
-  overflow: visible;
-}
-
 /* Grid container */
-.streak-heatmap-grid {
+.rs-heatmap-grid {
   display: flex;
   gap: 0;
 }
 
 /* Day-of-week labels */
-.streak-heatmap-day-labels {
+.rs-heatmap-day-labels {
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  margin-right: 4px;
+  gap: 3px;
+  margin-right: 6px;
   flex-shrink: 0;
-  width: 18px;
+  width: 20px;
+  /* Push down to align with cells, leaving room for month labels above */
+  padding-top: 20px;
 }
 
-.streak-heatmap-day-labels span {
-  height: 11px;
-  font-size: 15px;
-  color: #585858;
+.rs-heatmap-day-labels span {
+  height: 14px;
+  font-size: 0.65rem;
+  color: #999;
   display: flex;
   align-items: center;
   line-height: 1;
 }
 
-/* Cells grid */
-.streak-heatmap-cells {
-  display: flex;
-  gap: 2px;
+/*
+  Wrapper around month-labels + cells.
+  Month labels are absolutely positioned above the cells grid.
+*/
+.rs-heatmap-cells-wrapper {
+  position: relative;
+  /* Top padding makes room for the month labels row */
+  padding-top: 20px;
 }
 
-.streak-heatmap-week {
+/* Month labels — positioned absolutely so they never fight for slot width */
+.rs-heatmap-months-row {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 18px;
+  pointer-events: none;
+}
+
+.rs-month-label {
+  position: absolute;
+  top: 0;
+  font-size: 0.7rem;
+  font-weight: 500;
+  color: #888;
+  white-space: nowrap;
+  line-height: 1;
+}
+
+/* Cells grid — BIGGER cells: 14px desktop */
+.rs-heatmap-cells {
+  display: flex;
+  gap: 3px;
+}
+
+.rs-heatmap-week {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
-.streak-heatmap-cell {
-  width: 25px;
-  height: 25px;
-  border-radius: 2px;
+.rs-heatmap-cell {
+  width: 14px;
+  height: 14px;
+  border-radius: 3px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: default;
 }
 
-:root[data-theme="dark"] .streak-heatmap-cell--inactive {
-  background: var(--background-color);
-}
-
-.streak-heatmap-cell:focus-visible {
+.rs-heatmap-cell:focus-visible {
   outline: 2px solid #4A90D9;
   outline-offset: 1px;
 }
 
-.streak-heatmap-cell--empty {
-  background: transparent;
-}
+.rs-heatmap-cell--empty    { background: transparent; }
+.rs-heatmap-cell--inactive { background: #EBEDF0; }
+.rs-heatmap-cell--active   { background: #2D8A4E; }
 
-.streak-heatmap-cell--inactive {
-  background: #EBEDF0;
-}
-
-.streak-heatmap-cell--active {
-  background: #2D8A4E;
-}
-
-.streak-heatmap-cell--active.streak-heatmap-cell--low {
+.rs-heatmap-cell--active.rs-heatmap-cell--low {
   background: #9BE9A8;
 }
 
-.streak-heatmap-cell--active:hover,
-.streak-heatmap-cell--active:focus-visible {
+.rs-heatmap-cell--active:hover,
+.rs-heatmap-cell--active:focus-visible {
   transform: scale(1.3);
   box-shadow: 0 0 3px rgba(45, 138, 78, 0.4);
 }
 
-.streak-heatmap-cell--inactive:hover,
-.streak-heatmap-cell--inactive:focus-visible {
+.rs-heatmap-cell--inactive:hover,
+.rs-heatmap-cell--inactive:focus-visible {
   transform: scale(1.3);
   box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
 }
 
-/* Legend — aligned to the right edge of the grid, not the card */
-.streak-heatmap-legend {
+/* Legend */
+.rs-heatmap-legend {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   justify-content: flex-end;
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
-.streak-heatmap-legend .streak-heatmap-cell {
-  width: 13px;
-  height: 13px;
+.rs-heatmap-legend .rs-heatmap-cell {
+  width: 10px;
+  height: 10px;
 }
 
-.streak-heatmap-legend-text {
-  font-size: 13px;
+.rs-heatmap-legend-text {
+  font-size: 0.65rem;
   color: #999;
   margin: 0 3px;
 }
 
 /* Tooltip */
-.streak-tooltip {
+.rs-tooltip {
   position: fixed;
   transform: translate(-50%, -100%);
   background: #24292e;
   color: #fff;
   padding: 5px 8px;
   border-radius: 5px;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -307,7 +286,7 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-.streak-tooltip::after {
+.rs-tooltip::after {
   content: "";
   position: absolute;
   bottom: -4px;
@@ -319,7 +298,7 @@
 }
 
 /* --- Streak Freeze Section --- */
-.streak-freeze-section {
+.rs-freeze-section {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -329,36 +308,32 @@
   border: 1px solid #d4e8ff;
 }
 
-:root[data-theme="dark"] .streak-freeze-section {
-  background-color: #243141;
-
-}
-.streak-freeze-info {
+.rs-freeze-info {
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.streak-freeze-icon {
+.rs-freeze-icon {
   width: 22px;
   height: 22px;
   flex-shrink: 0;
 }
 
-.streak-freeze-title {
-  font-size: 16px;
+.rs-freeze-title {
+  font-size: 0.8rem;
   font-weight: 600;
   color: var(--text-color, #222);
   margin: 0;
 }
 
-.streak-freeze-desc {
-  font-size: 13px;
+.rs-freeze-desc {
+  font-size: 0.7rem;
   color: var(--secondary-color, #666);
   margin: 1px 0 0 0;
 }
 
-.streak-freeze-btn {
+.rs-freeze-btn {
   padding: 6px 14px;
   background: #4A9FD6;
   color: #000000;
@@ -372,28 +347,28 @@
   white-space: nowrap;
 }
 
-.streak-freeze-btn:hover {
+.rs-freeze-btn:hover {
   background: #3A8BC2;
   transform: translateY(-1px);
 }
 
-.streak-freeze-btn:active {
+.rs-freeze-btn:active {
   transform: translateY(0);
 }
 
-.streak-freeze-btn:disabled {
+.rs-freeze-btn:disabled {
   background: #b0cfe0;
   cursor: not-allowed;
   transform: none;
 }
 
-.streak-freeze-btn:focus-visible {
+.rs-freeze-btn:focus-visible {
   outline: 2px solid #4A90D9;
   outline-offset: 2px;
 }
 
 /* --- Loading State --- */
-.streak-loading {
+.rs-loading {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -402,26 +377,26 @@
   gap: 12px;
 }
 
-.streak-loading p {
+.rs-loading p {
   font-size: 0.8rem;
   color: #888;
   margin: 0;
 }
 
-.streak-loading-pulse {
+.rs-loading-pulse {
   width: 28px;
   height: 28px;
   border-radius: 50%;
   background: #F7931A;
-  animation: streak-pulse 1.2s ease-in-out infinite;
+  animation: rs-pulse 1.2s ease-in-out infinite;
 }
 
-@keyframes streak-pulse {
+@keyframes rs-pulse {
   0%, 100% { transform: scale(0.8); opacity: 0.5; }
-  50% { transform: scale(1.1); opacity: 1; }
+  50%      { transform: scale(1.1); opacity: 1; }
 }
 
-.streak-error {
+.rs-error {
   text-align: center;
   color: #888;
   padding: 24px 0;
@@ -431,69 +406,82 @@
 /* ============ RESPONSIVE ============ */
 
 @media (min-width: 768px) {
-  .streak-stat__number {
+  .rs-stat__number {
     font-size: 2rem;
   }
 }
 
 @media (max-width: 600px) {
-  .streak-container {
+  .rs-container {
     padding: 16px 14px;
     border-radius: 10px;
     margin: 0 auto 16px auto;
   }
 
-  .streak-title {
-    font-size: 20px;
+  .rs-title {
+    font-size: 1rem;
   }
 
-  .streak-motivational {
-    font-size: 15px;
+  .rs-motivational {
+    font-size: 0.78rem;
     padding-left: 0;
   }
 
-  .streak-counters {
+  .rs-counters {
     padding: 10px 0;
     margin-bottom: 12px;
   }
 
-  .streak-stat__number {
+  .rs-stat__number {
     font-size: 1.4rem;
   }
 
-  .streak-stat__label {
-    font-size: 11px;
+  .rs-stat__label {
+    font-size: 0.6rem;
   }
 
-  .streak-stat-divider {
+  .rs-stat-divider {
     height: 24px;
   }
 
-  .streak-heatmap-cell {
-    width: 15px;
-    height: 15px;
+  /* Mobile cells: 11px (still bigger than the old 9px) */
+  .rs-heatmap-cell {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
   }
 
-  .streak-heatmap-cells {
-    gap: 1px;
+  .rs-heatmap-cells {
+    gap: 2px;
   }
 
-  .streak-heatmap-week {
-    gap: 1px;
+  .rs-heatmap-week {
+    gap: 2px;
   }
 
-  .streak-heatmap-month-slot {
-    width: 9px;
+  .rs-heatmap-day-labels span {
+    height: 11px;
+    font-size: 0.55rem;
   }
 
-  .streak-freeze-section {
+  .rs-heatmap-day-labels {
+    gap: 2px;
+    margin-right: 4px;
+    width: 18px;
+  }
+
+  .rs-month-label {
+    font-size: 0.6rem;
+  }
+
+  .rs-freeze-section {
     flex-direction: column;
     gap: 8px;
     align-items: flex-start;
     padding: 10px 12px;
   }
 
-  .streak-freeze-btn {
+  .rs-freeze-btn {
     width: 100%;
     text-align: center;
   }
