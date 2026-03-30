@@ -6,7 +6,8 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 const Footer = () => {
     const location = useLocation();
     const hiddenRoute = ["/login", "/signup", "/confirm"];
-
+    const token = localStorage.getItem("token") //check to see if user is logged in
+    const isAuthenticated = !!token; //true -> user is logged in. false -> user is not logged in
     if (hiddenRoute.includes(location.pathname)) {
         return null;
     }
@@ -31,12 +32,20 @@ const Footer = () => {
                             <li><a className="footer-links" href="/about#mission">Our Mission</a></li>
                             <li><a className="footer-links" href="/about#what-we-offer">What We Offer</a></li>
                         </ul>
-                        <ul className="profile-section"><span className="footer-header">Profile</span>
-                            <li><a className="footer-links" href="/profile"> My Profile</a></li>
-                            <li><a className="footer-links" href="/progress">Book Progress</a></li>
-                            <li><a className="footer-links desktop-only" href="/reviews">Reviews</a></li>
-                            <li><a className="footer-links desktop-only" href="/friends">Friends</a></li>
-                        </ul>
+                        {isAuthenticated ? (
+                            <ul className="profile-section"><span className="footer-header">Profile</span>
+                                <li><a className="footer-links" href="/profile"> My Profile</a></li>
+                                <li><a className="footer-links" href="/progress">Book Progress</a></li>
+                                <li><a className="footer-links desktop-only" href="/reviews">Reviews</a></li>
+                                <li><a className="footer-links desktop-only" href="/friends">Friends</a></li>
+                            </ul>
+                        ) : (
+                            <ul className="profile-section"><span className="footer-header">Profile</span>
+                                <li><a className="footer-links" href="/signup">Sign Up</a></li>
+                                <li><a className="footer-links" href="/login">Login</a></li>
+                                
+                            </ul>
+                        )}
                         <ul className="support-section"><span className="footer-header">Support</span>
                             <li><a className="footer-links" href="/privacyPolicy">Privacy Policy</a></li>
                             <li><a className="footer-links" href="/account">Account</a></li>
