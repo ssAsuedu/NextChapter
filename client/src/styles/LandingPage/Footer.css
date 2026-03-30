@@ -129,28 +129,30 @@ footer {
     .team-info {
         flex-direction: column;
         justify-content: center;
-        /* width: 450px; */
         width: 100%;
         max-width: 450px;
     }
 
     .nav-sections {
-        gap: 25px;
-        /* width: 450px; */
+        /* gap: 12px; */
         width: 100%;
         max-width: 450px;
+        flex-wrap: wrap;
+        
     }
 
     .content-wrapper {
         flex-direction: column;
         gap: 20px;
-        align-items: center;
         text-align: left;
+        align-items: center;
     }
 
     .discover-section, .about-us-section, .profile-section, .support-section {
+        padding-left: 0;
         gap: 5px;
     }
+    
 }
 
 @media (min-width: 768px) and (max-width: 1200px) {
@@ -163,10 +165,6 @@ footer {
 
     .footer-header {
         margin-bottom: 0;
-    }
-
-    .nav-sections {
-        gap: 25px;
     }
 
     .desktop-only {
