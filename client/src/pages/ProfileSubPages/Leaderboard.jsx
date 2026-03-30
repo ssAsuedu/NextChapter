@@ -2,7 +2,24 @@ import React, { useEffect, useState } from "react";
 import { getLeaderboard, getFriends } from "../../api";
 import "../../styles/ProfilePage/Leaderboard.css";
 import ProfileNavbar from "../../components/ProfilePage/ProfileNavbar";
+import HalfwayBadge from "../../assets/HalfwayBadge.svg";
+import JourneyComplete from "../../assets/JourneyComplete.svg";
+import NewChapter from "../../assets/NewChapter.svg";
+import FutureLibrarian from "../../assets/FutureLibrarian.svg";
+import CriticInTheMaking from "../../assets/CriticInTheMaking.svg";
+import FirstConnection from "../../assets/FirstConnection.svg";
+import ConversationStarter from "../../assets/ConversationStarter.svg";
 
+const badgeIconMap = {
+  HALFWAY: HalfwayBadge,
+  FINISHED: JourneyComplete,
+  JOURNEY_COMPLETE: JourneyComplete,
+  NEW_CHAPTER: NewChapter,
+  FUTURE_LIBRARIAN: FutureLibrarian,
+  CONVERSATION_STARTER: ConversationStarter,
+  FIRST_CONNECTION: FirstConnection,
+  CRITIC_IN_THE_MAKING: CriticInTheMaking
+};
 
 const Leaderboard = () => {
   const [rows, setRows] = useState([]);
@@ -11,8 +28,10 @@ const Leaderboard = () => {
   const [open, setOpen] = useState(false);
   const currentUserEmail = localStorage.getItem("userEmail") || "";
   // add states to show friends only in the leaderboard upon toggle 
+  const [activeBadgeIndex, setActiveBadgeIndex] = useState({});
   const [showFriendsOnly, setShowFriendsOnly] = useState(false);
   const [friends, setFriends] = useState([]);
+
   useEffect(() => {
     const load = async () => {
       setLoading(true);
@@ -31,8 +50,8 @@ const Leaderboard = () => {
       try {
         if (!currentUserEmail) return;
 
-        const response = await getFriends(currentUserEmail); // ← NEW API call
-        setFriends(response.data || []); // ← NEW
+        const response = await getFriends(currentUserEmail);
+        setFriends(response.data || []);
       } catch (err) {
         console.error("Error loading friends:", err);
       }
@@ -42,14 +61,28 @@ const Leaderboard = () => {
   }, [currentUserEmail]);
 
   const filteredRows = showFriendsOnly
-      ? rows.filter((u) =>
-        friends.some(
-          (friend) =>
-            friend.email?.trim().toLowerCase() ===
-            u.email?.trim().toLowerCase()
-        )
+    ? rows.filter((u) =>
+      friends.some(
+        (friend) =>
+          friend.email?.trim().toLowerCase() ===
+          u.email?.trim().toLowerCase()
       )
+    )
     : rows;
+
+  const changeBadge = (userKey, direction, badgeCount) => {
+    if (!badgeCount) return;
+
+    setActiveBadgeIndex((prev) => {
+      const current = prev[userKey] ?? 0;
+      const next = (current + direction + badgeCount) % badgeCount;
+
+      return {
+        ...prev,
+        [userKey]: next,
+      };
+    });
+  };
 
   return (
     <div>
@@ -62,7 +95,7 @@ const Leaderboard = () => {
             <p className="leaderboard-subtitle">
               Points are earned from badges across the app.
             </p>
-             <div className="leaderboard-toggle">
+            <div className="leaderboard-toggle">
               <input
                 type="checkbox"
                 className="leaderboard-toggle-checkbox"
@@ -92,33 +125,126 @@ const Leaderboard = () => {
             <div className="leaderboard-empty">No users yet.</div>
           ) : (
             filteredRows.map((u, i) => (
-              <div className="leaderboard-wrapper" key={`${u.name}-${i}`}> 
+              <div className="leaderboard-wrapper" key={`${u.name}-${i}`}>
                 <div className="leaderboard-row">
-                <div className="leaderboard-user">
-                  <div className="leaderboard-rank">
-                    <h2>#{i + 1}</h2>
+                  <div className="leaderboard-user">
+                    <div className="leaderboard-rank">
+                      <h2>#{i + 1}</h2>
                     </div>
                     <div className="leaderboard-text">
                       <h3 className="leaderboard-name">{u.name}</h3>
                       <p className="leaderboard-smalltext">
                         {u.badgeCount} badges
                       </p>
-                      </div> 
-                </div>
-                <div className="leaderboard-badges">
-                  {u.badgeBreakdown
-                    ? Object.entries(u.badgeBreakdown)
-                      .slice(0, 3)
-                      .map(([type, count]) => (
-                        <span className="leaderboard-badge-oval" key={type}>
-                          {type.replaceAll("_", " ")} ×{count}
-                        </span>
-                      ))
-                    : null}
-                </div>
+                    </div>
+                  </div>
+                  <div className="leaderboard-badges-wrap">
+                    {u.badgeBreakdown && Object.entries(u.badgeBreakdown).length > 0 && (
+                      <button
+                        className="scroll-btn left"
+                        onClick={() =>
+                          changeBadge(
+                            u.email,
+                            -1,
+                            Object.entries(u.badgeBreakdown).length
+                          )
+                        }
+                      >
+                        ‹
+                      </button>
+                    )}
 
-                <div className="leaderboard-score">{u.score} pts</div>
-              </div>
+                    <div
+                      className="leaderboard-badges-slider"
+                      onTouchStart={(e) => {
+                        if (window.innerWidth > 768) return;
+                        e.currentTarget.dataset.startX = e.touches[0].clientX;
+                      }}
+                      onTouchEnd={(e) => {
+                        if (window.innerWidth > 768) return;
+
+                        const startX = Number(e.currentTarget.dataset.startX);
+                        if (!startX) return;
+
+                        const endX = e.changedTouches[0].clientX;
+                        const diff = startX - endX;
+
+                        if (Math.abs(diff) > 40) {
+                          changeBadge(
+                            u.email,
+                            diff > 0 ? 1 : -1,
+                            u.badgeBreakdown
+                              ? Object.entries(u.badgeBreakdown).length
+                              : 0
+                          );
+                        }
+
+                        e.currentTarget.dataset.startX = "";
+                      }}
+                    >
+                      {u.badgeBreakdown
+                        ? Object.entries(u.badgeBreakdown).map(
+                          ([type, count], index, arr) => {
+                            const badgeSrc = badgeIconMap[type];
+                            const current = activeBadgeIndex[u.email] ?? 0;
+                            const prevIndex =
+                              (current - 1 + arr.length) % arr.length;
+                            const nextIndex = (current + 1) % arr.length;
+
+                            let positionClass = "is-hidden";
+
+                            if (index === current) {
+                              positionClass = "is-active";
+                            } else if (index === prevIndex) {
+                              positionClass = "is-prev";
+                            } else if (index === nextIndex) {
+                              positionClass = "is-next";
+                            }
+
+                            return (
+                              <div
+                                className={`leaderboard-badge-slide ${positionClass}`}
+                                key={type}
+                              >
+                                {badgeSrc ? (
+                                  <img
+                                    src={badgeSrc}
+                                    alt={type}
+                                    className="leaderboard-badge-icon"
+                                    title={`${type.replaceAll("_", " ")} ×${count}`}
+                                  />
+                                ) : (
+                                  <span className="leaderboard-badge-oval-fallback">
+                                    {type.replaceAll("_", " ")}
+                                  </span>
+                                )}
+                                <span className="leaderboard-badge-count">
+                                  ×{count}
+                                </span>
+                              </div>
+                            );
+                          }
+                        )
+                        : null}
+                    </div>
+
+                    {u.badgeBreakdown && Object.entries(u.badgeBreakdown).length > 0 && (
+                      <button
+                        className="scroll-btn right"
+                        onClick={() =>
+                          changeBadge(
+                            u.email,
+                            1,
+                            Object.entries(u.badgeBreakdown).length
+                          )
+                        }
+                      >
+                        ›
+                      </button>
+                    )}
+                  </div>
+                  <div className="leaderboard-score">{u.score} pts</div>
+                </div>
               </div>
             ))
           )}
