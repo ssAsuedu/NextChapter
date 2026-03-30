@@ -50,7 +50,7 @@ body {
   grid-template-columns: 180px minmax(0, 1fr) 120px;
   align-items: center;
   gap: 20px;
-  padding: 20px 24px;
+  padding: 14px 20px;
   border-bottom: 1px solid #f1edf8;
 }
 
@@ -172,8 +172,8 @@ body {
 
 .leaderboard-badges-slider {
   position: relative;
-  width: 260px;
-  height: 190px;
+  width: 240px;
+  height: 140px;
   overflow: visible;
 }
 
@@ -182,7 +182,7 @@ body {
   top: 0;
   left: 50%;
   width: 220px;
-  height: 180px;
+  height: auto; 
   border-radius: 22px;
   background: #f3eef8;
   border: 1px solid rgba(23, 17, 31, 0.14);
@@ -219,14 +219,14 @@ body {
 }
 
 .leaderboard-badge-icon {
-  width: 120px;
-  height: 120px;
+  width: 100px;
+  height: 100px;
   object-fit: contain;
   display: block;
 }
 
 .leaderboard-badge-count {
-  margin-top: 6px;
+  margin-top: 1px;
   font-size: 0.9rem;
   font-weight: 700;
   color: var(--text-color);
