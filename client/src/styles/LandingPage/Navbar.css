@@ -32,6 +32,7 @@
   fill: #c4a5e8;
   stroke: #a97dd4;
 }
+
 button.menu-btn {
   display: none;
 }
@@ -180,6 +181,10 @@ li {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
+.user-initial:hover {
+  background-color: var(--text-color);
+}
+
 .logged-in {
   display: flex;
   justify-content: center;
@@ -245,7 +250,7 @@ li {
 }
 
 :root[data-theme="dark"] .scrolled {
-  background-color: var(--primary-color);
+  background-color: var(--filter-pane);
   
 }
 
@@ -253,12 +258,16 @@ li {
   color: var(--text-color);
 }
 
+:root[data-theme="dark"] .link:hover {
+  text-decoration: underline;
+}
+
 :root[data-theme="dark"] .link-scrolled {
-  color: var(--background-color);
+  color: white;
 }
 
 :root[data-theme="dark"] .bg-scroll {
-  background-color: var(--image-color);
+  background-color: var(--primary-color);
   color: white;
 
 }
@@ -273,21 +282,19 @@ li {
   color: var(--background-color);
   background-color: var(--text-color);
 
-
 }
 
 :root[data-theme="dark"] .auth-signout.signout-nav:hover {
   background-color: var(--primary-color);
   border: 1px solid var(--background-color);
-
-
 }
+
 :root[data-theme="dark"] .user-initial.not-scroll {
   color: var(--background-color);
 }
 
 :root[data-theme="dark"] .carrot.nav-scrolled {
-  color: var(--background-color);
+  color: white;
 }
 
 :root[data-theme="dark"] .dropdown-links {
@@ -305,9 +312,10 @@ li {
 }
 
 :root[data-theme="dark"] .nav-message-icon path {
-  fill: var(--image-color);
+  fill: var(--primary-color);
+  stroke: #a97dd4;
 }
-@media (min-width:300px) and (max-width: 768px) {
+@media (min-width:300px) and (max-width: 860px) {
   button.menu-btn {
     display: block;
     margin: 0;
@@ -351,10 +359,6 @@ li {
 
   .desktop {
     display: none;
-  }
-
-  .scrolled {
-    padding-bottom: 0;
   }
 
   .left {
@@ -430,20 +434,59 @@ li {
     margin-bottom: 10px;
   }
 
+  :root[data-theme="dark"] .navbar {
+    background-color: var(--filter-pane);
+    border-bottom: none;
+  }
   :root[data-theme="dark"] .link.not-scroll {
-    color: var(--background-color);
+    color: white;
   }
 
   :root[data-theme="dark"] .carrot {
-    color: var(--background-color);
+    color: white;
   }
 
   :root[data-theme="dark"] button.menu-btn {
-    color: var(--background-color);
+    color: white;
   }
+
   :root[data-theme="dark"] .auth-signup.not-scroll, :root[data-theme="dark"] .auth-login.not-scroll, :root[data-theme="dark"] .auth-signout.not-scroll{
     background-color: transparent;
     border: none;
-    color: var(--background-color);
+    color: white;
+  }
+
+  :root[data-theme="dark"] .logged-in.open .auth-signout.signout-nav {
+    color: white;
+    background-color: transparent;
+  }
+
+  :root[data-theme="dark"] .dropdown-links {
+    background-color: transparent;
+  }
+
+  :root[data-theme="dark"] .link-text {
+    color: white;
+  }
+
+  :root[data-theme="dark"] .auth-signout.signout-nav:hover {
+    border: none;
+    transform: scale(1);
+  }
+}
+
+@media (min-width: 860px) and (max-width: 1000px) {
+
+  .left {
+    gap: 15px;
+  }
+
+  .logged-in {
+    gap: 5px;
+  }
+
+  .auth-signout.not-scroll {
+    padding: 0;
+    padding: 5px 15px 5px 15px;
   }
 }

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../styles/LandingPage/Navbar.css";
 import MenuIcon from '@mui/icons-material/Menu'
@@ -24,6 +24,10 @@ const Navbar = () => {
   const [profileDrop, setProfileDrop] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
+  const mobileRef = useRef(null);
+  const aboutRef = useRef(null);
+  const profileRef = useRef(null);
+
   const changeBackground = () => {
     if (window.scrollY >= 80 && window.innerWidth > 768) {
       setScrolled(true);
@@ -40,6 +44,34 @@ const Navbar = () => {
       window.removeEventListener('scroll', changeBackground); //cleanup when component unmounts, prevents memory leaks
     };
   }, [])
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (menuOpen && mobileRef.current && !mobileRef.current.contains(event.target)) {
+        setDropDown(false);
+        setProfileDrop(false);
+        setMenuOpen(false);
+      }
+      
+      if(!menuOpen) {
+        if(aboutRef.current && !aboutRef.current.contains(event.target)) {
+          setDropDown(false);
+        } 
+
+        if(profileRef.current && !profileRef.current.contains(event.target)) {
+          setProfileDrop(false);
+        }
+      }
+
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+
+  }, []);
 
   useEffect(() => {
     const fetchUnread = async () => {
@@ -106,9 +138,11 @@ const Navbar = () => {
         <IconButton className={`menu-btn ${menuOpen ? 'open' : ''}`} aria-label="menu" onClick={() => setMenuOpen(!menuOpen)}>
             <MenuIcon />
           </IconButton>
+        {/* <div ref={mobileRef}> */}
         <ul className={`left ${menuOpen ? 'open' : ''}`}>
           <li className=""><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/">Home</Link></li>
-          <div className={`about-nav ${scrolled ? 'about-scrolled' : 'not-scroll'}`}>
+          <div ref={aboutRef} className={`about-nav ${scrolled ? 'about-scrolled' : 'not-scroll'}`}>
+            
             <div className="about-name-arrow">
               <li className="about-arrow"><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/about">About</Link></li>
               {dropDown ? (
@@ -120,9 +154,30 @@ const Navbar = () => {
             {dropDown && (
               <div className="dropdown-links">
                 <ul>
-                  <li className="about-links"><span className="link-text" onClick={() => scrollToSection("#mission")}>Our Mission</span></li>
-                  <li className="about-links"><span className="link-text" onClick={() => scrollToSection("#what-we-offer")}>What We Offer</span></li>
-                  <li className="about-links"><span className="link-text" onClick={() => scrollToSection("#team")}>Our Team</span></li>
+                  <li className="about-links"><span className="link-text" 
+                  onClick={() => {
+                    scrollToSection("#mission")
+                    setDropDown(false)
+                    setMenuOpen(false)
+                    setProfileDrop(false)
+                  }}>  
+                  Our Mission</span></li>
+                  <li className="about-links"><span className="link-text" 
+                  onClick={() => {
+                    scrollToSection("#what-we-offer")
+                    setDropDown(false)
+                    setMenuOpen(false)
+                    setProfileDrop(false)
+                  }}>
+                  What We Offer</span></li>
+                  <li className="about-links"><span className="link-text" 
+                  onClick={() => {
+                    scrollToSection("#team")
+                    setDropDown(false)
+                    setMenuOpen(false)
+                    setProfileDrop(false)
+                  }}>
+                  Our Team</span></li>
                 </ul>
               </div>
             )}
@@ -131,7 +186,7 @@ const Navbar = () => {
           <li className=""><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/explore">Explore</Link></li>
           {isAuthenticated ? (
             <>
-            <div className="profile-nav">
+            <div ref={profileRef} className="profile-nav">
               <div className="profile-name-arrow">
                 <li className="profile-arrow"><Link className={`link ${scrolled ? 'link-scrolled' : 'not-scroll'}`} to="/profile">Profile</Link>
                   {profileDrop ? (
@@ -144,10 +199,38 @@ const Navbar = () => {
               {profileDrop && (
               <div className="dropdown-links">
                 <ul>
-                  <li className="profile-links"><span className="link-text" onClick={() => go("/progress")}>Progress</span></li>
-                  <li className="profile-links"><span className="link-text" onClick={() => go("/reviews")}>Reviews</span></li>
-                  <li className="profile-links"><span className="link-text" onClick={() => go("/friends")}>Friends</span></li>
-                  <li className="profile-links"><span className="link-text" onClick={() => go("/account")}>Account</span></li>
+                  <li className="profile-links"><span className="link-text" 
+                  onClick={() => {
+                    go("/progress")
+                    setDropDown(false)
+                    setMenuOpen(false)
+                    setProfileDrop(false)
+                  }}>
+                  Progress</span></li>
+                  <li className="profile-links"><span className="link-text" 
+                  onClick={() => {
+                    go("/reviews")
+                    setDropDown(false)
+                    setMenuOpen(false)
+                    setProfileDrop(false)
+                  }}>
+                  Reviews</span></li>
+                  <li className="profile-links"><span className="link-text" 
+                  onClick={() => {
+                    go("/friends")
+                    setDropDown(false)
+                    setMenuOpen(false)
+                    setProfileDrop(false)
+                  }}>
+                  Friends</span></li>
+                  <li className="profile-links"><span className="link-text" 
+                  onClick={() => {
+                    go("/account")
+                    setDropDown(false)
+                    setMenuOpen(false)
+                    setProfileDrop(false)
+                  }}>
+                  Account</span></li>
                 </ul>
               </div>
             )}
@@ -159,6 +242,8 @@ const Navbar = () => {
             null
           )}
       </ul>
+      {/* </div> */}
+
       <ul className="right">
         {isAuthenticated ? ( //if logged in
           userInitial && (
