@@ -4,7 +4,6 @@ import { signup, confirmEmail } from "../api";
 import { TextField, Button } from "@mui/material";
 import "../styles/LoginPage/SignUp.css";
 import signUp from "../assets/sign_up.svg";
-import confirmationImage from "../assets/confirmation.svg";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");

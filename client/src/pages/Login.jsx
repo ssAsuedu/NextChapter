@@ -46,7 +46,8 @@ const Login = () => {
       console.log(err.response?.data?.error);
       if(err.response?.data?.error === "User is not confirmed.") {
         
-        navigate("/confirm", {state: {email}})
+        navigate("/confirm", {state: {email}});
+        return;
       }
         setErrors(prev => ({...prev, password: errorMessage}));
       
