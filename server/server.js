@@ -110,6 +110,24 @@ app.post("/api/signup", (req, res) => {
   });
 });
 
+app.post("/api/resend-code", (req, res) => {
+    const {email} = req.body;
+    console.log("Email received:", email);
+    
+    const cognitoUser = new CognitoUser({
+      Username: email,
+      Pool: userPool,
+    });
+    console.log("Email received:", email);
+    cognitoUser.resendConfirmationCode((err, result) => { //Cognito's API to generate new confirmation code
+      if(err) {
+        console.error("Resend error:", err);
+        return res.status(400).json({ error: err.message }); //error
+      }
+      res.json({ message: "Confirmation code resent! Check your inbox."}); //code sent successfully
+      console.log("Confirmation code resent successfully:", result);
+    });
+});
 // Login Route
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
@@ -144,6 +162,13 @@ app.post("/api/login", async (req, res) => {
     },
     onFailure: (err) => {
       console.error("Login error:", err);
+
+      if (err.code === "UserNotConfirmedException") {
+        return res.status(403).json({
+          error: "User is not confirmed.",
+          message: "Your email is not confirmed."
+        })
+      }
       res.status(401).json({ error: err.message || "Login failed" });
     },
   });

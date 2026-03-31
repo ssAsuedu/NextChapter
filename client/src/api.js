@@ -14,6 +14,10 @@ export const confirmEmail = async ({ email, code }) => {
   return axios.post(`${API_BASE_URL}/confirm`, { email, code });
 };
 
+export const resendConfirmationCode = async ({ email }) => {
+  return axios.post(`${API_BASE_URL}/resend-code`, { email });
+};
+
 export const addBookToBookshelf = async ({ email, volumeId }) => {
   return axios.post(`${API_BASE_URL}/bookshelf/add`, { email, volumeId });
 };
