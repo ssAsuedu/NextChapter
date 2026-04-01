@@ -43,10 +43,10 @@ const BookCard = ({ info, volumeId }) => {
       />
       <div className="book-details">
         <h3 className="book-title">{info.title}</h3>
-        {/* <p className="book-authors">
+        <p className="book-authors">
           {info.authors ? info.authors.join(", ") : "Unknown Author"}
-        </p> */}
-        <p className="book-date">{info.publishedDate}</p>
+        </p>
+        {/* <p className="book-date">{info.publishedDate}</p> */}
       </div>
     </div>
   );

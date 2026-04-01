@@ -1,4 +1,5 @@
 @import url('../colors.css');
+
 .profile-page {
   position: relative;
   display: flex;
@@ -17,7 +18,7 @@
   left: 0;
   top: 60px;
   height: calc(100vh - 60px);
-  box-shadow: 2px 0 8px rgba(0,0,0,0.04);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.04);
   z-index: 10;
 }
 
@@ -44,12 +45,53 @@
 }
 
 .profile-content {
-  font-family: "Sen", sans-serif;
-  padding: 0 32px 32px 32px;
-  width: 100%;
-  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 0 75px;
 }
 
+.profile-section-card {
+  background: #ffffff;
+  border-radius: 22px;
+  border: 1px solid rgba(171, 124, 231, 0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  padding: 22px 24px;
+}
+
+.profile-scroll-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 14px;
+}
+
+.profile-horizontal-scroll {
+  display: flex;
+  gap: 18px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  width: 100%;
+  padding: 8px 6px;
+}
+
+.profile-horizontal-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.profile-scroll-item {
+  flex: 0 0 auto;
+}
+
+.profile-empty-text {
+  color: #777;
+  padding: 16px 4px;
+}
+
+.list-scroll-item {
+  width: 280px;
+}
 .profile-content h1 {
   text-align: center;
   font-family: "Sen", sans-serif;
@@ -57,6 +99,21 @@
   font-size: 2rem;
   margin-bottom: 40px;
   width: 100%;
+}
+.profile-bookshelf-container {
+  background: linear-gradient(135deg, #f3e8ff 0%, #ede5ff 100%);
+  border-radius: 16px;
+  padding: 24px 16px;
+  margin-bottom: 2.5rem;
+  border: 1px solid #d8c8ff;
+}
+
+.profile-lists-container {
+  background: linear-gradient(135deg, #f4f7ff 0%, #f0eaff 100%);
+  border: 1px solid #e0d9ff;
+  border-radius: 16px;
+  padding: 24px 16px;
+  margin-bottom: 2.5rem;
 }
 
 .profile-header-row {
@@ -89,11 +146,52 @@
 .bookshelf-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  column-gap: 24px;
-  row-gap: 70px;
+  gap: 24px;
   width: 100%;
-  justify-items: center;
-  margin-bottom: 200px;
+  margin-bottom: 0;
+  align-items: stretch;
+}
+
+.bookshelf-item {
+  background: #f5f3ff;
+  border: 1px solid #e6e0f8;
+  border-radius: 16px;
+  padding: 16px 12px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 320px;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(171, 124, 231, 0.08);
+}
+
+
+.bookshelf-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 12px rgba(171, 124, 231, 0.15);
+}
+/* have to fix this but need to check what other pages if any are using the book cards still, will look into it  */
+.bookshelf-item .book-card,
+.bookshelf-item .book-card:hover,
+.bookshelf-item .book-card:focus,
+.bookshelf-item .book-card:focus-visible,
+.bookshelf-item .book-image,
+.bookshelf-item .book-image:hover,
+.bookshelf-item .book-image:focus,
+.bookshelf-item .book-image:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+  transform: none !important;
+}
+
+.create-list-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+  margin-right: 0px;
 }
 
 .profile-top-section {
@@ -168,7 +266,7 @@
 .review-modal-box {
   background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
   padding: 32px;
   min-width: 400px;
   max-width: 1200px;
@@ -280,10 +378,6 @@
   border: 3px solid #ab7ce7;
 }
 
-.book-selection-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(171, 124, 231, 0.2);
-}
 
 .book-selection-img {
   width: 100%;
@@ -370,8 +464,7 @@
 }
 
 .lists-section {
-  margin-top: 60px;
-  margin-left: 35px;
+  margin: 0;
 }
 
 .lists-section-title {
@@ -416,12 +509,23 @@
   height: 100px;
   object-fit: cover;
   border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-.list-thumb-img:nth-child(1) { left: 0px; top: 5px; }
-.list-thumb-img:nth-child(2) { left: 18px; top: 2px; }
-.list-thumb-img:nth-child(3) { left: 36px; top: 0px; }
+.list-thumb-img:nth-child(1) {
+  left: 0px;
+  top: 5px;
+}
+
+.list-thumb-img:nth-child(2) {
+  left: 18px;
+  top: 2px;
+}
+
+.list-thumb-img:nth-child(3) {
+  left: 36px;
+  top: 0px;
+}
 
 .review-modal-box.large {
   width: 1000px;
@@ -590,7 +694,7 @@
   object-fit: cover;
   border-radius: 6px;
   flex-shrink: 0;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 }
 
 .detail-book-info {
@@ -641,7 +745,7 @@
   background: #f5f3ff;
   padding: 20px 24px;
   border-radius: 16px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease;
   cursor: pointer;
 }
@@ -715,7 +819,7 @@
   right: 12px;
   background: #fff;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   z-index: 10;
   width: 130px;
@@ -839,4 +943,97 @@
   background: #d0d0d0;
   color: #888;
   cursor: default;
+}
+
+.profile-badges-wrap {
+  position: relative;
+  width: 100%;
+  max-width: 320px;
+  margin: 10px auto 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-badges-slider {
+  position: relative;
+  width: 220px;
+  height: 140px;
+  overflow: visible;
+}
+
+.profile-badge-slide {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 180px;
+  height: 130px;
+  border-radius: 18px;
+  background: #f3eef8;
+  border: 1px solid rgba(23, 17, 31, 0.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 12px;
+  box-sizing: border-box;
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.profile-badge-slide.is-active {
+  transform: translateX(-50%) scale(1.06);
+  z-index: 3;
+  box-shadow:
+    0 0 0 1px rgba(171, 124, 231, 0.28),
+    0 0 20px rgba(171, 124, 231, 0.25);
+}
+
+.profile-badge-slide.is-prev {
+  transform: translateX(-70%) scale(0.92);
+  z-index: 2;
+}
+
+.profile-badge-slide.is-next {
+  transform: translateX(-30%) scale(0.92);
+  z-index: 2;
+}
+
+.profile-badge-slide.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.profile-badge-icon {
+  width: 75px;
+  height: 75px;
+  object-fit: contain;
+}
+
+.profile-badge-count {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--text-color);
+}
+
+.profile-scroll-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.profile-badges-wrap .scroll-btn.left {
+  left: -16px;   
+}
+
+.profile-badges-wrap .scroll-btn.right {
+  right: -16px;  
 }

@@ -32,6 +32,7 @@ const FriendProfile = () => {
   const [loading, setLoading] = useState(true);
   const [userBookshelf, setUserBookshelf] = useState([]);
   const [badges, setBadges] = useState([]);
+  const [activeBadgeIndex, setActiveBadgeIndex] = useState(0);
   const badgeIcons = {
     HALFWAY: HalfwayBadge,
     FINISHED: JourneyComplete,
@@ -128,6 +129,21 @@ const FriendProfile = () => {
     fetchBooks();
   }, [lists]);
 
+  const groupedBadges = Object.entries(
+    badges.reduce((acc, badge) => {
+      acc[badge.type] = (acc[badge.type] || 0) + 1;
+      return acc;
+    }, {})
+  );
+
+  const changeBadge = (direction) => {
+    if (!groupedBadges.length) return;
+
+    setActiveBadgeIndex((prev) =>
+      (prev + direction + groupedBadges.length) % groupedBadges.length
+    );
+  };
+
   const getDetailBooks = () => {
     if (!selectedList) return [];
     let listBooks = selectedList.books
@@ -196,13 +212,63 @@ const FriendProfile = () => {
           <h2 className="profile-username">{friendInfo.name}</h2>
           <p className="profile-created">Joined: {formattedDate}</p>
           <p className="profile-followers">Friends: {friendCount}</p>
+          {/* apply same formatting/logic across friends and profile page */}
           <div className="profile-badges-row">
-            {badges.length === 0 ? (
+            {groupedBadges.length === 0 ? (
               <p>No badges yet</p>
             ) : (
-              badges.map((badge, i) => (
-                <img key={i} src={badgeIcons[badge.type]} className="badge-icon" alt={badge.type} />
-              ))
+              <div className="profile-badges-wrap">
+
+                {groupedBadges.length > 1 && (
+                  <button
+                    className="scroll-btn left"
+                    onClick={() => changeBadge(-1)}
+                  >
+                    ‹
+                  </button>
+                )}
+
+                <div className="profile-badges-slider">
+                  {groupedBadges.map(([type, count], index, arr) => {
+                    const current = activeBadgeIndex;
+                    const prevIndex = (current - 1 + arr.length) % arr.length;
+                    const nextIndex = (current + 1) % arr.length;
+
+                    let positionClass = "is-hidden";
+
+                    if (index === current) positionClass = "is-active";
+                    else if (index === prevIndex) positionClass = "is-prev";
+                    else if (index === nextIndex) positionClass = "is-next";
+
+                    return (
+                      <div
+                        className={`profile-badge-slide ${positionClass}`}
+                        key={type}
+                      >
+                        {badgeIcons[type] ? (
+                          <img
+                            src={badgeIcons[type]}
+                            className="profile-badge-icon"
+                          />
+                        ) : (
+                          <span>{type}</span>
+                        )}
+                        <span className="profile-badge-count">×{count}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {groupedBadges.length > 1 && (
+                  <button
+                    className="scroll-btn right"
+                    onClick={() => changeBadge(1)}
+                  >
+                    ›
+                  </button>
+                )}
+
+              </div>
             )}
           </div>
         </div>
@@ -210,62 +276,64 @@ const FriendProfile = () => {
 
       {/* Public Lists */}
       <div className="profile-content">
-        <div className="lists-section">
-          <div className="profile-header-row">
-            <h1>{friendInfo.name}'s Lists</h1>
-          </div>
+        <div className="profile-lists-container">
+          <div className="lists-section">
+            <div className="profile-header-row">
+              <h1>{friendInfo.name}'s Lists</h1>
+            </div>
 
-          {lists.length === 0 ? (
-            <p className="friend-no-lists">
-              This user has no public lists yet.
-            </p>
-          ) : (
-            <div className="lists-grid">
-              {sortedLists.map(list => (
-                <div
-                  key={list._id}
-                  className={`list-card ${list.pinned === true ? "list-card-pinned" : ""}`}
-                  onClick={() => {
-                    setSelectedList(list);
-                    setDetailSearch("");
-                    setDetailSort("custom");
-                  }}
-                >
-                  {list.pinned && (
-                    <span className="pin-badge">
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c3fc5" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 2H8a1 1 0 0 0-1 1v1.5a1 1 0 0 0 .4.8L9 7v4l-2 2h10l-2-2V7l1.6-1.7a1 1 0 0 0 .4-.8V3a1 1 0 0 0-1-1z"/>
-                        <line x1="12" y1="13" x2="12" y2="21" stroke="#6c3fc5" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      Pinned
-                    </span>
-                  )}
-                  <div className="list-card-body">
-                    <div className="list-thumbnail">
-                      {list.books.slice(0, 3).map((bookId, index) => {
-                        const book = books.find(b => b.id === bookId);
-                        return book ? (
-                          <img
-                            key={bookId}
-                            src={book.volumeInfo?.imageLinks?.thumbnail}
-                            alt=""
-                            className="list-thumb-img"
-                            style={{ zIndex: 3 - index }}
-                          />
-                        ) : null;
-                      })}
-                    </div>
-                    <div className="list-card-info">
-                      <h3 className="list-card-title">{list.name}</h3>
-                      {list.description && (
-                        <p className="list-card-description">{list.description}</p>
-                      )}
+            {lists.length === 0 ? (
+              <p className="friend-no-lists">
+                This user has no public lists yet.
+              </p>
+            ) : (
+              <div className="lists-grid">
+                {sortedLists.map(list => (
+                  <div
+                    key={list._id}
+                    className={`list-card ${list.pinned === true ? "list-card-pinned" : ""}`}
+                    onClick={() => {
+                      setSelectedList(list);
+                      setDetailSearch("");
+                      setDetailSort("custom");
+                    }}
+                  >
+                    {list.pinned && (
+                      <span className="pin-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c3fc5" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16 2H8a1 1 0 0 0-1 1v1.5a1 1 0 0 0 .4.8L9 7v4l-2 2h10l-2-2V7l1.6-1.7a1 1 0 0 0 .4-.8V3a1 1 0 0 0-1-1z" />
+                          <line x1="12" y1="13" x2="12" y2="21" stroke="#6c3fc5" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                        Pinned
+                      </span>
+                    )}
+                    <div className="list-card-body">
+                      <div className="list-thumbnail">
+                        {list.books.slice(0, 3).map((bookId, index) => {
+                          const book = books.find(b => b.id === bookId);
+                          return book ? (
+                            <img
+                              key={bookId}
+                              src={book.volumeInfo?.imageLinks?.thumbnail}
+                              alt=""
+                              className="list-thumb-img"
+                              style={{ zIndex: 3 - index }}
+                            />
+                          ) : null;
+                        })}
+                      </div>
+                      <div className="list-card-info">
+                        <h3 className="list-card-title">{list.name}</h3>
+                        {list.description && (
+                          <p className="list-card-description">{list.description}</p>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          )}
+                ))}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
