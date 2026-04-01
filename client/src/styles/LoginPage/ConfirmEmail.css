@@ -101,6 +101,8 @@
     border-radius: 999px;
     padding: 10px;
     border: 1px solid #86efac;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .handle-message p {
@@ -120,6 +122,20 @@
     background-color: var(--text-color) !important;
     color: var(--background-color) !important;
 }
+
+:root[data-theme="dark"] .modal-login {
+    color: var(--background-color) !important;
+    background-color: var(--primary-color) !important;
+}
+
+:root[data-theme="dark"] .modal-login:hover {
+    background-color: var(--text-color) !important;
+}
+
+:root[data-theme="dark"] .success-modal {
+    background-color: var(--filter-pane)
+}
+
 
 @media (max-width: 768px) {
     .confirmation-svg {

@@ -9,8 +9,6 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [confirmCode, setConfirmCode] = useState("");
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({name: "", email: "", password: [], confirm: ""});
   const navigate = useNavigate();
@@ -67,10 +65,14 @@ const SignUp = () => {
     setLoading(true);
     try {
       await signup({ email, password, name });
-      //setShowConfirm(true);
       navigate("/confirm", {state: {email}});
     } catch (err) {
-      
+      if(err.response?.data?.error === "UsernameExistsException") {
+        setErrors((prev) => ({
+          ...prev,
+          email: "An account with this email already exists.",
+        }));
+      }
     }
     setLoading(false);
   };
@@ -89,7 +91,15 @@ const SignUp = () => {
                   variant="outlined"
                   fullWidth
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) =>  {
+                    setName(e.target.value);
+                    if(errors?.name.length > 0) {
+                      setErrors((prev) => ({
+                      ...prev,
+                      name: "",
+                      }));
+                    }
+                  }}
                   required
                   margin="normal"
                   error = {!!errors.name}
@@ -114,7 +124,15 @@ const SignUp = () => {
             variant="outlined"
             fullWidth
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value)
+              if(errors?.email.length > 0) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    email: "",
+                  }));
+                }
+            }}
             required
             margin="normal"
             placeholder="e.g. johndoe123@gmail.com" //Placholder text inside the email to let users know the format
@@ -140,12 +158,20 @@ const SignUp = () => {
               variant="outlined"
               fullWidth
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                if(errors?.password.length > 0) {
+                  setErrors((prev) => ({
+                    ...prev,
+                    password: [],
+                  }));
+                } 
+              }}
               required
               margin="normal"
-              error={errors.password.length > 0}
+              error={errors?.password.length > 0}
               helperText={ //checks if the password array for errors exists
-                errors.password.length > 0 ? (
+                errors?.password.length > 0 ? (
                 <span className="password-error-list"> {/* adds the style for the errors */}
                   {errors.password.map((err, index) => (
                   <span key={index} style={{ display: "block" }}>{err}</span>
