@@ -445,7 +445,7 @@ const Friends = () => {
           <form onSubmit={handleSearch} className="search-form">
             <input
               type="text"
-              placeholder="Search by name or email..."
+              placeholder="Search by name or email"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="search-input"

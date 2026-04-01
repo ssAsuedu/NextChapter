@@ -7,7 +7,6 @@
    ============================================ */
 
 .friends-container {
-  /* max-width: 1000px; */
   margin: 0 auto;
   padding: 120px 20px 60px;
   background-color: #fff;
@@ -64,13 +63,12 @@
 
 :root[data-theme="dark"] .tabs {
   background-color: var(--filter-pane);
-  
 }
 
-:root[data-theme="dark"] .tabs button{
+:root[data-theme="dark"] .tabs button {
   color: var(--hover);
-  
 }
+
 .tabs button {
   padding: 12px 24px;
   border: none;
@@ -97,6 +95,7 @@
 :root[data-theme="dark"] .tabs button.active {
   color: var(--background-color);
 }
+
 /* ============ SECTION HEADINGS ============ */
 .friends-list h2,
 .find-friends h2,
@@ -106,6 +105,7 @@
   font-weight: 700;
   color: var(--hover);
   margin-bottom: 1.25rem;
+  text-align: center;
 }
 
 .delete-heading {
@@ -120,7 +120,10 @@
   display: flex;
   gap: 12px;
   margin-bottom: 5rem;
-  max-width: 500px;
+  max-width: 400px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .search-input {
@@ -139,6 +142,7 @@
   background-color: var(--filter-pane);
   color: var(--text-color);
 }
+
 .search-input:focus {
   outline: none;
   border-color: var(--primary-color);
@@ -155,13 +159,13 @@
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 20px;
   margin-top: 1rem;
-  justify-content: start;
-  justify-items: center;
-  
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* ============ USER CARDS ============ */
-.user-card, .user-card.pending{
+.user-card, .user-card.pending {
   background: #fff;
   border: 1px solid #eee;
   border-radius: 16px;
@@ -173,7 +177,7 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   width: 100%;
   gap: 25px;
-  
+  box-sizing: border-box;
 }
 
 :root[data-theme="dark"] .user-card, :root[data-theme="dark"] .user-card.pending {
@@ -184,12 +188,12 @@
   border-color: #fbbf24;
   box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
 }
+
 :root[data-theme="dark"] .user-card p, :root[data-theme="dark"] .user-card.pending p {
   color: var(--text-color);
   font-style: italic;
   opacity: 0.8;
 }
-
 
 .user-card:hover, .user-card.pending:hover {
   box-shadow: 0 6px 20px rgba(171, 124, 231, 0.15);
@@ -279,7 +283,6 @@ button:disabled {
   background-color: #e8f5e9;
   color: #2e7d32;
   border: 1px solid #a5d6a7;
-
 }
 
 :root[data-theme="dark"] .btn-add {
@@ -289,6 +292,7 @@ button:disabled {
 :root[data-theme="dark"] .btn-add:hover, :root[data-theme="dark"] .btn-accept:hover {
   color: #2e7d32;
 }
+
 .btn-reject,
 .btn-cancel {
   background-color: #f2f2f2;
@@ -329,6 +333,7 @@ button:disabled {
 :root[data-theme="dark"] .btn-pending {
   color: #2f2f2f;
 }
+
 /* ============ REQUEST ACTIONS ============ */
 .request-actions {
   display: flex;
@@ -344,7 +349,10 @@ button:disabled {
   font-size: 1.05rem;
   background: #f8f8f8;
   border-radius: 16px;
-  margin-top: 1rem;
+  margin: 1rem auto 0 auto;
+  max-width: 500px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 :root[data-theme="dark"] .empty-state {
@@ -352,6 +360,7 @@ button:disabled {
   color: var(--text-color);
   font-weight: 600;
 }
+
 /* ============ REQUESTS SECTION ============ */
 .requests-section {
   display: flex;
@@ -363,19 +372,30 @@ button:disabled {
 .find-friends p[style] {
   color: #888 !important;
   font-size: 1rem;
+  text-align: center;
 }
 
 :root[data-theme="dark"] .find-friends p[style] {
   color: var(--hover) !important;
   opacity: 0.9;
-  
-}
-:root[data-theme="dark"] .loading-text {
-  color: var(--hover) !important;
-  opacity: 0.9;  
 }
 
-/* ============ delete modal  ============ */
+:root[data-theme="dark"] .loading-text {
+  color: var(--hover) !important;
+  opacity: 0.9;
+}
+
+/* ============ CENTERED SECTIONS ============ */
+.friends-list,
+.find-friends,
+.pending-requests,
+.sent-requests {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ============ DELETE MODAL ============ */
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
@@ -395,9 +415,7 @@ button:disabled {
   border-radius: 10px;
 }
 
-
 .delete-error {
-  /* border: 2px solid #9d232360; */
   border-radius: 999px;
   color: var(--error-state);
 }
@@ -409,7 +427,6 @@ button:disabled {
 
 .confirm-request {
   background-color: var(--hover);
-
 }
 
 :root[data-theme="dark"] .confirm-request {
@@ -442,7 +459,6 @@ button:disabled {
   color: var(--background-color);
 }
 
-
 .cancel-request:hover {
   transform: scale(1.07);
   background-color: var(--text-color);
@@ -461,18 +477,11 @@ button:disabled {
   color: var(--secondary-color);
 }
 
-.pending-requests, .friends-list, .sent-requests {
-  justify-items: left;
-}
 /* ============================================
    RESPONSIVE DESIGN
    ============================================ */
 
 @media (max-width: 768px) {
-  
-  .empty-state {
-    width: 400px;
-  }
   .friends-container {
     padding: 100px 16px 40px;
   }
@@ -505,19 +514,23 @@ button:disabled {
     width: 100%;
   }
 
+  .user-grid {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+  }
+
   .user-card, .user-card.pending {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
     padding: 18px 20px;
-    justify-items: center;
     box-sizing: border-box;
   }
 
-  .user-card button, .user-card.pending
+  .user-card button,
   .user-card .request-actions {
     width: 100%;
-    max-width: 100%;;
+    max-width: 100%;
   }
 
   .request-actions {
@@ -527,6 +540,10 @@ button:disabled {
 
   .request-actions button {
     flex: 1;
+  }
+
+  .empty-state {
+    max-width: 100%;
   }
 }
 
