@@ -473,7 +473,7 @@ const Friends = () => {
                       <h3>{user.name}</h3>
                       <p>{user.email}</p>
                     </div>
-                    <FriendRequestButton user={user} />
+                      <FriendRequestButton user={user} />
                   </div>
                 ))}
               </div>
