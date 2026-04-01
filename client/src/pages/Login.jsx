@@ -9,6 +9,7 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({email: "", password: ""});
+  const [successfulLogin, setSuccessfulLogin] = useState(false);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -32,6 +33,7 @@ const Login = () => {
     }
 
     try {
+      setSuccessfulLogin(true);
       const response = await login({ email, password });
       console.log(response.data)
       localStorage.setItem("token", response.data.token);
@@ -39,7 +41,6 @@ const Login = () => {
         localStorage.setItem("userName", response.data.user.name);
       }
       localStorage.setItem("userEmail", response.data.user.email);
-
       navigate("/profile");
     } catch (err) {
       const errorMessage = err.response?.data?.error || "Email and password do not match.";
@@ -50,8 +51,7 @@ const Login = () => {
         return;
       }
         setErrors(prev => ({...prev, password: errorMessage}));
-      
-      // alert("Login failed: " + (err.response?.data?.error || "Unknown error"));
+        setSuccessfulLogin(false);
     }
   };
 
@@ -71,7 +71,15 @@ const Login = () => {
               variant="outlined"
               fullWidth
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if(errors?.email.length > 0) {
+                  setErrors((prev) => ({
+                  ...prev,
+                  email: "",
+                  }));
+                }
+              }}
               required
               margin="normal"
               placeholder="e.g. johndoe123@gmail.com" //Placholder text inside the email to let users know the format
@@ -97,7 +105,15 @@ const Login = () => {
               variant="outlined"
               fullWidth
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value)
+                if(errors?.password.length > 0) {
+                  setErrors((prev) => ({
+                  ...prev,
+                  password: "",
+                  }));
+                }
+              }}
               required
               margin="normal"
               error = {!!errors.password}
@@ -121,14 +137,14 @@ const Login = () => {
             color="primary"
             fullWidth
             className="login"
+            disabled={successfulLogin}
           >
-            Login
+          {successfulLogin ? "Logging in..." : "Login"}
           </Button>
         </form>
         <p className="account-creation">Don't have an account? <a href="/signup">Sign up</a></p>
         </div>
       </div>
-
       {/* Right Half with Background Image */}
       <div className="login-image" alt="Person sitting at a desk reading a book with a cup of coffee, lamp, and bookshelf filled with books in the background."></div>
     </div>
