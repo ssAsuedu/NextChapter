@@ -45,7 +45,7 @@ const Profile = () => {
   const [editListId, setEditListId] = useState(null);
   const [editListStep, setEditListStep] = useState(1);
   const [openMenuListId, setOpenMenuListId] = useState(null);
-
+  const [activeProfileBadgeIndex, setActiveProfileBadgeIndex] = useState(0);
   const editBookGridRef = useRef(null);
   const scrollIntervalRef = useRef(null);
 
@@ -395,7 +395,22 @@ const Profile = () => {
   const formattedDate = createdAt
     ? new Date(createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
     : "N/A";
+  // group the badges instead of accumulating
+  const groupedBadges = Object.entries(
+    badges.reduce((acc, badge) => {
+      acc[badge.type] = (acc[badge.type] || 0) + 1;
+      return acc;
+    }, {})
+  );
 
+  const changeProfileBadge = (direction) => {
+    if (!groupedBadges.length) return;
+
+    setActiveProfileBadgeIndex((prev) => {
+      return (prev + direction + groupedBadges.length) % groupedBadges.length;
+    });
+  };
+  
   return (
     <div className="profile-page">
 
@@ -408,133 +423,188 @@ const Profile = () => {
           <h2 className="profile-username">{userName || "User"}</h2>
           <p className="profile-created">Joined: {formattedDate}</p>
           <p className="profile-followers">Friends: {friendCount}</p>
-          <div className="profile-badges-row">
-            {badges.length === 0 ? (
-              <p>No badges yet</p>
-            ) : (
-              badges.map((badge, i) => (
-                <img key={i} src={badgeIcons[badge.type]} className="badge-icon" alt={badge.type} />
-              ))
+          <div className="profile-badges-wrap">
+            {groupedBadges.length > 1 && (
+              <button
+                className="scroll-btn left"
+                onClick={() => changeProfileBadge(-1)}
+              >
+                &#8249;
+              </button>
+            )}
+
+            <div className="profile-badges-slider">
+              {groupedBadges.map(([type, count], index, arr) => {
+                const current = activeProfileBadgeIndex;
+                const prevIndex = (current - 1 + arr.length) % arr.length;
+                const nextIndex = (current + 1) % arr.length;
+
+                let positionClass = "is-hidden";
+
+                if (index === current) positionClass = "is-active";
+                else if (index === prevIndex) positionClass = "is-prev";
+                else if (index === nextIndex) positionClass = "is-next";
+
+                return (
+                  <div
+                    className={`profile-badge-slide ${positionClass}`}
+                    key={type}
+                  >
+                    <img
+                      src={badgeIcons[type]}
+                      className="profile-badge-icon"
+                    />
+                    <span className="profile-badge-count">×{count}</span>
+                  </div>
+                );
+              })}
+            </div>
+
+            {groupedBadges.length > 1 && (
+              <button
+                className="scroll-btn right"
+                onClick={() => changeProfileBadge(1)}
+              >
+                &#8250;
+              </button>
             )}
           </div>
         </div>
       </div>
 
-  
+
       {/* Main Content */}
       <div className="profile-content">
 
         {/* Bookshelf */}
-        <div className="profile-header-row">
-          <h1>Your Bookshelf</h1>
-        </div>
-        <div className="bookshelf-grid">
-          {books.length > 0 ? (
-            books.map(book => (
-              <BookCard key={book.id} info={book.volumeInfo} volumeId={book.id} />
-            ))
-          ) : (
-            <p>No books saved yet.</p>
-          )}
-        </div>
-
-        {/* Lists Section */}
-        <div className="lists-section">
+        <div className="profile-bookshelf-container">
           <div className="profile-header-row">
-            <h1>Your Lists</h1>
-            <Button variant="contained" onClick={openCreateListModal} className="create-list-btn">
-              Create New List
-            </Button>
+            <h1>Your Bookshelf</h1>
           </div>
-          <div className="lists-grid">
-            {sortedLists.length > 0 ? (
-              sortedLists.map(list => (
+          <div className="bookshelf-grid">
+            {books.length > 0 ? (
+              books.map(book => (
                 <div
-                  key={list._id}
-                  className={`list-card ${list.pinned === true ? "list-card-pinned" : ""}`}
-                  onClick={() => openListDetail(list)}
+                  className="bookshelf-item"
+                  key={book.id}
+                  onClick={() => navigate(`/book/${book.id}`)}
                 >
-                  {list.pinned && (
-                    <span className="pin-badge">
-                       <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c3fc5" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M16 2H8a1 1 0 0 0-1 1v1.5a1 1 0 0 0 .4.8L9 7v4l-2 2h10l-2-2V7l1.6-1.7a1 1 0 0 0 .4-.8V3a1 1 0 0 0-1-1z"/>
-                        <line x1="12" y1="13" x2="12" y2="21" stroke="#6c3fc5" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      Pinned
-                    </span>
-                  )}
-                  <button
-                    className="list-options-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setOpenMenuListId(openMenuListId === list._id ? null : list._id);
-                    } }
-                  >
-                    ⋯
-                  </button>
-
-                  {openMenuListId === list._id && (
-                    <div className="list-options-menu">
-                      <button
-                        className="review-option-item"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenMenuListId(null);
-                          handleTogglePin(list, e);
-                        } }
-                      >
-                        {list.pinned === true ? "Unpin List" : "Pin List"}
-                      </button>
-                      <button
-                        className="review-option-item"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenMenuListId(null);
-                          openEditListModal(list, e);
-                        } }
-                      >
-                        Edit List
-                      </button>
-                      <button
-                        className="review-option-item delete"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setOpenMenuListId(null);
-                          handleDeleteList(list._id);
-                        } }
-                      >
-                        Delete List
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="list-card-body">
-                    <div className="list-thumbnail">
-                      {list.books.slice(0, 3).map((bookId, index) => {
-                        const book = books.find(b => b.id === bookId);
-                        return book ? (
-                          <img
-                            key={bookId}
-                            src={book.volumeInfo?.imageLinks?.thumbnail}
-                            alt=""
-                            className="list-thumb-img"
-                            style={{ zIndex: 3 - index }}
-                          />
-                        ) : null;
-                      })}
-                    </div>
-                    <div className="list-card-info">
-                      <h3 className="list-card-title">{list.name}</h3>
-                      {list.description && (
-                        <p className="list-card-description">{list.description}</p>
-                      )}
-                    </div>
-                  </div>
+                  <BookCard info={book.volumeInfo} volumeId={book.id} />
                 </div>
               ))
             ) : (
-              <p>No lists created yet.</p>
+              <p>No books saved yet.</p>
             )}
+          </div>
+        </div>
+
+        {/* Lists Section */}
+        <div className="profile-lists-container">
+          <div className="lists-section">
+
+            <div className="profile-header-row">
+              <h1>Your Lists</h1>
+            </div>
+
+            <div className="lists-grid">
+              {sortedLists.length > 0 ? (
+                sortedLists.map(list => (
+                  <div
+                    key={list._id}
+                    className={`list-card ${list.pinned === true ? "list-card-pinned" : ""}`}
+                    onClick={() => openListDetail(list)}
+                  >
+                    {list.pinned && (
+                      <span className="pin-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c3fc5" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16 2H8a1 1 0 0 0-1 1v1.5a1 1 0 0 0 .4.8L9 7v4l-2 2h10l-2-2V7l1.6-1.7a1 1 0 0 0 .4-.8V3a1 1 0 0 0-1-1z" />
+                          <line x1="12" y1="13" x2="12" y2="21" stroke="#6c3fc5" strokeWidth="2" strokeLinecap="round" />
+                        </svg>
+                        Pinned
+                      </span>
+                    )}
+                    <button
+                      className="list-options-btn"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setOpenMenuListId(openMenuListId === list._id ? null : list._id);
+                      }}
+                    >
+                      ⋯
+                    </button>
+
+                    {openMenuListId === list._id && (
+                      <div className="list-options-menu">
+                        <button
+                          className="review-option-item"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenuListId(null);
+                            handleTogglePin(list, e);
+                          }}
+                        >
+                          {list.pinned === true ? "Unpin List" : "Pin List"}
+                        </button>
+                        <button
+                          className="review-option-item"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenuListId(null);
+                            openEditListModal(list, e);
+                          }}
+                        >
+                          Edit List
+                        </button>
+                        <button
+                          className="review-option-item delete"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setOpenMenuListId(null);
+                            handleDeleteList(list._id);
+                          }}
+                        >
+                          Delete List
+                        </button>
+                      </div>
+                    )}
+
+                    <div className="list-card-body">
+                      <div className="list-thumbnail">
+                        {list.books.slice(0, 3).map((bookId, index) => {
+                          const book = books.find(b => b.id === bookId);
+                          return book ? (
+                            <img
+                              key={bookId}
+                              src={book.volumeInfo?.imageLinks?.thumbnail}
+                              alt=""
+                              className="list-thumb-img"
+                              style={{ zIndex: 3 - index }}
+                            />
+                          ) : null;
+                        })}
+                      </div>
+                      <div className="list-card-info">
+                        <h3 className="list-card-title">{list.name}</h3>
+                        {list.description && (
+                          <p className="list-card-description">{list.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p>No lists created yet.</p>
+              )}
+            </div>
+            <div className="create-list-footer">
+              <Button
+                variant="contained"
+                onClick={openCreateListModal}
+                className="create-list-btn"
+              >
+                Create New List
+              </Button>
+            </div>
           </div>
         </div>
       </div>
