@@ -19,6 +19,18 @@ const Progress = () => {
   const [editIdx, setEditIdx] = useState(null);
   const [editPage, setEditPage] = useState(0);
 
+  const getImage = (imageLinks) => {
+
+    const url =
+    imageLinks?.extraLarge ||
+    imageLinks?.large ||
+    imageLinks?.medium ||
+    imageLinks?.thumbnail ||
+    imageLinks?.smallThumbnail;
+
+    return url ? url.replace("http://", "https://") : "default-book.png";
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       if (!email) return;
@@ -85,22 +97,22 @@ const Progress = () => {
       {/* Top Section */}
       <div className="progress-top-section">
         <h1 id="progress-heading" className="progress-title">Your Progress</h1>
-
+          <div
+            className="progress-stats"
+            role="region"
+            aria-label="Reading statistics"
+          >
+          <div className="books-read-container" aria-label={`Total books read: ${totalRead}`}>
+            <h2 className="total-read">{totalRead}</h2>
+            <h3>Books Read</h3>
+          </div>
+          <div className="in-progress-container" aria-label={`Total in progress: ${totalInProgress}`}>
+            <h2 className="currently-reading">{totalInProgress}</h2>
+            <h3>In Progress</h3>
+          </div>
+        </div>
         <div className="progress-streak-wrapper">
           <ReadingStreak />
-        </div>
-
-        <div
-          className="progress-stats"
-          role="region"
-          aria-label="Reading statistics"
-        >
-          <div className="progress-stat-line" aria-label={`Total books read: ${totalRead}`}>
-            Total Books Read: {totalRead}
-          </div>
-          <div className="progress-stat-line" aria-label={`Total in progress: ${totalInProgress}`}>
-            Total In Progress: {totalInProgress}
-          </div>
         </div>
       </div>
 
@@ -131,15 +143,15 @@ const Progress = () => {
                 >
                   <div className="left-side">
                     <img
-                      src={book.volumeInfo.imageLinks?.thumbnail || "/default-book.png"}
+                      src={getImage(book.volumeInfo.imageLinks)}
                       alt={`Cover of ${book.volumeInfo.title}`}
                       className="progress-book-image"
                     />
                     </div>
                     <div className="right-side">
-                  <div className="progress-book-info">
-                    <h3>{book.volumeInfo.title}</h3>
-                    <p>{book.volumeInfo.authors?.join(", ")}</p>
+                      <div className="progress-book-info">
+                        <h3>{book.volumeInfo.title}</h3>
+                        <p>{book.volumeInfo.authors?.join(", ")}</p>
 
                     <div
                       className="progress-bar-container"
@@ -155,6 +167,7 @@ const Progress = () => {
                     <div className="progress-inputs">
                       {editIdx === idx ? (
                         <>
+                        <div className="progress-input-wrapper">
                           <label htmlFor={`page-input-${idx}`}>
                             Page:
                           </label>
@@ -169,10 +182,11 @@ const Progress = () => {
                               min: 0,
                               max: totalPages,
                               "aria-label": `Current page for ${book.volumeInfo.title}`,
-                              style: { background: "#faf8ff" }
+                              style: { background: "#faf8ff", textAlign: "center" }
                             }}
                             sx={{
                               width: 70,
+                              minWidth: 0,
                               marginLeft: 1,
                               "& .MuiOutlinedInput-root": {
                                 background: "#faf8ff",
@@ -183,19 +197,22 @@ const Progress = () => {
                             }}
                           />
                           <span aria-hidden="true">/ {totalPages || "?"}</span>
+                          </div>
+                          <div className="progress-buttons">
                           <IconButton
                             className="progress-cancel-btn"
                             onClick={() => setEditIdx(null)}
                             size="small"
                             aria-label="Cancel editing"
                             sx={{
-                              marginLeft: 1,
+                              height: 36,
+                              width: 36,
                               background: "#bbb",
                               color: "#fff",
                               "&:hover": { background: "#888" }
                             }}
                           >
-                            <CloseIcon />
+                            <CloseIcon fontSize="small"/>
                           </IconButton>
                           <IconButton
                             className="progress-save-btn"
@@ -211,6 +228,7 @@ const Progress = () => {
                           >
                             <CheckIcon />
                           </IconButton>
+                          </div>
                         </>
                       ) : (
                         <>
