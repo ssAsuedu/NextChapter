@@ -39,11 +39,18 @@ function Messages() {
     setSelectedSender(sender);
     try {
       await markMessagesAsRead(email, sender);
-      setMessages((prev) =>
-        prev.map((msg) =>
-          msg.sender === sender ? { ...msg, unread: "read" } : msg
-        )
+  
+      const updatedMessages = messages.map((msg) =>
+        msg.sender === sender ? { ...msg, unread: "read" } : msg
       );
+      setMessages(updatedMessages);
+  
+      const newCount = new Set(
+        updatedMessages
+          .filter((m) => m.unread === "unread")
+          .map((m) => m.sender)
+      ).size;
+      window.dispatchEvent(new CustomEvent("messagesRead", { detail: { newCount } }));
     } catch (err) {
       console.error(err);
     }

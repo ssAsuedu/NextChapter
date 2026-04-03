@@ -76,21 +76,32 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUnread = async () => {
       if (!email) return;
-  
       try {
         const res = await getMessages(email);
-  
-        const unread = res.data.messages.filter(
-          (msg) => msg.unread === "unread"
-        ).length;
-  
+        const unread = new Set(
+          res.data.messages
+            .filter((msg) => msg.unread === "unread")
+            .map((msg) => msg.sender)
+        ).size;
         setUnreadCount(unread);
       } catch (err) {
         console.error(err);
       }
     };
-  
+
     fetchUnread();
+
+    const interval = setInterval(fetchUnread, 30000);
+
+    const handleMessagesRead = (e) => {
+      setUnreadCount(e.detail.newCount);
+    };
+    window.addEventListener("messagesRead", handleMessagesRead);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("messagesRead", handleMessagesRead);
+    };
   }, [email]);
 
   const go = (path) => {
@@ -249,7 +260,7 @@ const Navbar = () => {
           userInitial && (
             <div className={`logged-in ${menuOpen ? 'open' : ''}`}>
               <div className="nav-message-icon" onClick={() => navigate("/messages")}>
-                <svg width="30" height="30" viewBox="0 0 22 22" fill="none">
+                <svg width="33" height="33" viewBox="0 0 22 22" fill="none">
                   <path d="M11 2C6.03 2 2 5.69 2 10.2c0 2.6 1.35 4.93 3.47 6.43L4.5 20l3.8-1.9C9.36 18.36 10.17 18.4 11 18.4c4.97 0 9-3.69 9-8.2C20 5.69 15.97 2 11 2Z"/>
                 </svg>
                 {unreadCount > 0 && <span className="nav-message-badge">{unreadCount}</span>}
