@@ -7,6 +7,27 @@
   align-items: center;
 }
 
+.progress-book-info .error-styling {
+  color: var(--error-state);
+  margin: 0;
+}
+
+.confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 999;
+  transition: opacity 1s ease;
+  width: 100vw !important;
+  height: 100vh !important;
+  margin: 0 auto;
+}
+
+.confetti.fade-out {
+  opacity: 0;
+}
+
 .progress-page h1 {
   text-align: center;
   font-family: "Sen", sans-serif;
@@ -247,7 +268,7 @@
   background-color: white;
   border-radius: 10px;
   align-items: center;
-  gap: 20px;
+  gap: 30px;
   padding: 16px;
   /* max-width: 350px; */
 }
@@ -376,7 +397,7 @@
 
 .progress-buttons {
   display: flex;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 }
 .progress-inputs input[type="number"] {
   background: #f4f4f4;
@@ -414,10 +435,7 @@
 .progress-edit-btn {
   padding: 10px 20px 10px 20px;
   margin-bottom: 10px;
-}
-
-.progress-edit-btn:hover {
-  scale: 1.07;
+  border: none;
 }
 
 :root[data-theme="dark"] .progress-edit-btn {
@@ -493,23 +511,29 @@
   .progress-streak-wrapper {
     max-width: 100%;
   }
+
+  .progress-list {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
 }
 
-@media (min-width: 768px) and (max-width: 1000px) {
-  /* .progress-list {
-    grid-template-columns: repeat(2, 1fr);
-  } */
+@media (max-width: 600px) {
+  .progress-list {
+    grid-template-columns: 1fr;
+  }
 }
 
 /* ── Responsive: mobile ── */
 @media (max-width: 768px) {
-  /* .progress-list {
-    grid-template-columns: 1fr;
-    gap: 20px;
-  } */
   
+  .progress-list {
+    margin: 0 auto;
+  }
   .progress-page {
     padding: 24px 16px 16px 16px;
+    margin: 0 auto;
   }
 
   .progress-page h1 {
@@ -524,14 +548,6 @@
   .progress-title {
     font-size: 1.8rem;
   }
-
-  .progress-book-card {
-    padding: 16px;
-  }
-
-  /* .progress-book-image {
-    max-width: 140px;
-  } */
 
   .progress-inputs {
     flex-wrap: wrap;

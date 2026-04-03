@@ -21,10 +21,27 @@ const Progress = () => {
   const [editIdx, setEditIdx] = useState(null);
   const [editPage, setEditPage] = useState(0);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [fadeConfetti, setFadeConfetti] = useState(false);
   const [bookModal, setBookModal] = useState(false);
   const [dataLoaded, setDataLoaded] = useState(false);
   const hasMounted = useRef(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
 
+  const[errors, setErrors] = useState({});
+  useEffect(() => { //for react confetti so it can take up the whole width and height of the screen, no matter the size
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  })
   const getImage = (imageLinks) => {
 
     const url =
@@ -69,6 +86,7 @@ const Progress = () => {
   };
 
   const totalRead = progress.filter(p => p.totalPages > 0 && p.currentPage === p.totalPages).length;
+
   const [displayTotalRead, setDisplayTotalRead] = useState(totalRead);
   const prevTotalRead = useRef(totalRead);
 
@@ -86,7 +104,7 @@ const Progress = () => {
       setBookModal(true); //show the congrats book modal
       setTimeout(() => {
         setDisplayTotalRead(prev => prev + 1);
-      }, 3000); //display the updated book count after 3 seconds
+      }, 4000); //display the updated book count after 3 seconds
     } else if(totalRead < prevTotalRead.current) { //if the total is less than the current books
       setDisplayTotalRead(totalRead); //just set the current to the total
     }
@@ -104,10 +122,20 @@ const Progress = () => {
 
   useEffect(() => {
     if(showConfetti) { //if the confetti is triggered
-      const timer = setTimeout(() => {
+
+      const fadeTimer = setTimeout(() => {
+        setFadeConfetti(true); //start fade
+      }, 4000); //start fade before it ends
+
+      const removeTimer = setTimeout(() => {
         setShowConfetti(false);
-      }, 5000); //show the confetti for 5 seconds
-      return () => clearTimeout(timer);
+        setFadeConfetti(false);
+      }, 5000);
+
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(removeTimer);
+      }
     }
   }, [showConfetti]);
 
@@ -118,8 +146,20 @@ const Progress = () => {
     setEditPage(currentPage);
   };
 
-  const handleSave = async (idx, volumeId, totalPages) => {
-    const currentPage = Math.max(0, Math.min(Number(editPage), totalPages));
+  const handleSave = async (volumeId, totalPages) => {
+    const currentPage = Number(editPage);
+    if(currentPage < 0 || currentPage > totalPages) {
+      setErrors(prev => ({
+        ...prev,
+        [volumeId]: `Please enter a valid page number.`,
+      }));
+      return;
+    }
+    setErrors(prev => ({
+      ...prev,
+      [volumeId]: null,
+    }));
+
     await updateProgress({
       email,
       volumeId,
@@ -144,8 +184,15 @@ const Progress = () => {
       <ProfileNavbar />
       {/* Top Section */}
       <div className="progress-top-section">
+        {showConfetti && (
+          <div className={`confetti ${fadeConfetti ? "fade-out" : ""}`}>
+          <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          />
+          </div>
+        )}
         <h1 id="progress-heading" className="progress-title">Your Progress</h1>
-        {showConfetti && <Confetti/>}
           <div
             className="progress-stats"
             role="region"
@@ -244,7 +291,13 @@ const Progress = () => {
                             variant="outlined"
                             size="small"
                             value={editPage}
-                            onChange={e => setEditPage(e.target.value)}
+                            onChange={e => {
+                              setEditPage(e.target.value);
+                              setErrors(prev => ({
+                              ...prev,
+                              [volumeId]: null,
+                              }));
+                            }}
                             inputProps={{
                               min: 0,
                               max: totalPages,
@@ -283,7 +336,7 @@ const Progress = () => {
                           </IconButton>
                           <IconButton
                             className="progress-save-btn"
-                            onClick={() => handleSave(idx, volumeId, totalPages)}
+                            onClick={() => handleSave(volumeId, totalPages)}
                             size="small"
                             aria-label={`Save progress for ${book.volumeInfo.title}`}
                             sx={{
@@ -296,6 +349,9 @@ const Progress = () => {
                             <CheckIcon />
                           </IconButton>
                           </div>
+                          {errors[volumeId] && (
+                            <span className="error-styling">{errors[volumeId]}</span>
+                          )}
                         </>
                       ) : (
                         <>
@@ -307,7 +363,13 @@ const Progress = () => {
                     </div>
                     <button
                         className="progress-edit-btn"
-                        onClick={() => handleEditClick(idx, p.currentPage)}
+                        onClick={() => {
+                          handleEditClick(idx, p.currentPage)
+                          setErrors(prev => ({
+                              ...prev,
+                              [volumeId]: null,
+                              }));
+                        }}
                         aria-label={`Update progress for ${book.volumeInfo.title}`}
                     >
                     Update
