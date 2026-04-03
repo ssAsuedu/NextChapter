@@ -250,7 +250,7 @@ const ReadingStreak = () => {
               </defs>
             </svg>
           </div>
-          <h3 className="rs-title">Reading Streak</h3>
+          <h2 className="rs-title">Reading Streak</h2>
         </div>
         <p className="rs-motivational" role="status" aria-live="polite">
           {getMotivationalMessage(currentStreak)}

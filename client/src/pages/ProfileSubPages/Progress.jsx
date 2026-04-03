@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { getBookshelf, getProgress, updateProgress } from "../../api";
 import axios from "axios";
 import "../../styles/ProfilePage/Progress.css";
@@ -8,6 +8,8 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import ReadingStreak from "../../components/ProfilePage/ReadingStreak";
+import Confetti from "react-confetti";
+import BookCelebration from "../../assets/book_celebration.svg";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -18,6 +20,39 @@ const Progress = () => {
   const [books, setBooks] = useState([]);
   const [editIdx, setEditIdx] = useState(null);
   const [editPage, setEditPage] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [fadeConfetti, setFadeConfetti] = useState(false);
+  const [bookModal, setBookModal] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const hasMounted = useRef(false);
+  const [windowSize, setWindowSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  const[errors, setErrors] = useState({});
+  useEffect(() => { //for react confetti so it can take up the whole width and height of the screen, no matter the size
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  })
+  const getImage = (imageLinks) => {
+
+    const url =
+    imageLinks?.extraLarge ||
+    imageLinks?.large ||
+    imageLinks?.medium ||
+    imageLinks?.thumbnail ||
+    imageLinks?.smallThumbnail;
+
+    return url ? url.replace("http://", "https://") : "default-book.png";
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +61,7 @@ const Progress = () => {
       const progRes = await getProgress(email);
       setBookshelf(shelfRes.data.bookshelf || []);
       setProgress(progRes.data.progress || []);
+      setDataLoaded(true);
     };
     fetchData();
   }, [email]);
@@ -50,6 +86,59 @@ const Progress = () => {
   };
 
   const totalRead = progress.filter(p => p.totalPages > 0 && p.currentPage === p.totalPages).length;
+
+  const [displayTotalRead, setDisplayTotalRead] = useState(totalRead);
+  const prevTotalRead = useRef(totalRead);
+
+  useEffect(() => {
+    if(!dataLoaded) return;
+    if(!hasMounted.current) {
+      hasMounted.current = true;
+      prevTotalRead.current = totalRead;
+      setDisplayTotalRead(totalRead); //first load synced, now confetti won't play upon load
+      return;
+    }
+
+    if (totalRead > prevTotalRead.current) { //if the total books read is greater than currently read books
+      setShowConfetti(true); //set confetti to true
+      setBookModal(true); //show the congrats book modal
+      setTimeout(() => {
+        setDisplayTotalRead(prev => prev + 1);
+      }, 4000); //display the updated book count after 3 seconds
+    } else if(totalRead < prevTotalRead.current) { //if the total is less than the current books
+      setDisplayTotalRead(totalRead); //just set the current to the total
+    }
+    prevTotalRead.current = totalRead;
+  }, [totalRead]);
+
+  useEffect(() => {
+    if (showConfetti) { //if confetti is triggered (new book read)
+      window.scrollTo({ //scroll to the top of the screen smoothly
+        top: 0,
+        behavior: "smooth",
+      });;
+    }
+  }, [showConfetti]);
+
+  useEffect(() => {
+    if(showConfetti) { //if the confetti is triggered
+
+      const fadeTimer = setTimeout(() => {
+        setFadeConfetti(true); //start fade
+      }, 4000); //start fade before it ends
+
+      const removeTimer = setTimeout(() => {
+        setShowConfetti(false);
+        setFadeConfetti(false);
+      }, 5000);
+
+      return () => {
+        clearTimeout(fadeTimer);
+        clearTimeout(removeTimer);
+      }
+    }
+  }, [showConfetti]);
+
   const totalInProgress = progress.filter(p => p.totalPages > 0 && p.currentPage > 0 && p.currentPage < p.totalPages).length;
 
   const handleEditClick = (idx, currentPage) => {
@@ -57,8 +146,20 @@ const Progress = () => {
     setEditPage(currentPage);
   };
 
-  const handleSave = async (idx, volumeId, totalPages) => {
-    const currentPage = Math.max(0, Math.min(Number(editPage), totalPages));
+  const handleSave = async (volumeId, totalPages) => {
+    const currentPage = Number(editPage);
+    if(currentPage < 0 || currentPage > totalPages) {
+      setErrors(prev => ({
+        ...prev,
+        [volumeId]: `Please enter a valid page number.`,
+      }));
+      return;
+    }
+    setErrors(prev => ({
+      ...prev,
+      [volumeId]: null,
+    }));
+
     await updateProgress({
       email,
       volumeId,
@@ -81,26 +182,51 @@ const Progress = () => {
   return (
     <div role="main" aria-labelledby="progress-heading">
       <ProfileNavbar />
-
       {/* Top Section */}
       <div className="progress-top-section">
+        {showConfetti && (
+          <div className={`confetti ${fadeConfetti ? "fade-out" : ""}`}>
+          <Confetti
+          width={windowSize.width}
+          height={windowSize.height}
+          />
+          </div>
+        )}
         <h1 id="progress-heading" className="progress-title">Your Progress</h1>
-
+          <div
+            className="progress-stats"
+            role="region"
+            aria-label="Reading statistics"
+          >
+          <div className="books-read-container" aria-label={`Total books read: ${displayTotalRead}`}>
+            <h2 className="total-read">{displayTotalRead}</h2>
+            <h3>Books Read</h3>
+          </div>
+          <div className="in-progress-container" aria-label={`Total in progress: ${totalInProgress}`}>
+            <h2 className="currently-reading">{totalInProgress}</h2>
+            <h3>In Progress</h3>
+          </div>
+        </div>
+        {!showConfetti && bookModal && (
+          <div className="completed-book-overlay">
+            <div className="completed-book-content">
+              <div className="success-image">
+                <img src={BookCelebration}></img>
+                </div>
+                <div className="completed-book-text">
+                  <h3>Congratulations! You finished a book!</h3>
+                  <h4>Your journey doesn't end here, keep reading!</h4>
+                  </div>
+                  <button className="keep-reading-btn" 
+                  onClick={() => {
+                    setBookModal(false);
+                  }}
+                  >Keep Reading</button>
+              </div>
+            </div>
+        )}
         <div className="progress-streak-wrapper">
           <ReadingStreak />
-        </div>
-
-        <div
-          className="progress-stats"
-          role="region"
-          aria-label="Reading statistics"
-        >
-          <div className="progress-stat-line" aria-label={`Total books read: ${totalRead}`}>
-            Total Books Read: {totalRead}
-          </div>
-          <div className="progress-stat-line" aria-label={`Total in progress: ${totalInProgress}`}>
-            Total In Progress: {totalInProgress}
-          </div>
         </div>
       </div>
 
@@ -131,15 +257,15 @@ const Progress = () => {
                 >
                   <div className="left-side">
                     <img
-                      src={book.volumeInfo.imageLinks?.thumbnail || "/default-book.png"}
+                      src={getImage(book.volumeInfo.imageLinks)}
                       alt={`Cover of ${book.volumeInfo.title}`}
                       className="progress-book-image"
                     />
                     </div>
                     <div className="right-side">
-                  <div className="progress-book-info">
-                    <h3>{book.volumeInfo.title}</h3>
-                    <p>{book.volumeInfo.authors?.join(", ")}</p>
+                      <div className="progress-book-info">
+                        <h3>{book.volumeInfo.title}</h3>
+                        <p>{book.volumeInfo.authors?.join(", ")}</p>
 
                     <div
                       className="progress-bar-container"
@@ -155,6 +281,7 @@ const Progress = () => {
                     <div className="progress-inputs">
                       {editIdx === idx ? (
                         <>
+                        <div className="progress-input-wrapper">
                           <label htmlFor={`page-input-${idx}`}>
                             Page:
                           </label>
@@ -164,15 +291,22 @@ const Progress = () => {
                             variant="outlined"
                             size="small"
                             value={editPage}
-                            onChange={e => setEditPage(e.target.value)}
+                            onChange={e => {
+                              setEditPage(e.target.value);
+                              setErrors(prev => ({
+                              ...prev,
+                              [volumeId]: null,
+                              }));
+                            }}
                             inputProps={{
                               min: 0,
                               max: totalPages,
                               "aria-label": `Current page for ${book.volumeInfo.title}`,
-                              style: { background: "#faf8ff" }
+                              style: { background: "#faf8ff", textAlign: "center" }
                             }}
                             sx={{
-                              width: 70,
+                              // width: 70,
+                              minWidth: 0,
                               marginLeft: 1,
                               "& .MuiOutlinedInput-root": {
                                 background: "#faf8ff",
@@ -183,23 +317,26 @@ const Progress = () => {
                             }}
                           />
                           <span aria-hidden="true">/ {totalPages || "?"}</span>
+                          </div>
+                          <div className="progress-buttons">
                           <IconButton
                             className="progress-cancel-btn"
                             onClick={() => setEditIdx(null)}
                             size="small"
                             aria-label="Cancel editing"
                             sx={{
-                              marginLeft: 1,
+                              height: 36,
+                              width: 36,
                               background: "#bbb",
                               color: "#fff",
                               "&:hover": { background: "#888" }
                             }}
                           >
-                            <CloseIcon />
+                            <CloseIcon fontSize="small"/>
                           </IconButton>
                           <IconButton
                             className="progress-save-btn"
-                            onClick={() => handleSave(idx, volumeId, totalPages)}
+                            onClick={() => handleSave(volumeId, totalPages)}
                             size="small"
                             aria-label={`Save progress for ${book.volumeInfo.title}`}
                             sx={{
@@ -211,6 +348,10 @@ const Progress = () => {
                           >
                             <CheckIcon />
                           </IconButton>
+                          </div>
+                          {errors[volumeId] && (
+                            <span className="error-styling">{errors[volumeId]}</span>
+                          )}
                         </>
                       ) : (
                         <>
@@ -222,7 +363,13 @@ const Progress = () => {
                     </div>
                     <button
                         className="progress-edit-btn"
-                        onClick={() => handleEditClick(idx, p.currentPage)}
+                        onClick={() => {
+                          handleEditClick(idx, p.currentPage)
+                          setErrors(prev => ({
+                              ...prev,
+                              [volumeId]: null,
+                              }));
+                        }}
                         aria-label={`Update progress for ${book.volumeInfo.title}`}
                     >
                     Update

@@ -15,10 +15,9 @@
   box-shadow: 0 1px 6px rgba(0, 0, 0, 0.04);
 }
 
-:root[data-theme="dark"] .streak-container {
+:root[data-theme="dark"] .rs-container {
   background-color: var(--filter-pane);
 }
-
 /* --- Header --- */
 .rs-header {
   margin-bottom: 16px;
@@ -65,7 +64,7 @@
 }
 
 .rs-motivational {
-  font-size: 0.85rem;
+  font-size: 0.90rem;
   color: var(--secondary-color, #666);
   margin: 0;
   line-height: 1.4;
@@ -103,8 +102,11 @@
 .rs-stat--longest .rs-stat__number { color: var(--primary-color, #222); }
 .rs-stat--total   .rs-stat__number { color: #4CAF50; }
 
+:root[data-theme="dark"] .rs-stat--total .rs-stat__number {
+  color: #4eb452;
+}
 .rs-stat__label {
-  font-size: 0.7rem;
+  font-size: 0.8rem;
   color: var(--secondary-color, #666);
   font-weight: 500;
   text-transform: uppercase;
@@ -125,7 +127,7 @@
 }
 
 .rs-heatmap-title {
-  font-size: 0.85rem;
+  font-size: 20px;
   font-weight: 600;
   color: var(--text-color, #222);
   margin: 0 0 10px 0;
@@ -165,7 +167,7 @@
 
 .rs-heatmap-day-labels span {
   height: 14px;
-  font-size: 0.65rem;
+  font-size: 15px;
   color: #999;
   display: flex;
   align-items: center;
@@ -195,13 +197,20 @@
 .rs-month-label {
   position: absolute;
   top: 0;
-  font-size: 0.7rem;
+  font-size: 15px;
   font-weight: 500;
   color: #888;
   white-space: nowrap;
   line-height: 1;
 }
 
+:root[data-theme="dark"] .rs-month-label {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .rs-heatmap-legend-text {
+  color: var(--text-color);
+}
 /* Cells grid — BIGGER cells: 14px desktop */
 .rs-heatmap-cells {
   display: flex;
@@ -215,8 +224,8 @@
 }
 
 .rs-heatmap-cell {
-  width: 14px;
-  height: 14px;
+  width: 25px;
+  height: 25px;
   border-radius: 3px;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
   cursor: default;
@@ -257,15 +266,16 @@
 }
 
 .rs-heatmap-legend .rs-heatmap-cell {
-  width: 10px;
-  height: 10px;
+  width: 15px;
+  height: 15px;
 }
 
 .rs-heatmap-legend-text {
-  font-size: 0.65rem;
+  font-size: 12px;
   color: #999;
   margin: 0 3px;
 }
+
 
 /* Tooltip */
 .rs-tooltip {
@@ -308,6 +318,15 @@
   border: 1px solid #d4e8ff;
 }
 
+:root[data-theme="dark"] .rs-freeze-section {
+  background-color: #3a5f8f;
+}
+
+:root[data-theme="dark"] .rs-freeze-btn {
+  background-color: #7abff0;
+}
+
+
 .rs-freeze-info {
   display: flex;
   align-items: center;
@@ -315,20 +334,20 @@
 }
 
 .rs-freeze-icon {
-  width: 22px;
-  height: 22px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
 }
 
 .rs-freeze-title {
-  font-size: 0.8rem;
+  font-size: 15px;
   font-weight: 600;
   color: var(--text-color, #222);
   margin: 0;
 }
 
 .rs-freeze-desc {
-  font-size: 0.7rem;
+  font-size: 13px;
   color: var(--secondary-color, #666);
   margin: 1px 0 0 0;
 }
@@ -350,6 +369,7 @@
 .rs-freeze-btn:hover {
   background: #3A8BC2;
   transform: translateY(-1px);
+  color: #000000;
 }
 
 .rs-freeze-btn:active {
@@ -445,9 +465,9 @@
   }
 
   /* Mobile cells: 11px (still bigger than the old 9px) */
-  .rs-heatmap-cell {
-    width: 11px;
-    height: 11px;
+  .rs-heatmap-cell, .rs-heatmap-legend .rs-heatmap-cell {
+    width: 14px;
+    height: 14px;
     border-radius: 2px;
   }
 
@@ -461,17 +481,17 @@
 
   .rs-heatmap-day-labels span {
     height: 11px;
-    font-size: 0.55rem;
   }
 
   .rs-heatmap-day-labels {
     gap: 2px;
     margin-right: 4px;
     width: 18px;
+    
   }
 
-  .rs-month-label {
-    font-size: 0.6rem;
+  .rs-month-label, .rs-heatmap-day-labels span {
+    font-size: 12px;
   }
 
   .rs-freeze-section {
