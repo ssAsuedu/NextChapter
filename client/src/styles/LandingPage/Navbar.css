@@ -85,6 +85,7 @@ li {
 
 .carrot {
   color: var(--text-color);
+  display: none !important;
 }
 
 .nav-scrolled {
@@ -98,6 +99,8 @@ li {
   background-color: var(--primary-color);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   border-radius: 10px;
+
+  display: none;
 }
 
 .dropdown-links ul {
@@ -222,6 +225,14 @@ li {
   font-size: 14px;
 }
 
+.about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
+  display: block;
+}
+
+.about-arrow, .profile-arrow {
+  position: relative;
+}
+
 .auth-signout {
   background-color: var(--hover);
   border: 1px solid #ccc;
@@ -262,6 +273,7 @@ li {
   align-items: center;
   gap: 15px;
 }
+
 .auth-signup:hover, .auth-signout:hover {
   background-color: var(--text-color);
   color: white;
@@ -273,6 +285,26 @@ li {
   
 }
 
+:root[data-theme="dark"] .auth-login.not-scroll, .auth-login.login-nav{
+  background-color: var(--background-color);
+  border: 1px solid #ccc;
+  color: var(--secondary-color);
+}
+
+:root[data-theme="dark"] .auth-login.not-scroll:hover, .auth-login.login-nav:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+
+:root[data-theme="dark"] .auth-signup.not-scroll, .auth-signup.signup-nav {
+  color: var(--background-color);
+  border: none;
+}
+
+:root[data-theme="dark"] .auth-login.not-scroll:hover, .auth-login.login-nav:hover {
+  transform: scale(1.07);
+}
 :root[data-theme="dark"] .link {
   color: var(--text-color);
 }
@@ -297,14 +329,19 @@ li {
   color: var(--background-color);
 }
 
+:root[data-theme="dark"] .auth-signout.not-scroll:hover{
+  background-color: var(--text-color);
+}
+
 :root[data-theme="dark"] .auth-signout.signout-nav {
   color: var(--background-color);
-  background-color: var(--text-color);
+  background-color: var(--primary-color);
+  border: none;
 
 }
 
 :root[data-theme="dark"] .auth-signout.signout-nav:hover {
-  background-color: var(--primary-color);
+  background-color: var(--text-color);
   border: 1px solid var(--background-color);
 }
 
@@ -334,7 +371,20 @@ li {
   fill: var(--primary-color);
   stroke: #a97dd4;
 }
+
+
 @media (min-width:300px) and (max-width: 860px) {
+  .desktop-dropdown {
+    display: none;
+  }
+
+  .carrot {
+    display: block !important;
+  }
+  .mobile-dropdown {
+    display: block;
+  }
+
   button.menu-btn {
     display: block;
     margin: 0;
@@ -365,9 +415,6 @@ li {
     font-size: 18px;
   }
   
-  .carrot {
-    color: white;
-  }
   .navbar {
     background-color: var(--text-color);
   }
