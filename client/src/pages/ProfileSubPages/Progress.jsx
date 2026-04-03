@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { getBookshelf, getProgress, updateProgress } from "../../api";
 import axios from "axios";
 import "../../styles/ProfilePage/Progress.css";
@@ -8,6 +8,8 @@ import IconButton from "@mui/material/IconButton";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import ReadingStreak from "../../components/ProfilePage/ReadingStreak";
+import Confetti from "react-confetti";
+import BookCelebration from "../../assets/book_celebration.svg";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -18,6 +20,10 @@ const Progress = () => {
   const [books, setBooks] = useState([]);
   const [editIdx, setEditIdx] = useState(null);
   const [editPage, setEditPage] = useState(0);
+  const [showConfetti, setShowConfetti] = useState(false);
+  const [bookModal, setBookModal] = useState(false);
+  const [dataLoaded, setDataLoaded] = useState(false);
+  const hasMounted = useRef(false);
 
   const getImage = (imageLinks) => {
 
@@ -38,6 +44,7 @@ const Progress = () => {
       const progRes = await getProgress(email);
       setBookshelf(shelfRes.data.bookshelf || []);
       setProgress(progRes.data.progress || []);
+      setDataLoaded(true);
     };
     fetchData();
   }, [email]);
@@ -62,6 +69,48 @@ const Progress = () => {
   };
 
   const totalRead = progress.filter(p => p.totalPages > 0 && p.currentPage === p.totalPages).length;
+  const [displayTotalRead, setDisplayTotalRead] = useState(totalRead);
+  const prevTotalRead = useRef(totalRead);
+
+  useEffect(() => {
+    if(!dataLoaded) return;
+    if(!hasMounted.current) {
+      hasMounted.current = true;
+      prevTotalRead.current = totalRead;
+      setDisplayTotalRead(totalRead); //first load synced, now confetti won't play upon load
+      return;
+    }
+
+    if (totalRead > prevTotalRead.current) { //if the total books read is greater than currently read books
+      setShowConfetti(true); //set confetti to true
+      setBookModal(true); //show the congrats book modal
+      setTimeout(() => {
+        setDisplayTotalRead(prev => prev + 1);
+      }, 3000); //display the updated book count after 3 seconds
+    } else if(totalRead < prevTotalRead.current) { //if the total is less than the current books
+      setDisplayTotalRead(totalRead); //just set the current to the total
+    }
+    prevTotalRead.current = totalRead;
+  }, [totalRead]);
+
+  useEffect(() => {
+    if (showConfetti) { //if confetti is triggered (new book read)
+      window.scrollTo({ //scroll to the top of the screen smoothly
+        top: 0,
+        behavior: "smooth",
+      });;
+    }
+  }, [showConfetti]);
+
+  useEffect(() => {
+    if(showConfetti) { //if the confetti is triggered
+      const timer = setTimeout(() => {
+        setShowConfetti(false);
+      }, 5000); //show the confetti for 5 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [showConfetti]);
+
   const totalInProgress = progress.filter(p => p.totalPages > 0 && p.currentPage > 0 && p.currentPage < p.totalPages).length;
 
   const handleEditClick = (idx, currentPage) => {
@@ -93,17 +142,17 @@ const Progress = () => {
   return (
     <div role="main" aria-labelledby="progress-heading">
       <ProfileNavbar />
-
       {/* Top Section */}
       <div className="progress-top-section">
         <h1 id="progress-heading" className="progress-title">Your Progress</h1>
+        {showConfetti && <Confetti/>}
           <div
             className="progress-stats"
             role="region"
             aria-label="Reading statistics"
           >
-          <div className="books-read-container" aria-label={`Total books read: ${totalRead}`}>
-            <h2 className="total-read">{totalRead}</h2>
+          <div className="books-read-container" aria-label={`Total books read: ${displayTotalRead}`}>
+            <h2 className="total-read">{displayTotalRead}</h2>
             <h3>Books Read</h3>
           </div>
           <div className="in-progress-container" aria-label={`Total in progress: ${totalInProgress}`}>
@@ -111,6 +160,24 @@ const Progress = () => {
             <h3>In Progress</h3>
           </div>
         </div>
+        {!showConfetti && bookModal && (
+          <div className="completed-book-overlay">
+            <div className="completed-book-content">
+              <div className="success-image">
+                <img src={BookCelebration}></img>
+                </div>
+                <div className="completed-book-text">
+                  <h3>Congratulations! You finished a book!</h3>
+                  <h4>Your journey doesn't end here, keep reading!</h4>
+                  </div>
+                  <button className="keep-reading-btn" 
+                  onClick={() => {
+                    setBookModal(false);
+                  }}
+                  >Keep Reading</button>
+              </div>
+            </div>
+        )}
         <div className="progress-streak-wrapper">
           <ReadingStreak />
         </div>
@@ -185,7 +252,7 @@ const Progress = () => {
                               style: { background: "#faf8ff", textAlign: "center" }
                             }}
                             sx={{
-                              width: 70,
+                              // width: 70,
                               minWidth: 0,
                               marginLeft: 1,
                               "& .MuiOutlinedInput-root": {

@@ -46,6 +46,75 @@
   width: 100%;
 }
 
+.completed-book-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.success-image {
+  height: 50%;
+  width: 100%;
+  margin: 0 auto;
+  background-color: #e7d5ff;
+  padding: 10px;
+  border-radius: 20px;
+}
+
+.success-image img {
+  width: 100%;
+  height: 100%;
+  
+}
+
+.completed-book-text {
+  padding: 40px;
+}
+
+.completed-book-text h4 {
+  text-align: center;
+  margin-top: 25px;
+  margin-bottom: 0;
+  color: var(--secondary-color);
+}
+.completed-book-text h3 {
+  text-align: center;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: var(--text-color);
+}
+
+.completed-book-content {
+  background-color: white;
+  border-radius: 8px;
+  width: 90%;
+  height: 90%;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+  max-width: 400px;
+  max-height: 600px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+}
+
+.keep-reading-btn {
+  width: fit-content;
+  margin: 0 auto;
+  background-color: var(--hover);
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.keep-reading-btn:hover {
+  background-color: var(--text-color);
+  transform: scale(1.07);
+}
+
 .progress-stats {
   display: flex;
   gap: 50px;
@@ -103,9 +172,7 @@
       left: 100%;
     }
   }
-  /* Trigger Shine on Hover */
   
-
   .books-read-container:hover {
     filter: brightness(1.05);
   }
@@ -166,10 +233,12 @@
 /* ── Book cards grid ── */
 .progress-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   gap: 40px;
-  
   margin: 0 auto;
+  justify-content: center;
+  
+  /* align-items: start; */
 }
 
 .progress-book-card {
@@ -180,6 +249,7 @@
   align-items: center;
   gap: 20px;
   padding: 16px;
+  /* max-width: 350px; */
 }
 
 :root[data-theme="dark"] .progress-book-card {
@@ -193,8 +263,9 @@
 .progress-book-image {
   border-radius: 6px;
   height: auto;
-  object-fit: contain;
+  object-fit: cover;
   max-width: 100%;
+  
 }
 
 .progress-book-card:hover {
@@ -228,7 +299,7 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  
+  gap: 5px;
 }
 
 .progress-book-info h3 {
@@ -252,11 +323,11 @@
 }
 
 .progress-book-info span {
+  margin-left: 5px;
   color: var(--text-color);
 }
 
 .progress-bar-container {
-  /* width: 100%; */
   height: 12px;
   background: #e0e0e0;
   border-radius: 6px;
@@ -282,14 +353,15 @@
   min-width: 0;
   align-items: center;
   flex-wrap: wrap;
+  
 }
 
 .progress-input-wrapper {
   display: flex;
   align-items: center;
-  /* flex-wrap: wrap; */
-  gap: 10px;
+  flex-wrap: wrap;
   overflow: hidden;
+
 }
 .progress-inputs label,
 .progress-inputs input,
@@ -311,7 +383,8 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   color: #222;
-  padding: 4px 8px;
+  width: 45px;
+  padding: 2px 2px;
   font-size: 1rem;
   outline: none;
   transition: border-color 0.2s;
@@ -360,6 +433,27 @@
   color: var(--text-color);
 }
 
+:root[data-theme="dark"] .currently-reading {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .in-progress-container h3 {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .completed-book-content {
+  background-color: var(--filter-pane);
+}
+
+:root[data-theme="dark"] .keep-reading-btn {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .keep-reading-btn:hover {
+  background-color: var(--text-color);
+}
+
 .progress-edit-btn:hover,
 .progress-save-btn:hover {
   background-color: var(--text-color);
@@ -402,9 +496,9 @@
 }
 
 @media (min-width: 768px) and (max-width: 1000px) {
-  .progress-list {
+  /* .progress-list {
     grid-template-columns: repeat(2, 1fr);
-  }
+  } */
 }
 
 /* ── Responsive: mobile ── */
@@ -435,9 +529,9 @@
     padding: 16px;
   }
 
-  .progress-book-image {
+  /* .progress-book-image {
     max-width: 140px;
-  }
+  } */
 
   .progress-inputs {
     flex-wrap: wrap;
