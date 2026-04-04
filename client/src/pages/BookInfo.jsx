@@ -24,6 +24,7 @@ const BookInfo = () => {
   const [showShare, setShowShare] = useState(false);
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
+  const [showSuccess, setShowSuccess] = useState(false);
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
 
@@ -221,7 +222,7 @@ const BookInfo = () => {
           })
         )
       );
-      alert("Recommendation sent!");
+      setShowSuccess(true);
       resetShareModal();
     } catch (err) {
       console.error(err);
@@ -509,6 +510,18 @@ const BookInfo = () => {
                 Cancel
               </button>
             </div>
+          </div>
+        </div>
+      )}
+      {showSuccess && (
+        <div className="share-modal-overlay" onClick={() => setShowSuccess(false)}>
+          <div className="share-modal success-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="success-icon">✓</div>
+            <h3>Recommendation Sent!</h3>
+            <p>Your friend(s) will receive your book recommendation.</p>
+            <button className="share-confirm-btn" onClick={() => setShowSuccess(false)}>
+              Done
+            </button>
           </div>
         </div>
       )}

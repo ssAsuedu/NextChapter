@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   margin-top: 0;
-  padding: 48px 0 0 0;
+  padding: 0px 0 0 0;
   min-height: 100vh;
   width: 100%;
   background: #fff;
@@ -12,7 +12,7 @@
 .bookinfo-main-wrapper {
   width: 100%;
   background-color: #faf8ff; 
-  padding: 80px 0 20px 0;  
+  padding: 140px 0 20px 0;  
   margin-top: 0;   
 }
 
@@ -754,4 +754,35 @@
 .bookinfo-share-btn:hover .share-icon {
   transform: translate(2px, -2px);
   transform: scaleX(-1);
+}
+
+.success-modal {
+  text-align: center;
+  align-items: center;
+}
+
+.success-icon {
+  width: 56px;
+  height: 56px;
+  background-color: #ab7ce7;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin: 0 auto;
+}
+
+.success-modal h3 {
+  margin: 0;
+  color: #6c3fc5;
+  font-size: 1.2rem;
+}
+
+.success-modal p {
+  margin: 0;
+  color: #666;
+  font-size: 0.95rem;
 }
