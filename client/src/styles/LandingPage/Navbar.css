@@ -349,6 +349,9 @@ li {
   color: var(--background-color);
 }
 
+.user-initial.bg-scroll:hover {
+  background-color: var(--hover);
+}
 :root[data-theme="dark"] .carrot.nav-scrolled {
   color: white;
 }
@@ -373,14 +376,22 @@ li {
 }
 
 
+@media (hover:none) and (pointer: coarse) {
+  .about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
+    display: none;
+  }
+}
 @media (min-width:300px) and (max-width: 860px) {
   .desktop-dropdown {
     display: none;
   }
 
+
   .carrot {
     display: block !important;
+    color: white;
   }
+
   .mobile-dropdown {
     display: block;
   }
