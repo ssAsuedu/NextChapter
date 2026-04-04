@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   margin-top: 0;
-  padding: 64px 0 0 0;
+  padding: 0px 0 0 0;
   min-height: 100vh;
   width: 100%;
   background: #fff;
@@ -12,7 +12,7 @@
 .bookinfo-main-wrapper {
   width: 100%;
   background-color: #faf8ff; 
-  padding: 80px 0 20px 0;  
+  padding: 140px 0 20px 0;  
   margin-top: 0;   
 }
 
@@ -606,18 +606,6 @@
     object-fit: contain;
     border-radius: 4px;
     margin-bottom: 8px;
-  }
-}
-
-@media (min-width: 860px) and (max-width: 1000px) {
-  .bookinfo-container {
-    padding: 55px 0 0 0;
-  }
-}
-
-@media (min-width:300px) and (max-width: 860px) {
-  .bookinfo-container {
-    padding: 55px 0 0 0;
   }
 }
 
