@@ -1,0 +1,241 @@
+/* BadgeNotification.css */
+
+
+/* ── Overlay ── */
+.badge-notif-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+  transition: background 0.35s ease;
+}
+
+.badge-notif-overlay.badge-notif-enter {
+  background: rgba(0, 0, 0, 0.45);
+  pointer-events: auto;
+}
+
+.badge-notif-overlay.badge-notif-exit {
+  background: rgba(0, 0, 0, 0);
+  pointer-events: none;
+}
+
+/* ── Card ── */
+.badge-notif-card {
+  position: relative;
+  background: linear-gradient(145deg, #1a1028, #2a1745);
+  border: 1.5px solid rgba(171, 124, 231, 0.35);
+  border-radius: 20px;
+  padding: 32px 36px 28px;
+  text-align: center;
+  max-width: 320px;
+  width: 90vw;
+  box-shadow:
+    0 0 60px rgba(108, 63, 197, 0.25),
+    0 20px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0.7) translateY(30px);
+  transition: opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+              transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.badge-notif-enter .badge-notif-card {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+.badge-notif-exit .badge-notif-card {
+  opacity: 0;
+  transform: scale(0.85) translateY(-20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* ── Sparkles ── */
+.badge-notif-sparkle {
+  position: absolute;
+  font-size: 18px;
+  color: #ab7ce7;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.badge-notif-enter .sparkle-1 {
+  top: 12%;
+  left: 15%;
+  animation: sparkle-float 1.8s ease-in-out 0.3s infinite;
+}
+
+.badge-notif-enter .sparkle-2 {
+  top: 8%;
+  right: 12%;
+  animation: sparkle-float 2.1s ease-in-out 0.6s infinite;
+}
+
+.badge-notif-enter .sparkle-3 {
+  bottom: 22%;
+  left: 10%;
+  animation: sparkle-float 1.6s ease-in-out 0.9s infinite;
+}
+
+@keyframes sparkle-float {
+  0%, 100% {
+    opacity: 0;
+    transform: translateY(0) scale(0.8);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translateY(-8px) scale(1.1);
+  }
+}
+
+/* ── Header ── */
+.badge-notif-header {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  color: #ab7ce7;
+  margin-bottom: 20px;
+}
+
+/* ── Icon ── */
+.badge-notif-icon-wrap {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.badge-notif-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 110px;
+  height: 110px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(171, 124, 231, 0.35) 0%, transparent 70%);
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+}
+
+.badge-notif-icon {
+  position: relative;
+  width: 90px;
+  height: 90px;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(108, 63, 197, 0.4));
+  animation: badge-bounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0.2s both;
+}
+
+@keyframes badge-bounce {
+  0% { transform: scale(0.3) rotate(-15deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ── Text ── */
+.badge-notif-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f0e6ff;
+  margin-bottom: 6px;
+}
+
+.badge-notif-desc {
+  font-size: 13px;
+  color: #a89abf;
+  margin-bottom: 14px;
+  line-height: 1.4;
+}
+
+.badge-notif-points {
+  display: inline-block;
+  background: linear-gradient(135deg, #6c3fc5, #ab7ce7);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 4px 16px;
+  border-radius: 20px;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+}
+
+/* ── Dismiss Button ── */
+.badge-notif-dismiss {
+  display: block;
+  width: 100%;
+  padding: 10px 0;
+  background: rgba(171, 124, 231, 0.15);
+  border: 1px solid rgba(171, 124, 231, 0.3);
+  border-radius: 12px;
+  color: #ab7ce7;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.badge-notif-dismiss:hover {
+  background: rgba(171, 124, 231, 0.25);
+  border-color: rgba(171, 124, 231, 0.5);
+  transform: translateY(-1px);
+}
+
+/* ── Light theme override ── */
+[data-theme="light"] .badge-notif-card {
+  background: linear-gradient(145deg, #ffffff, #f5f0ff);
+  border-color: rgba(108, 63, 197, 0.2);
+  box-shadow:
+    0 0 60px rgba(108, 63, 197, 0.12),
+    0 20px 40px rgba(0, 0, 0, 0.08);
+}
+
+[data-theme="light"] .badge-notif-name {
+  color: #2a1745;
+}
+
+[data-theme="light"] .badge-notif-desc {
+  color: #6b5b80;
+}
+
+[data-theme="light"] .badge-notif-dismiss {
+  background: rgba(108, 63, 197, 0.08);
+  border-color: rgba(108, 63, 197, 0.2);
+}
+
+[data-theme="light"] .badge-notif-dismiss:hover {
+  background: rgba(108, 63, 197, 0.15);
+}
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .badge-notif-card {
+    padding: 24px 20px 22px;
+    max-width: 280px;
+  }
+
+  .badge-notif-icon {
+    width: 72px;
+    height: 72px;
+  }
+
+  .badge-notif-glow {
+    width: 90px;
+    height: 90px;
+  }
+
+  .badge-notif-name {
+    font-size: 18px;
+  }
+}
