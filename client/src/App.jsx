@@ -23,6 +23,7 @@ import FriendProfile from "./pages/FriendProfile";
 import Leaderboard from "./pages/ProfileSubPages/Leaderboard";
 import useLocalStorage from "use-local-storage";
 import Messages from "./pages/Messages";
+import BadgeProvider from "./components/BadgeNotification/BadgeNotification";
 document.documentElement.setAttribute("data-theme", "light");
 
 const App = () => {
@@ -37,29 +38,31 @@ const App = () => {
 
   return (
     <Router>
-      <ScrollToTop />
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/search" element={<Search />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/confirm" element={<ConfirmEmail />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
-        <Route path="/progress" element={<Progress />} />
-        <Route path="/reviews" element={<Reviews />} />
-        <Route path="/book/:volumeId" element={<BookInfo />} />
-        <Route path="/friends" element={<Friends />} />
-        <Route path="/account" element={<Account />} />
-        <Route path="/mood" element={<MoodFinder />} />
-        <Route path="/leaderboard" element={<Leaderboard />} />
-        <Route path="/friend/:userEmail" element={<FriendProfile />} />
-        <Route path="/messages" element={<Messages />} />
-      </Routes>
-      <Footer />
+      <BadgeProvider>
+        <ScrollToTop />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/search" element={<Search />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/confirm" element={<ConfirmEmail />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/PrivacyPolicy" element={<PrivacyPolicy />} />
+          <Route path="/progress" element={<Progress />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/book/:volumeId" element={<BookInfo />} />
+          <Route path="/friends" element={<Friends />} />
+          <Route path="/account" element={<Account />} />
+          <Route path="/mood" element={<MoodFinder />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/friend/:userEmail" element={<FriendProfile />} />
+          <Route path="/messages" element={<Messages />} />
+        </Routes>
+        <Footer />
+      </BadgeProvider>
     </Router>
 
   );
