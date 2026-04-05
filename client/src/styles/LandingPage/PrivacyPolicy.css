@@ -11,14 +11,19 @@
   width: 100%;
   overflow-x: hidden;
   font-family: 'Sen', Arial, Helvetica, sans-serif;
-  background-color: #fff;
+  background-color: var(--background-color);
 }
 
 /* ============ HERO SECTION ============ */
 .privacy-hero {
   width: 100%;
   padding: 140px 20px 60px;
-  background: linear-gradient(135deg, #f8f5ff 0%, #ffffff 100%);
+  background: linear-gradient(
+  135deg,
+  rgba(171, 124, 231, 0.18), 
+  rgba(140, 180, 255, 0.16), 
+  rgba(255, 170, 210, 0.14) 
+);
   text-align: center;
 }
 
@@ -31,7 +36,7 @@
 
 .last-updated {
   font-size: 1rem;
-  color: #777;
+  color: var(--secondary-color);
   margin: 0;
 }
 
@@ -45,7 +50,8 @@
 /* ============ INTRO ============ */
 .privacy-intro {
   font-size: 1.15rem;
-  color: #444;
+  /* color: #444; */
+  color: var(--secondary-color);
   line-height: 1.8;
   text-align: center;
   margin-bottom: 2rem;
@@ -60,8 +66,12 @@
   margin-bottom: 2.5rem;
 }
 
+:root[data-theme="dark"] .privacy-disclaimer {
+  background-color: var(--filter-pane);
+}
+
 .privacy-disclaimer p {
-  color: #444;
+  color: var(--secondary-color);
   font-size: 1rem;
   line-height: 1.7;
   margin: 0;
@@ -73,7 +83,7 @@
 
 /* ============ SECTIONS ============ */
 .privacy-section {
-  margin-bottom: 2rem;
+  margin-bottom: 3.5rem;
 }
 
 .privacy-section h2 {
@@ -87,22 +97,48 @@
 
 .privacy-section p {
   font-size: 1.05rem;
-  color: #444;
+  color: var(--secondary-color);
   line-height: 1.8;
   margin: 0;
 }
 
-.privacy-section p strong {
+.privacy-section p strong, .feature-descriptions li strong {
   color: var(--hover);
   font-weight: 600;
 }
 
+.feature-descriptions {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  margin-top: 15px;
+}
+
+.feature-descriptions ul {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.privacy-section li {
+  color: var(--secondary-color);
+  list-style: circle;
+}
 /* ============ CONTACT SECTION (highlighted) ============ */
 .privacy-section.contact-section {
   background: #f8f5ff;
   padding: 28px;
   border-radius: 16px;
   margin-top: 2.5rem;
+  box-shadow: 
+    0 6px 16px rgba(0,0,0,0.06),
+    0 12px 32px rgba(171,124,231,0.12);
+}
+
+:root[data-theme="dark"] .privacy-section.contact-section {
+  background-color: var(--filter-pane);
 }
 
 .privacy-section.contact-section h2 {
@@ -113,6 +149,7 @@
 
 .privacy-section.contact-section p {
   text-align: center;
+  color: var(--secondary-color);
 }
 
 /* ============================================
