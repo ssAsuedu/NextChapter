@@ -3,7 +3,6 @@ import { useEffect, useRef } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import "../../styles/LandingPage/Navbar.css";
 import MenuIcon from "@mui/icons-material/Menu";
-import CloseIcon from "@mui/icons-material/Close";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { IconButton } from "@mui/material";
@@ -89,16 +88,18 @@ const Navbar = () => {
     if (window.location.pathname !== "/about") {
       //check the current page location
       navigate(`/about${hash || ""}`); //if the user isnt on the about page already, navigate them there with React Router's navigate
-    } else {
-      if (!hash) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-        return;
-      }
-      const element = document.querySelector(hash); //if user is already on about
-      if (element) {
-        //scroll smoothly to that section
-        element.scrollIntoView({ behavior: "smooth" });
-      }
+      return;
+    }
+
+    if(!hash) { //if the user is already on the about page
+      window.scrollTo({top: 0, behavior: "smooth"});
+      return;
+    }
+
+    //scroll to the specific dropdown sections in the navbar
+    const element = document.querySelector(hash);
+    if(element) {
+      element.scrollIntoView({behavior: "smooth"});
     }
   };
 
@@ -145,6 +146,7 @@ const Navbar = () => {
                 <Link
                   id="about-dropdown"
                   className={`link ${scrolled ? "link-scrolled" : "not-scroll"}`}
+                  onClick={() => scrollToSection()}
                   to="/about"
                 >
                   About
@@ -449,7 +451,7 @@ const Navbar = () => {
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className={`auth-signout ${scrolled ? "signout-nav" : "not-scroll"}`}
+                  className={`auth-signout desktop-dropdown ${scrolled ? "signout-nav" : "not-scroll"}`}
                 >
                   Sign Out
                 </button>
