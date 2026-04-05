@@ -29,11 +29,11 @@ const About = () => {
   }, [location]);
 
   const teamMembers = [
-    { name: 'Shifa Sadaat', role: 'Backend' },
-    { name: 'Tamara Grujicic', role: 'Frontend' },
-    { name: 'Tasnim Haque', role: 'Frontend & UI/UX' },
-    { name: 'Maimouna Gaye', role: 'Backend' },
-    { name: 'Diana Torres', role: 'Frontend' }
+    { name: 'Shifa Sadaat', role: 'Full-stack Developer' },
+    { name: 'Tamara Grujicic', role: 'Full-stack Developer' },
+    { name: 'Tasnim Haque', role: 'Full-stack Developer' },
+    { name: 'Maimouna Gaye', role: 'Full-stack Developer' },
+    { name: 'Diana Torres', role: 'Full-stack Developer' }
   ];
 
   return (
