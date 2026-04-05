@@ -242,6 +242,7 @@ li {
 
 .auth-signout.not-scroll, .auth-signout.signout-nav {
   margin: 0;
+  border: none;
 }
 
 .signout-nav {
@@ -376,12 +377,16 @@ li {
 }
 
 
-@media (hover:none) and (pointer: coarse) {
+/* @media (hover:none) and (pointer: coarse) {
   .about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
-    display: none;
+    display: none !important;
   }
-}
+} */
 @media (min-width:300px) and (max-width: 860px) {
+  .about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
+    display: none !important;
+  }
+
   .desktop-dropdown {
     display: none;
   }
@@ -555,15 +560,18 @@ li {
 @media (min-width: 860px) and (max-width: 1000px) {
 
   .left {
-    gap: 15px;
+    gap: 25px;
   }
 
   .logged-in {
-    gap: 5px;
+    gap: 10px;
   }
 
   .auth-signout.not-scroll {
     padding: 0;
-    padding: 5px 15px 5px 15px;
+  }
+
+  .auth-signout.desktop-dropdown.not-scroll {
+    padding: 10px 20px;
   }
 }
