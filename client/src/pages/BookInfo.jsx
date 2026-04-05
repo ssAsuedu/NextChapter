@@ -8,6 +8,8 @@ import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
 import { getBookReviews, getBookshelf, addBookToBookshelf, deleteBookFromBookshelf, sendMessage, getFriends } from "../api";
 import BookJournal from "../components/ExplorePage/BookJournal";
 import ReplyIcon from '@mui/icons-material/Reply';
+import Stars from "../components/Stars";
+import BookRating from "../components/BookRating";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -230,28 +232,6 @@ const BookInfo = () => {
     }
   };
 
-  const renderStars = (rating) => {
-    const stars = [];
-    const fullStars = Math.floor(rating);
-    const remainder = rating - fullStars;
-    const totalStars = 5;
-
-    for (let i = 1; i <= totalStars; i++) {
-      if (i <= fullStars) {
-        stars.push(<span key={i} className="star full">★</span>);
-      } else if (i === fullStars + 1 && remainder > 0) {
-        let className = "star empty";
-        if (remainder >= 0.75) className = "star three-quarter";
-        else if (remainder >= 0.5) className = "star half";
-        else if (remainder >= 0.25) className = "star quarter";
-        stars.push(<span key={i} className={className}>★</span>);
-      } else {
-        stars.push(<span key={i} className="star empty">★</span>);
-      }
-    }
-    return stars;
-  };
-
   if (!book) {
     return <div className="bookinfo-loading">Loading...</div>;
   }
@@ -281,36 +261,7 @@ const BookInfo = () => {
             </div>
 
             <div className="bookinfo-rating-share-row">
-              <div
-                className="bookinfo-rating-row"
-                onClick={() => {
-                  const reviewsSection = document.getElementById("reviews");
-                  if (reviewsSection) {
-                    const yOffset = -50;
-                    const y =
-                      reviewsSection.getBoundingClientRect().top +
-                      window.pageYOffset +
-                      yOffset;
-                    window.scrollTo({ top: y, behavior: "smooth" });
-                  }
-                }}
-              >
-                {averageRating ? (
-                  <>
-                    <div className="bookinfo-rating-stars">
-                      {renderStars(averageRating)}
-                    </div>
-                    <span className="bookinfo-rating-value">
-                      {averageRating.toFixed(1)}{" "}
-                      <span className="bookinfo-rating-count">
-                        ({reviews.length} ratings)
-                      </span>
-                    </span>
-                  </>
-                ) : (
-                  <span className="bookinfo-no-rating">No ratings yet</span>
-                )}
-              </div>
+              <BookRating volumeId={volumeId} showRatingValue={true}/>
               <button
                 className="bookinfo-share-btn"
                 onClick={() => {
@@ -419,7 +370,8 @@ const BookInfo = () => {
                     })}
                   </div>
                   <div className="bookinfo-review-content">
-                    {renderStars(r.rating)}
+                    {/* {renderStars(r.rating)} */}
+                    <Stars rating={r.rating}/>
                   </div>
                   <div className="bookinfo-review-content">{r.reviewText}</div>
                 </div>

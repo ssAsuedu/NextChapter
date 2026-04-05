@@ -105,8 +105,12 @@
 .star {
   font-size: 0.9rem;
   margin-right: 1px;
-  color: #e0d6f7; 
+  color: #c3b1eb;
   position: relative;
+}
+
+:root[data-theme="dark"] .star {
+  color: rgba(196, 156, 240, 0.4); 
 }
 
 .star.full {

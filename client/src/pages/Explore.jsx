@@ -5,7 +5,13 @@ import BookCard from "../components/ExplorePage/ExploreCard";
 import "../styles/ExplorePage/Explore.css";
 import { getBookshelf, addBookToBookshelf, getTrendingBooks } from "../api";
 import { createPortal } from "react-dom";
-import { getSearchFromCache, setSearchInCache, getBookFromCache, setBookInCache } from "../../utils/apiCache";
+import {
+  getSearchFromCache,
+  setSearchInCache,
+  getBookFromCache,
+  setBookInCache,
+} from "../../utils/apiCache";
+import BookRating from "../components/BookRating";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
@@ -20,7 +26,7 @@ const categories = [
   { label: "Romance", query: "subject:romance" },
 ];
 
-const SCROLL_AMOUNT = 600; // px to scroll per click
+// const SCROLL_AMOUNT = 600; // px to scroll per click
 
 const Explore = () => {
   const [booksByCategory, setBooksByCategory] = useState({});
@@ -69,14 +75,14 @@ const Explore = () => {
             if (cached) return { ...cached, readers: item.readers };
             try {
               const bookRes = await axios.get(
-                `https://www.googleapis.com/books/v1/volumes/${item.volumeId}?key=${GOOGLE_BOOKS_API_KEY}`
+                `https://www.googleapis.com/books/v1/volumes/${item.volumeId}?key=${GOOGLE_BOOKS_API_KEY}`,
               );
               setBookInCache(item.volumeId, bookRes.data);
               return { ...bookRes.data, readers: item.readers };
             } catch {
               return null;
             }
-          })
+          }),
         );
         setTrendingBooks(bookDetails.filter(Boolean));
       } catch {
@@ -107,8 +113,8 @@ const Explore = () => {
       try {
         const response = await axios.get(
           `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-            cat.query
-          )}&maxResults=12&key=${GOOGLE_BOOKS_API_KEY}`
+            cat.query,
+          )}&maxResults=12&key=${GOOGLE_BOOKS_API_KEY}`,
         );
         setBooksByCategory((prev) => ({
           ...prev,
@@ -128,8 +134,13 @@ const Explore = () => {
   const handleScroll = (catLabel, direction) => {
     const container = scrollRefs.current[catLabel];
     if (container) {
-      const scrollBy = direction === "right" ? SCROLL_AMOUNT : -SCROLL_AMOUNT;
-      container.scrollBy({ left: scrollBy, behavior: "smooth" });
+      // const scrollBy = direction === "right" ? SCROLL_AMOUNT : -SCROLL_AMOUNT;
+      const scrollBy = container.clientWidth * 0.8; //scrolls about 80% of the visible area
+      // container.scrollBy({ left: scrollBy, behavior: "smooth" });
+      container.scrollBy({
+        left: direction === "right" ? scrollBy : -scrollBy,
+        behavior: "smooth",
+      });
     }
   };
 
@@ -163,16 +174,14 @@ const Explore = () => {
   };
 
   const handleHideBook = (volumeId) => {
-    setHiddenBooks((prev) => (prev.includes(volumeId) ? prev : [...prev, volumeId]));
+    setHiddenBooks((prev) =>
+      prev.includes(volumeId) ? prev : [...prev, volumeId],
+    );
     if (hoveredCard?.volumeId === volumeId) setHoveredCard(null);
   };
 
   return (
-    <div
-      className="explore-page"
-      role="main"
-      aria-labelledby="explore-heading"
-    >
+    <div className="explore-page" role="main" aria-labelledby="explore-heading">
       <h1 id="explore-heading">Explore Books</h1>
 
       {/* Mood Finder CTA */}
@@ -180,10 +189,7 @@ const Explore = () => {
         <div className="mood-cta-text">
           <span>Not sure what to read? Let your mood decide.</span>
         </div>
-        <button
-          className="mood-cta-btn"
-          onClick={() => navigate("/mood")}
-        >
+        <button className="mood-cta-btn" onClick={() => navigate("/mood")}>
           Explore Based on My Mood
         </button>
       </div>
@@ -194,11 +200,8 @@ const Explore = () => {
         role="region"
         aria-labelledby="trending-heading"
       >
-        <h2
-          className="category-title trending-title"
-          id="trending-heading"
-        >
-           Trending with Readers
+        <h2 className="category-title trending-title" id="trending-heading">
+          Trending with Readers
         </h2>
         <div
           className="category-scroll-wrapper"
@@ -243,6 +246,10 @@ const Explore = () => {
                     <span className="trending-reader-count">
                       {book.readers} {book.readers === 1 ? "reader" : "readers"}
                     </span>
+                    <p className="book-title-display">
+                      {book.volumeInfo?.title}
+                    </p>
+                    <BookRating volumeId={book.id} showRatingValue={false} />
                   </div>
                 ))
             ) : (
@@ -306,15 +313,24 @@ const Explore = () => {
                 booksByCategory[cat.label]
                   .filter((book) => !hiddenBooks.includes(book.id))
                   .map((book) => (
-                    <BookCard
-                      key={book.id}
-                      info={book.volumeInfo}
-                      volumeId={book.id}
-                      bookshelf={bookshelf}
-                      onMouseEnter={handleCardMouseEnter}
-                      onMouseLeave={handleCardMouseLeave}
-                      isHovered={hoveredCard?.volumeId === book.id}
-                    />
+                    <div key={book.id} className="book-item-display">
+                      <BookCard
+                        key={book.id}
+                        info={book.volumeInfo}
+                        volumeId={book.id}
+                        bookshelf={bookshelf}
+                        onMouseEnter={handleCardMouseEnter}
+                        onMouseLeave={handleCardMouseLeave}
+                        isHovered={hoveredCard?.volumeId === book.id}
+                      />
+                      <p className="book-title-display">
+                        {book.volumeInfo?.title}
+                      </p>
+                      <p className="book-author-display">
+                        {book.volumeInfo?.authors}
+                      </p>
+                      <BookRating volumeId={book.id} showRatingValue={false} />
+                    </div>
                   ))
               ) : (
                 <div
@@ -384,7 +400,7 @@ const Explore = () => {
               Not Interested
             </button>
           </div>,
-          document.body
+          document.body,
         )}
     </div>
   );
