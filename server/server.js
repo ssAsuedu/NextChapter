@@ -18,6 +18,24 @@ const PORT = process.env.PORT || 5050;
 // Trust proxy (HTTPS via LB) and middleware
 app.set("trust proxy", 1);
 
+const hasBadge = (user, badgeType, volumeId = null) => {
+  return (user.badges || []).some(
+    (b) => b.type === badgeType && (volumeId ? b.volumeId === volumeId : true)
+  );
+};
+
+// award badge helper function so that no duplicates are awarded to one user 
+const awardBadge = (user, badgeType, volumeId = null) => {
+  if (!hasBadge(user, badgeType, volumeId)) {
+    user.badges = user.badges || [];
+    user.badges.push({
+      type: badgeType,
+      ...(volumeId ? { volumeId } : {}),
+      earnedAt: new Date(),
+    });
+  }
+};
+
 const allowedOrigins = (process.env.CORS_ORIGINS || process.env.CORS_ORIGIN || "")
   .split(",")
   .map(o => o.trim())
@@ -199,19 +217,17 @@ app.post("/api/bookshelf/add", async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
     if (!user.bookshelf.includes(volumeId)) {
       user.bookshelf.push(volumeId);
-      // if user has more than 20 books in shelf, then they earn the future librarian badge 
+      // if user adds first book 
+      if (user.bookshelf.length >= 1) {
+        awardBadge(user, "NEWCOMER");
+      }
+      // if user has 20+ books in shelf, then they earn the future librarian badge 
       if (user.bookshelf.length >= 20) {
-        const alreadyHas = (user.badges || []).some(
-          (b) => b.type === "FUTURE_LIBRARIAN"
-        );
-
-        if (!alreadyHas) {
-          user.badges = user.badges || [];
-          user.badges.push({
-            type: "FUTURE_LIBRARIAN",
-            earnedAt: new Date(),
-          });
-        }
+        awardBadge(user, "FUTURE_LIBRARIAN");
+      }
+      // if user has 100+ books then they earn library legend
+      if (user.bookshelf.length >= 100) {
+        awardBadge(user, "LIBRARY_LEGEND");
       }
       await user.save();
     }
@@ -357,15 +373,27 @@ app.post("/api/progress/update", async (req, res) => {
   const percent = safeTotal > 0 ? safeCurrent / safeTotal : 0;
 
   if (percent >= 0.5) {
-    const alreadyHas = (user.badges || []).some(
-      (b) => b.type === "HALFWAY" && b.volumeId === volumeId
-    );
-
-    if (!alreadyHas) {
-      user.badges = user.badges || [];
-      user.badges.push({ type: "HALFWAY", volumeId, earnedAt: new Date() });
-    }
+    awardBadge(user, "HALFWAY", volumeId);
   }
+
+  if ((user.progress || []).length >= 1) {
+    awardBadge(user, "BOOKWORM_BEGINNER");
+  }
+
+  const pagesReadThisSession = idx > -1
+    ? safeCurrent - (Number(user.progress[idx].currentPage) || 0)
+    : safeCurrent;
+
+  if (pagesReadThisSession >= 100) {
+    awardBadge(user, "DEEP_DIVER");
+  }
+
+ const inProgressBooks = progress.filter(p => p.totalPages > 0 && p.currentPage > 0 && p.currentPage < p.totalPages).length;
+
+  if (inProgressBooks >= 3) {
+    awardBadge(user, "MULTITASKER");
+  }
+
   // for finishing a book 
   if (safeTotal > 0 && safeCurrent >= safeTotal) {
     const alreadyFinished = (user.badges || []).some(
@@ -1004,13 +1032,23 @@ app.listen(PORT, "0.0.0.0", () => {
 
 
 const BADGE_POINTS = {
-  NEW_CHAPTER: 5,
+  NEW_CHAPTER: 10,
   HALFWAY: 10,
   FINISHED: 25,
   FUTURE_LIBRARIAN: 30,
   CRITIC_IN_THE_MAKING: 20,
   FIRST_CONNECTION: 10,
   CONVERSATION_STARTER: 15,
+  BOOK_MARATHONER: 20,
+  GENRE_JUMPER: 20,
+  NEWCOMER: 10,
+  BOOKWORM_BEGINNER: 15,
+  LIBRARY_LEGEND: 100,
+  READING_ROUTINE: 30,
+  DAILY_READER: 15,
+  DEEP_DIVER: 20,
+  MULTITASKER: 30,
+  EXPLORER: 30,
 };
 
 app.get("/api/leaderboard", async (req, res) => {

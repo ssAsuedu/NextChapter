@@ -9,6 +9,16 @@ import FutureLibrarian from "../../assets/FutureLibrarian.svg";
 import CriticInTheMaking from "../../assets/CriticInTheMaking.svg";
 import FirstConnection from "../../assets/FirstConnection.svg";
 import ConversationStarter from "../../assets/ConversationStarter.svg";
+import BookMarathoner from "../../assets/BookMarathoner.png";
+import BookwormBeginner from "../../assets/BookwormBeginner.png";
+import DailyReader from "../../assets/DailyReader.png";
+import DeepDiver from "../../assets/DeepDiver.png";
+import Explorer from "../../assets/Explorer.png";
+import GenreJumper from "../../assets/GenreJumper.png";
+import LibraryLegend from "../../assets/LibraryLegend.png";
+import Multitasker from "../../assets/Multitasker.png";
+import Newcomer from "../../assets/Newcomer.png";
+import ReadingRoutine from "../../assets/ReadingRoutine.png";
 
 const badgeIconMap = {
   HALFWAY: HalfwayBadge,
@@ -18,7 +28,17 @@ const badgeIconMap = {
   FUTURE_LIBRARIAN: FutureLibrarian,
   CONVERSATION_STARTER: ConversationStarter,
   FIRST_CONNECTION: FirstConnection,
-  CRITIC_IN_THE_MAKING: CriticInTheMaking
+  CRITIC_IN_THE_MAKING: CriticInTheMaking,
+  BOOK_MARATHONER: BookMarathoner,
+  BOOKWORM_BEGINNER: BookwormBeginner,
+  DAILY_READER: DailyReader,
+  DEEP_DIVER: DeepDiver,
+  EXPLORER: Explorer,
+  GENRE_JUMPER: GenreJumper,
+  LIBRARY_LEGEND: LibraryLegend,
+  MULTITASKER: Multitasker,
+  NEWCOMER: Newcomer,
+  READING_ROUTINE: ReadingRoutine,
 };
 
 const Leaderboard = () => {
