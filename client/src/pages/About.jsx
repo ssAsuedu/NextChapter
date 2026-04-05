@@ -29,11 +29,11 @@ const About = () => {
   }, [location]);
 
   const teamMembers = [
-    { name: 'Shifa Sadaat', role: 'Backend' },
-    { name: 'Tamara Grujicic', role: 'Frontend' },
-    { name: 'Tasnim Haque', role: 'Frontend & UI/UX' },
-    { name: 'Maimouna Gaye', role: 'Backend' },
-    { name: 'Diana Torres', role: 'Frontend' }
+    { name: 'Shifa Sadaat', role: 'Full-stack Developer' },
+    { name: 'Tamara Grujicic', role: 'Full-stack Developer' },
+    { name: 'Tasnim Haque', role: 'Full-stack Developer' },
+    { name: 'Maimouna Gaye', role: 'Full-stack Developer' },
+    { name: 'Diana Torres', role: 'Full-stack Developer' }
   ];
 
   return (
@@ -59,13 +59,11 @@ const About = () => {
         <div className="mission-text">
           <p>
             In today's fast-paced world, finding time, motivation, and focus for reading can feel impossible.
-            Next Chapter was created to change that. We believe that reading should be engaging, accessible,
-            and supported by a community of fellow book lovers.
+            Next Chapter was created to change that.
           </p>
           <p>
-            Our platform combines innovative tools with creative features to help you build lasting reading
-            habits, discover your next favorite book, and connect with readers around the world who share
-            your passion.
+            We strive to make reading engaging, accessible, and community-driven. Start your next chapter by building
+            lasting habits, discovering new books, and connecting with fellow readers.
           </p>
         </div>
       </section>
@@ -125,7 +123,7 @@ const About = () => {
         <h2 className="section-heading">Our Team</h2>
         <p className="team-intro">
           Next Chapter was created by a team of five passionate developers and book lovers as a
-          capstone project. United by our shared belief that reading should be accessible and enjoyable
+          Capstone project. United by our shared belief that reading should be accessible and enjoyable
           for everyone, we combined our technical skills and creativity to build a platform that addresses
           the challenges modern readers face.
         </p>
@@ -185,19 +183,6 @@ const About = () => {
           </button>
         </div>
       </section>
-
-      {/* Footer */}
-      {/* <div
-        className="about-footer"
-        aria-label="About page footer"
-      >
-        <p>
-          Built with <FavoriteIcon className="heart-icon" aria-hidden="true" /> using React, Node.js, Express, and MongoDB
-        </p>
-        <a href="/privacyPolicy" className="footer-link" aria-label="View our privacy policy">
-          View our Privacy Policy
-        </a>
-      </div> */}
     </div>
   );
 };
