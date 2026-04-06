@@ -77,10 +77,12 @@ const Navbar = () => {
   };
   // Handle Sign Out
   const handleSignOut = () => {
-    localStorage.removeItem("token"); // Remove the token from localStorage
-    localStorage.removeItem("userName"); // Remove the userName from localStorage
-
-    navigate("/"); // Redirect to the home page
+    localStorage.removeItem("token");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("idToken");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userEmail");
+    navigate("/");
   };
 
   const scrollToSection = (hash) => {

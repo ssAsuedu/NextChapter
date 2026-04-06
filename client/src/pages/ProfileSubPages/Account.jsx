@@ -2,8 +2,8 @@ import React, { useEffect, useState } from 'react';
 import "../../styles/ProfilePage/Account.css";
 import profileImage from "../../assets/profile2.svg";
 import ProfileNavbar from '../../components/ProfilePage/ProfileNavbar';
-import { getAllUsers, getFriends, updateUserName, changePassword } from '../../api';
-import { TextField, Button} from "@mui/material"
+import { getAllUsers, getFriends, updateUserName, changePassword, selfDeleteAccount } from '../../api';
+import { TextField } from "@mui/material";
 import ThemeToggle from "../../components/LandingPage/ThemeToggle";
 
 const Account = () => {
@@ -14,15 +14,16 @@ const Account = () => {
   const [newName, setNewName] = useState("");
   const [userNameLoading, setUsernameLoading] = useState(false);
   const [passwordLoading, setPasswordLoading] = useState(false);
-
-  // Password change state
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordError, setPasswordError] = useState({});
-  const [passwordSuccess, setPasswordSuccess] = useState();
+  const [passwordSuccess, setPasswordSuccess] = useState("");
   const [emptyInputs, setEmptyInputs] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
 
   const validatePassword = (oldPassword, newPassword, confirmPassword) => {
     const errors = {
@@ -153,6 +154,28 @@ const Account = () => {
         setPasswordSuccess("");
       }, 3000);
       
+  };
+
+  const handleDeleteAccount = async () => {
+    setDeleteError("");
+    setDeleteLoading(true);
+
+    try {
+      const accessToken = localStorage.getItem("accessToken") || localStorage.getItem("token");
+      if (!accessToken) {
+        throw new Error("Session expired. Please log in again.");
+      }
+
+      await selfDeleteAccount({ email: user.email, accessToken });
+
+      localStorage.clear();
+      window.location.href = "/";
+    } catch (err) {
+      setDeleteError(
+        err?.response?.data?.error || err.message || "Failed to delete account."
+      );
+      setDeleteLoading(false);
+    }
   };
 
   if (!user) {
@@ -331,6 +354,50 @@ const Account = () => {
           
         )}
         <ThemeToggle />
+
+        <div className="delete-account-wrapper">
+          <button
+            className="delete-account-btn"
+            type="button"
+            onClick={() => {
+              setDeleteError("");
+              setShowDeleteModal(true);
+            }}
+          >
+            Delete Account
+          </button>
+        </div>
+
+        {showDeleteModal && (
+          <div className="delete-modal-overlay">
+            <div className="delete-modal-content">
+              <p className="delete-modal-text">
+                Are you sure you want to delete your account?
+              </p>
+
+              {deleteError && <div className="error-styles">{deleteError}</div>}
+
+              <div className="delete-modal-buttons">
+                <button
+                  className="cancel-btn"
+                  type="button"
+                  onClick={() => setShowDeleteModal(false)}
+                  disabled={deleteLoading}
+                >
+                  Cancel
+                </button>
+                <button
+                  className="delete-confirm-btn"
+                  type="button"
+                  onClick={handleDeleteAccount}
+                  disabled={deleteLoading}
+                >
+                  {deleteLoading ? "Deleting..." : "Delete"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

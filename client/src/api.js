@@ -177,6 +177,10 @@ export const changePassword = async ({ email, oldPassword, newPassword }) => {
   return axios.post(`${API_BASE_URL}/users/change-password`, { email, oldPassword, newPassword });
 };
 
+export const selfDeleteAccount = async ({ email, accessToken }) => {
+  return axios.post(`${API_BASE_URL}/users/self-delete`, { email, accessToken });
+};
+
 // ============ STREAK API CALLS ============
 // Get streak data (current streak, longest streak, 90-day activity)
 export const getStreak = async (email) => {
