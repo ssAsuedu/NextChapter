@@ -435,7 +435,12 @@
   border: none;
   border-radius: 999px;
   padding: 10px 15px;
-  width: 80px;
+  min-width: 110px;    
+  width: auto;         
+  white-space: nowrap;  
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
   transition: background 0.2s, transform 0.2s;
 }
