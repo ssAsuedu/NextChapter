@@ -261,7 +261,7 @@ const BookInfo = () => {
             </div>
 
             <div className="bookinfo-rating-share-row">
-              <BookRating volumeId={volumeId} showRatingValue={true}/>
+              <BookRating volumeId={volumeId} showRatingValue={true} showNoRatings={true}/>
               <button
                 className="bookinfo-share-btn"
                 onClick={() => {

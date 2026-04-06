@@ -36,6 +36,7 @@ const Explore = () => {
   const [trendingBooks, setTrendingBooks] = useState([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
   const [hiddenBooks, setHiddenBooks] = useState([]);
+
   const scrollRefs = useRef({});
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
@@ -249,7 +250,16 @@ const Explore = () => {
                     <p className="book-title-display">
                       {book.volumeInfo?.title}
                     </p>
-                    <BookRating volumeId={book.id} showRatingValue={false} />
+                    <p className="book-author-display">
+                      {book.volumeInfo?.authors?.length
+                        ? book.volumeInfo.authors.join(", ")
+                        : "Unknown Author"}
+                    </p>
+                    <BookRating
+                      volumeId={book.id}
+                      showRatingValue={false}
+                      showNoRatings={false}
+                    />
                   </div>
                 ))
             ) : (
@@ -327,9 +337,15 @@ const Explore = () => {
                         {book.volumeInfo?.title}
                       </p>
                       <p className="book-author-display">
-                        {book.volumeInfo?.authors}
+                        {book.volumeInfo?.authors?.length
+                          ? book.volumeInfo.authors.join(", ")
+                          : "Unknown Author"}
                       </p>
-                      <BookRating volumeId={book.id} showRatingValue={false} />
+                      <BookRating
+                        volumeId={book.id}
+                        showRatingValue={false}
+                        showNoRatings={false}
+                      />
                     </div>
                   ))
               ) : (

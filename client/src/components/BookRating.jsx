@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Stars from "../components/Stars";
 import { getBookReviews } from "../api";
 
-function BookRating({ volumeId, showRatingValue }) {
+function BookRating({ volumeId, showRatingValue, showNoRatings }) {
   const [averageRating, setAverageRating] = useState(null);
   const [reviews, setReviews] = useState([]);
 
@@ -58,7 +58,9 @@ function BookRating({ volumeId, showRatingValue }) {
           )}
         </>
       ) : (
-        <span className="bookinfo-no-rating-display">No ratings yet</span>
+        showNoRatings && (
+          <span className="bookinfo-no-rating-display">No ratings yet</span>
+        )
       )}
     </div>
   );
