@@ -371,49 +371,95 @@ app.post("/api/progress/update", async (req, res) => {
   const safeCurrent = Math.max(0, Math.min(Number(currentPage) || 0, safeTotal));
 
   const idx = user.progress.findIndex((p) => p.volumeId === volumeId);
+
+  // capture old page BEFORE updating so we can compute the session delta for DEEP_DIVER
+  const oldPage = idx > -1 ? (Number(user.progress[idx].currentPage) || 0) : 0;
+
   if (idx > -1) {
     user.progress[idx].currentPage = currentPage;
     user.progress[idx].totalPages = totalPages;
   } else {
     user.progress.push({ volumeId, currentPage, totalPages });
   }
-  // logic for the badges earend based on user progress are being handled here 
-  // below handles the logic for the halfway badge (it is limited to one halfway badge per book)
-  const percent = safeTotal > 0 ? safeCurrent / safeTotal : 0;
 
-  if (percent >= 0.5) {
+  // ── BADGE LOGIC ──
+  // HALFWAY: reached 50% of a book (one per book)
+  const percent = safeTotal > 0 ? safeCurrent / safeTotal : 0;
+  if (safeTotal > 0 && percent >= 0.5) {
     awardBadge(user, "HALFWAY", volumeId);
   }
 
+  // BOOKWORM_BEGINNER: first progress session ever
   if ((user.progress || []).length >= 1) {
     awardBadge(user, "BOOKWORM_BEGINNER");
   }
 
-  const pagesReadThisSession = idx > -1
-    ? safeCurrent - (Number(user.progress[idx].currentPage) || 0)
-    : safeCurrent;
-
+  // DEEP_DIVER: 100+ pages in a single session
+  const pagesReadThisSession = safeCurrent - oldPage;
   if (pagesReadThisSession >= 100) {
     awardBadge(user, "DEEP_DIVER");
   }
 
- const inProgressBooks = progress.filter(p => p.totalPages > 0 && p.currentPage > 0 && p.currentPage < p.totalPages).length;
-
+  // MULTITASKER: 3 books in progress simultaneously
+  const inProgressBooks = (user.progress || []).filter(p => p.totalPages > 0 && p.currentPage > 0 && p.currentPage < p.totalPages).length;
   if (inProgressBooks >= 3) {
     awardBadge(user, "MULTITASKER");
   }
 
-  // for finishing a book 
+  // FINISHED: completed a book (one per book)
   if (safeTotal > 0 && safeCurrent >= safeTotal) {
-    const alreadyFinished = (user.badges || []).some(
-      (b) => b.type === "FINISHED" && b.volumeId === volumeId
-    );
+    awardBadge(user, "FINISHED", volumeId);
+  }
 
-    if (!alreadyFinished) {
-      user.badges = user.badges || [];
-      user.badges.push({ type: "FINISHED", volumeId, earnedAt: new Date() });
+  // ── ACTIVITY-BASED BADGES (DAILY_READER, BOOK_MARATHONER, READING_ROUTINE) ──
+  // Reuses the existing `readingActivity` array from featureRoutes (streak system).
+  // Each entry is { date: "YYYY-MM-DD", minutesRead: 0 }.
+  // We log today's date here so updating progress also counts as reading activity.
+  user.readingActivity = user.readingActivity || [];
+  const todayStr = new Date().toISOString().split("T")[0];
+  const alreadyLoggedToday = user.readingActivity.some((entry) => entry.date === todayStr);
+  if (!alreadyLoggedToday) {
+    user.readingActivity.push({ date: todayStr, minutesRead: 0 });
+  }
+
+  // Build a set of dates the user has been active (YYYY-MM-DD format)
+  const activeDates = new Set(user.readingActivity.map((a) => a.date));
+  const now = new Date();
+
+  // DAILY_READER: logged reading on 3 consecutive days (today + yesterday + day before)
+  const yesterdayStr = new Date(now.getTime() - 1 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+  const twoDaysAgoStr = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+  if (activeDates.has(todayStr) && activeDates.has(yesterdayStr) && activeDates.has(twoDaysAgoStr)) {
+    awardBadge(user, "DAILY_READER");
+  }
+
+  // BOOK_MARATHONER: active for 7 days straight (each of the last 7 days has activity)
+  let sevenDayStreak = true;
+  for (let i = 0; i < 7; i++) {
+    const dateStr = new Date(now.getTime() - i * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+    if (!activeDates.has(dateStr)) {
+      sevenDayStreak = false;
+      break;
     }
   }
+  if (sevenDayStreak) {
+    awardBadge(user, "BOOK_MARATHONER");
+  }
+
+  // READING_ROUTINE: 10 progress updates within the last 7 days.
+  // Tracked on a separate `progressUpdates` array since readingActivity is one entry per day.
+  user.progressUpdates = user.progressUpdates || [];
+  user.progressUpdates.push(now);
+  // Trim to last 14 days so the array doesn't grow forever
+  const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+  user.progressUpdates = user.progressUpdates.filter((d) => new Date(d) >= fourteenDaysAgo);
+
+  const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const updatesThisWeek = user.progressUpdates.filter((d) => new Date(d) >= sevenDaysAgo).length;
+  if (updatesThisWeek >= 10) {
+    awardBadge(user, "READING_ROUTINE");
+  }
+
   await user.save();
   res.json({ message: "Progress updated", progress: user.progress, badges: user.badges, });
 });
