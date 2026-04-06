@@ -3,7 +3,15 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import morgan from "morgan";
-import { CognitoUserPool, CognitoUser, AuthenticationDetails, CognitoUserAttribute } from "amazon-cognito-identity-js";
+import {
+  CognitoUserPool,
+  CognitoUser,
+  AuthenticationDetails,
+  CognitoUserAttribute,
+  CognitoAccessToken,
+  CognitoIdToken,
+  CognitoUserSession,
+} from "amazon-cognito-identity-js";
 import User from "./models/User.js";
 import Review from "./models/Review.js";
 import FriendRequest from "./models/FriendRequest.js";
@@ -163,8 +171,8 @@ app.post("/api/login", async (req, res) => {
   user.authenticateUser(authDetails, {
     onSuccess: async (result) => {
       const accessToken = result.getAccessToken().getJwtToken();
+      const idToken = result.getIdToken().getJwtToken();
 
-      // Optional: Fetch user info from MongoDB
       let userInfo = null;
       try {
         userInfo = await User.findOne({ email });
@@ -175,7 +183,8 @@ app.post("/api/login", async (req, res) => {
       res.json({
         message: "Login successful",
         token: accessToken,
-        user: userInfo, // This can be null if not found
+        idToken,
+        user: userInfo,
       });
     },
     onFailure: (err) => {
@@ -1082,3 +1091,76 @@ app.get("/api/leaderboard", async (req, res) => {
     res.status(500).json({ error: "Failed to load leaderboard" });
   }
 });
+
+app.post("/api/users/self-delete", async (req, res) => {
+  const { email, accessToken } = req.body;
+  if (!email || !accessToken) {
+    return res.status(400).json({ error: "Missing fields" });
+  }
+
+  if (!cognitoRegion) {
+    return res.status(500).json({ error: "Cognito region is not configured" });
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  try {
+    // 1) Verify token identity against Cognito
+    const me = await callCognitoUserApi(
+      "AWSCognitoIdentityProviderService.GetUser",
+      { AccessToken: accessToken }
+    );
+
+    const attrs = me?.UserAttributes || [];
+    const emailAttr = attrs.find((a) => a.Name === "email")?.Value?.toLowerCase();
+
+    if (!emailAttr || emailAttr !== normalizedEmail) {
+      return res.status(401).json({ error: "Invalid token for this user" });
+    }
+
+    // 2) Delete Cognito user (self-delete)
+    await callCognitoUserApi(
+      "AWSCognitoIdentityProviderService.DeleteUser",
+      { AccessToken: accessToken }
+    );
+
+    // 3) Delete Mongo user
+    await User.deleteOne({ email: normalizedEmail });
+
+    return res.json({ message: "Account deleted successfully" });
+  } catch (err) {
+    console.error("Self-delete error:", err.message);
+    return res.status(err.status === 400 || err.status === 401 ? 401 : 500).json({
+      error: "Failed to delete account",
+      details: err.message,
+    });
+  }
+});
+
+// Helper: call Cognito User Pool API with access token (no admin creds required)
+const cognitoRegion =
+  process.env.COGNITO_REGION ||
+  process.env.AWS_REGION ||
+  (poolData.UserPoolId ? poolData.UserPoolId.split("_")[0] : "");
+
+const cognitoEndpoint = `https://cognito-idp.${cognitoRegion}.amazonaws.com/`;
+
+async function callCognitoUserApi(target, payload) {
+  const resp = await fetch(cognitoEndpoint, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/x-amz-json-1.1",
+      "X-Amz-Target": target,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const data = await resp.json().catch(() => ({}));
+  if (!resp.ok) {
+    const msg = data?.message || data?.__type || "Cognito request failed";
+    const err = new Error(msg);
+    err.status = resp.status;
+    throw err;
+  }
+  return data;
+}

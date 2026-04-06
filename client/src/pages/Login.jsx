@@ -37,6 +37,10 @@ const Login = () => {
       const response = await login({ email, password });
       console.log(response.data)
       localStorage.setItem("token", response.data.token);
+      localStorage.setItem("accessToken", response.data.token); // keep a canonical key
+      if (response.data.idToken) {
+        localStorage.setItem("idToken", response.data.idToken);
+      }
       if (response.data.user?.name) {
         localStorage.setItem("userName", response.data.user.name);
       }

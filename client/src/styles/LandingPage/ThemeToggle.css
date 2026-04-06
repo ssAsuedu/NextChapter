@@ -2,6 +2,7 @@
     border-radius: 999px;
     margin-top: 25px;
     background-color: var(--hover);
+    margin-bottom: 25px;
 }
 
 .toggle-button:hover {
