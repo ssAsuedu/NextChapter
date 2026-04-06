@@ -8,6 +8,22 @@
   --filter-pane: #fafafa;
   --error-state: #9d2323;
 
+  --purple-gradient: linear-gradient(
+    135deg,
+    rgba(171,124,231,0.05) 0%,
+    rgba(171,124,231,0.12) 100% 
+  );
+
+   --vibrant-header-gradient-soft: linear-gradient(
+    135deg,
+    rgba(171,124,231,0.10) 0%,
+    rgba(203,150,245,0.10) 20%,
+    rgba(157,172,255,0.10) 40%,
+    rgba(186,144,232,0.10) 60%,
+    rgba(231,192,243,0.10) 80%,
+    rgba(171,124,231,0.10) 100% 
+  );
+
   /* Add more variables as needed */
 }
 
