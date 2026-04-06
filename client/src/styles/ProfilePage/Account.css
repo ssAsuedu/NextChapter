@@ -150,10 +150,14 @@
   transition: background 0.2s, color 0.2s, transform 0.2s
 }
 
+.save-btn {
+  min-width: 110px;
+}
 .cancel-btn {
   background: #f2f2f2;
   border: 1px solid #ccc;
   color: var(--secondary-color);
+  min-width: 110px;
   
 }
 .save-btn, .close-btn {
@@ -202,7 +206,7 @@
   flex-direction: column;
   min-width: 500px;
   max-width: 600px;
-  border: 3px solid var(--primary-color);
+  
 }
 
 .password-modal form h3 {
@@ -228,6 +232,11 @@
   color: #222;
 }
 
+:root[data-theme="dark"] .password-modal input {
+  background-color: var(--filter-pane);
+  caret-color: var(--text-color);
+  color: var(--text-color);
+}
 .input-field-wrapper {
   display: flex;
   flex-direction: column;
@@ -317,7 +326,6 @@
     padding: 20px 16px;
     margin-top: 80px;
     justify-content: center;
-    
   }
 
   .account-user {
@@ -338,7 +346,7 @@
   .account-info-buttons {
     margin-bottom: 30px;
     display: flex;
-
+    gap: 15px;
   }
   .change-password, .save-changes {
     padding: 10px 15px 10px 15px;
@@ -348,8 +356,11 @@
   .password-modal form {
     padding: 0;
     min-width: 300px;
-    padding: 15px 20px 15px 20px;
+    padding: 10px 12px;
+  }
 
+  .password-modal {
+    padding: 0 16px;
   }
 
   .input-label {
@@ -361,6 +372,10 @@
 
   .account-info-buttons, .row-info {
     margin-bottom: 15px;
+  }
+  
+  .save-btn, .cancel-btn {
+    min-width: 80px;
   }
 }
 
@@ -379,7 +394,7 @@
 
 .delete-account-btn {
   margin-left: 0;
-  background: #d32f2f;
+  background: var(--error-state);
   color: #fff;
   border: none;
   border-radius: 999px;
@@ -417,6 +432,16 @@
   text-align: center;
 }
 
+:root[data-theme="dark"] .delete-account-btn {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .delete-modal-text {
+  color: var(--text-color);
+}
+:root[data-theme="dark"] .delete-modal-content {
+  background-color: var(--filter-pane);
+}
 .delete-modal-text {
   margin: 0 0 18px 0;
   font-size: 1rem;
@@ -430,7 +455,7 @@
 }
 
 .delete-confirm-btn {
-  background: #d32f2f;
+  background: var(--error-state);
   color: #fff;
   border: none;
   border-radius: 999px;
