@@ -47,7 +47,7 @@ const Navbar = () => {
         const res = await getMessages(email);
         const unread = new Set(
           res.data.messages
-            .filter((msg) => msg.unread === "unread")
+            .filter((msg) => msg.unread === "unread" && msg.receiver === email)
             .map((msg) => msg.sender),
         ).size;
         setUnreadCount(unread);

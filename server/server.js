@@ -943,18 +943,21 @@ app.get('/api/friends/status', async (req, res) => {
 
 app.post("/api/messages/send", async (req, res) => {
   try {
-    const { senderEmail, receiverEmail, volumeId, title } = req.body;
+    const { senderEmail, receiverEmail, volumeId, title, messageText, type, coverUrl, author } = req.body;
 
-    if (!senderEmail || !receiverEmail || !volumeId || !title) {
+    if (!senderEmail || !receiverEmail) {
       return res.status(400).json({ error: "Missing fields" });
     }
 
     const newMessage = new Message({
       sender: senderEmail,
       receiver: receiverEmail,
-      volumeId,
-      title,
-      messageText: `Hi! I think you should give this book a try: ${title}`,
+      type: type || (volumeId ? "book_recommendation" : "text"),
+      volumeId: volumeId || null,
+      title: title || null,
+      coverUrl: coverUrl || null,
+      author: author || null,
+      messageText: messageText || (volumeId ? "Hi! I think you should give this book a try:" : ""),
       unread: "unread",
     });
 
@@ -969,8 +972,12 @@ app.post("/api/messages/send", async (req, res) => {
 
 app.get("/api/messages/:email", async (req, res) => {
   try {
-    const messages = await Message.find({ receiver: req.params.email })
-      .sort({ sentAt: -1 });
+    const messages = await Message.find({
+      $or: [
+        { receiver: req.params.email },
+        { sender: req.params.email }
+      ]
+    }).sort({ sentAt: -1 });
 
     res.json({ messages });
   } catch (err) {
