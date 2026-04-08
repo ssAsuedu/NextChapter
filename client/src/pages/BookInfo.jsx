@@ -218,7 +218,7 @@ const BookInfo = () => {
         selectedFriends.map((friend) =>
           sendMessage({
             senderEmail: email,
-            receiverEmail: friendEmail,
+            receiverEmail: friend.email,
             volumeId: book.id,
             title: book.volumeInfo.title,
             coverUrl: book.volumeInfo.imageLinks?.thumbnail?.replace("http://", "https://") || null,
