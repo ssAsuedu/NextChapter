@@ -68,16 +68,20 @@ const Home = () => {
             <Book className="about-icon" />
             Platform
             <h6 className="about-card-text">Our application empowers users to achieve their reading goals.</h6>
+            <div className="card-line"></div>
           </button>
+          
           <button className="about-button" aria-label="Learn more about the team behind Next Chapter">
             <Team className="about-icon" />
             Team
             <h6 className="about-card-text">Developed by a team of passionate readers who want to share their love for books.</h6>
+            <div className="card-line"></div>
           </button>
           <button className="about-button" aria-label="Learn more about the core values that drive the Next Chapter platform">
             <Values className="about-icon" />
             Values
             <h6 className="about-card-text">Next Chapter is built on our core values of curiosity, connection, and self-improvement.</h6>
+            <div className="card-line"></div>
           </button>
         </div>
         
