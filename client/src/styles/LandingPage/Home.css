@@ -77,7 +77,7 @@
 }
 
 .hero-profile-image {
-  width: 100%;
+  width: 90%;
   height: auto;
   object-fit: cover;
   border-radius: 24px; /* Square but with oval corners */
@@ -112,6 +112,7 @@
   background-color: var(--text-color);
   color: #fff;
   transform: scale(1.07);
+  border: none;
 }
 
 section button {
@@ -150,8 +151,20 @@ section button:hover {
 
 .about-button {
   box-shadow: rgba(171, 124, 231, 0.3) 0px 4px 12px;
+  transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+  border: 1px solid transparent;
 }
 
+.about-button:hover {
+  transform: translateY(-6px);
+}
+
+.about-button .card-line {
+  width: 100%;
+}
+.about-button:hover .card-line {
+  transform: scaleX(1); 
+}
 section h2 {
   font-size: 2.5rem;
   margin-bottom: 1rem;
@@ -182,12 +195,12 @@ section h4 {
 }
 
 .recommended-books a {
-  color: var(--primary-color);
+  color: var(--text-color);
   font-family: inherit;
 }
 
 .recommended-books a:hover {
-  color: #73559b;
+  text-decoration: underline;
 }
 
 /* About Button Styles */
@@ -196,19 +209,16 @@ section h4 {
   height: 250px;
   background: #fff;
   color: var(--secondary-color);
-  border: 1px solid var(--primary-color);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
   border-radius: 16px;
   margin: 6px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: space-around;
-  box-shadow: 0 2px 8px rgba(171, 124, 231, 0.06);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   cursor: pointer;
-  transition: 
-    background 0.3s,
-    color 0.3s,
-    transform 0.2s;
+  transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
   position: relative;
   font-size: 1.5rem;
   outline: none;
@@ -224,17 +234,14 @@ h6 {
 }
 
 .about-button:hover {
-  background: var(--primary-color);
-  color: #fff;
+  background-color: #fff;
+  color: var(--secondary-color);
   transform: scale(1.08);
+  transform: translateY(-6px);
+  border: 1px solid var(--primary-color);
+  box-shadow: 0 8px 28px rgba(170, 124, 231, 0.322);
 }
 
-.about-button:hover .about-icon  {
-  color: #fff;
-}
-.about-button:hover h6 {
-  color: white;
-}
 /* Trending Books Section */
 .trending-books {
   width: 100%;
@@ -312,8 +319,11 @@ h6 {
   margin: 0px 0 0 0;
   font-size: 2.5rem;
   color: var(--text-color);
-  font-weight: 700;
-  
+  font-weight: 700; 
+}
+
+#recommended-heading {
+  margin-bottom: 30px;
 }
   
 :root[data-theme="dark"] .browse-button {
@@ -390,14 +400,15 @@ h6 {
   }
 
   .trending-books-right p {
-    font-size: 0.9rem;
+    font-size: 0.95rem;
   }
   .left-side-hero p {
     font-size: 0.9rem;
   }
 
   .browse-button, .signup-button, .trending-books-button {
-    padding: 15px 20px 15px 20px;
+    padding: 0;
+    padding: 8px 15px 8px 15px;
     font-size: 0.9rem;
   }
 
@@ -427,7 +438,6 @@ h6 {
   }
 
   .about {
-    display: block;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -439,10 +449,15 @@ h6 {
   }
 
   .about-wrapper {
-    grid-template-columns: 1fr;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
   }
 
+  .about-button {
+    height: 270px;
+    width: 100%;
+
+  }
   .about-card-text, .login-text {
     font-size: 0.95rem;
   }
@@ -456,8 +471,25 @@ h6 {
     height: 100%;
   }
 }
+@media (min-width: 300px) and (max-width: 610px) {
+  .about-wrapper {
+    display: grid;
+    grid-template-columns: 1fr !important;
+    
+  }
 
-@media (min-width: 768px) and (max-width: 1200px) {
+  .about-button {
+    margin: 0;
+    margin-bottom: 20px;
+  }
+}
+
+
+@media (min-width: 767px) and (max-width: 1200px) {
+
+  .about-button {
+    width: 100%;
+  }
   .hero-content h1 {
     font-size: 2.6rem;
   }
@@ -482,8 +514,8 @@ h6 {
   }
  
   .hero-profile-image {
-    width: 300px;
-    height: 300px;
+    width: 350px;
+    height: 350px;
     background-color: var(--hover);
     border-radius: 999px;
   }
@@ -518,8 +550,9 @@ h6 {
 
   }
   .about-wrapper {
-    grid-template-columns: 1fr;
-    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
   }
 
   #recommended-heading {
@@ -531,13 +564,22 @@ h6 {
   }
 }
 
-@media (min-width: 1200px) and (max-width: 1525px) {
+@media (min-width: 768px) and (max-width: 865px) {
+  .hero-profile-image {
+    width: 310px;
+    height: 310px;
+    background-color: var(--hover);
+    border-radius: 999px;
+  }
+}
+
+@media (min-width: 1200px) and (max-width: 1535px) {
   .hero-content {
     grid-template-columns: 400px 1fr;
   }
 
   .hero-profile-image {
-    width: 100%;
+    width: 90%;
   }
 
   .about-wrapper {
