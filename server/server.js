@@ -44,6 +44,24 @@ const awardBadge = (user, badgeType, volumeId = null) => {
   }
 };
 
+// Helper: fetch a book's categories (genres) from Google Books API
+// Used for GENRE_JUMPER (progress/finished) and EXPLORER (bookshelf) badges
+const fetchBookGenres = async (volumeId) => {
+  try {
+    const key = process.env.VITE_GOOGLE_BOOKS_API || process.env.GOOGLE_BOOKS_API_KEY;
+    const url = `https://www.googleapis.com/books/v1/volumes/${volumeId}${key ? `?key=${key}` : ""}`;
+    const resp = await fetch(url);
+    if (!resp.ok) return [];
+    const data = await resp.json();
+    const categories = data?.volumeInfo?.categories || [];
+    // Normalize: take the first segment before "/" and lowercase it (e.g. "Fiction / Thrillers" → "fiction")
+    return categories.map((c) => c.split("/")[0].trim().toLowerCase()).filter(Boolean);
+  } catch (err) {
+    console.error("Failed to fetch book genres:", err.message);
+    return [];
+  }
+};
+
 const allowedOrigins = (process.env.CORS_ORIGINS || process.env.CORS_ORIGIN || "")
   .split(",")
   .map(o => o.trim())
@@ -238,6 +256,25 @@ app.post("/api/bookshelf/add", async (req, res) => {
       if (user.bookshelf.length >= 100) {
         awardBadge(user, "LIBRARY_LEGEND");
       }
+
+      // EXPLORER: books from 5+ different genres on the shelf.
+      // Fetch the new book's genres from Google Books and store them on the user
+      // under `shelfGenres` (a de-duplicated list of genre strings).
+      try {
+        const genres = await fetchBookGenres(volumeId);
+        if (genres.length > 0) {
+          user.shelfGenres = user.shelfGenres || [];
+          for (const g of genres) {
+            if (!user.shelfGenres.includes(g)) user.shelfGenres.push(g);
+          }
+          if ((user.shelfGenres || []).length >= 5) {
+            awardBadge(user, "EXPLORER");
+          }
+        }
+      } catch (e) {
+        console.error("EXPLORER genre check failed:", e.message);
+      }
+
       await user.save();
     }
     res.json({ message: "Book added to bookshelf", bookshelf: user.bookshelf });
@@ -407,8 +444,28 @@ app.post("/api/progress/update", async (req, res) => {
   }
 
   // FINISHED: completed a book (one per book)
+  // When a book is finished for the first time, also track its genre for GENRE_JUMPER
   if (safeTotal > 0 && safeCurrent >= safeTotal) {
+    const wasAlreadyFinished = hasBadge(user, "FINISHED", volumeId);
     awardBadge(user, "FINISHED", volumeId);
+
+    // GENRE_JUMPER: read 3+ different genres (only genres from finished books count)
+    if (!wasAlreadyFinished) {
+      try {
+        const genres = await fetchBookGenres(volumeId);
+        if (genres.length > 0) {
+          user.readGenres = user.readGenres || [];
+          for (const g of genres) {
+            if (!user.readGenres.includes(g)) user.readGenres.push(g);
+          }
+          if ((user.readGenres || []).length >= 3) {
+            awardBadge(user, "GENRE_JUMPER");
+          }
+        }
+      } catch (e) {
+        console.error("GENRE_JUMPER genre check failed:", e.message);
+      }
+    }
   }
 
   // ── ACTIVITY-BASED BADGES (DAILY_READER, BOOK_MARATHONER, READING_ROUTINE) ──
@@ -943,18 +1000,21 @@ app.get('/api/friends/status', async (req, res) => {
 
 app.post("/api/messages/send", async (req, res) => {
   try {
-    const { senderEmail, receiverEmail, volumeId, title } = req.body;
+    const { senderEmail, receiverEmail, volumeId, title, messageText, type, coverUrl, author } = req.body;
 
-    if (!senderEmail || !receiverEmail || !volumeId || !title) {
+    if (!senderEmail || !receiverEmail) {
       return res.status(400).json({ error: "Missing fields" });
     }
 
     const newMessage = new Message({
       sender: senderEmail,
       receiver: receiverEmail,
-      volumeId,
-      title,
-      messageText: `Hi! I think you should give this book a try: ${title}`,
+      type: type || (volumeId ? "book_recommendation" : "text"),
+      volumeId: volumeId || null,
+      title: title || null,
+      coverUrl: coverUrl || null,
+      author: author || null,
+      messageText: messageText || (volumeId ? "Hi! I think you should give this book a try:" : ""),
       unread: "unread",
     });
 
@@ -969,8 +1029,12 @@ app.post("/api/messages/send", async (req, res) => {
 
 app.get("/api/messages/:email", async (req, res) => {
   try {
-    const messages = await Message.find({ receiver: req.params.email })
-      .sort({ sentAt: -1 });
+    const messages = await Message.find({
+      $or: [
+        { receiver: req.params.email },
+        { sender: req.params.email }
+      ]
+    }).sort({ sentAt: -1 });
 
     res.json({ messages });
   } catch (err) {
