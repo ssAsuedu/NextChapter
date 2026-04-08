@@ -219,8 +219,11 @@ const BookInfo = () => {
           sendMessage({
             senderEmail: email,
             receiverEmail: friend.email,
-            volumeId,
-            title: info.title,
+            volumeId: book.id,
+            title: book.volumeInfo.title,
+            coverUrl: book.volumeInfo.imageLinks?.thumbnail?.replace("http://", "https://") || null,
+            author: book.volumeInfo.authors?.[0] || null,
+            type: "book_recommendation",
           })
         )
       );

@@ -240,8 +240,8 @@ export const getLeaderboard = async (limit = 50) => {
 
 // MESSAGES API CALLS
 
-export const sendMessage = async ({ senderEmail, receiverEmail, volumeId, title }) => {
-  return axios.post(`${API_BASE_URL}/messages/send`, { senderEmail, receiverEmail, volumeId, title });
+export const sendMessage = async ({ senderEmail, receiverEmail, volumeId, title, messageText, type, coverUrl, author }) => {
+  return axios.post(`${API_BASE_URL}/messages/send`, { senderEmail, receiverEmail, volumeId, title, messageText, type, coverUrl, author });
 };
 
 export const getMessages = async (email) => {
