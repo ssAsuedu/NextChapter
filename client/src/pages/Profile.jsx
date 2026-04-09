@@ -611,7 +611,10 @@ const Profile = () => {
 
       {/* ── List Detail Modal ── */}
       <Modal open={!!selectedList} onClose={closeListDetail} className="review-modal">
-        <Box className="review-modal-box large detail-modal-box">
+      <Box
+        sx={{ width: { xs: 'calc(100vw - 24px)', sm: 'min(1000px, calc(100vw - 24px))' }, maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }}
+        className="review-modal-box large detail-modal-box"
+      >
           <div className="detail-modal-header">
             <div className="modal-back" onClick={closeListDetail}>← Back to Lists</div>
             <div>
@@ -668,10 +671,23 @@ const Profile = () => {
 
       {/* ── Create List Modal ── */}
       <Modal open={showCreateListModal} onClose={closeCreateListModal} className="review-modal">
-        <Box
-          className={createListStep === 2 ? "review-modal-box large" : "review-modal-box"}
-          onClick={(e) => e.stopPropagation()}
-        >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: 'calc(100vw - 24px)', sm: '500px' },
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          boxSizing: 'border-box',
+          bgcolor: 'background.paper',
+          borderRadius: '12px',
+          padding: { xs: '16px 12px', sm: '24px' },
+          outline: 'none',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
           {createListStep === 1 ? (
             <>
               <h2 className="review-modal-title">Create New List</h2>
@@ -747,10 +763,23 @@ const Profile = () => {
 
       {/* ── Edit List Modal ── */}
       <Modal open={showEditListModal} onClose={closeEditListModal} className="review-modal">
-        <Box
-          className={editListStep === 2 ? "review-modal-box large" : "review-modal-box"}
-          onClick={(e) => e.stopPropagation()}
-        >
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          width: { xs: 'calc(100vw - 24px)', sm: '500px' },
+          maxHeight: '90vh',
+          overflowY: 'auto',
+          boxSizing: 'border-box',
+          bgcolor: 'background.paper',
+          borderRadius: '12px',
+          padding: { xs: '16px 12px', sm: '24px' },
+          outline: 'none',
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
           {editListStep === 1 ? (
             <>
               <h2 className="review-modal-title">Edit List</h2>
