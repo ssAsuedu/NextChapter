@@ -3,15 +3,34 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import "../styles/BookInfoPage/BookInfo.css";
 import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import ArrowDropUpIcon from '@mui/icons-material/ArrowDropUp';
-import { getBookReviews, getBookshelf, addBookToBookshelf, deleteBookFromBookshelf, sendMessage, getFriends } from "../api";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
+import {
+  getBookReviews,
+  getBookshelf,
+  addBookToBookshelf,
+  deleteBookFromBookshelf,
+  sendMessage,
+  getFriends,
+} from "../api";
 import BookJournal from "../components/ExplorePage/BookJournal";
-import ReplyIcon from '@mui/icons-material/Reply';
+import ReplyIcon from "@mui/icons-material/Reply";
 import Stars from "../components/Stars";
 import BookRating from "../components/BookRating";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+const GENRE_LIMIT = 3;
+
+const formatGenre = (genre) => {
+  if (!genre) return "";
+
+  const parts = genre.split("/").map((p) => p.trim());
+
+  if (parts.length >= 2) {
+    return parts[1];
+  }
+  return parts[0];
+};
 
 const BookInfo = () => {
   const { volumeId } = useParams();
@@ -44,7 +63,7 @@ const BookInfo = () => {
       }
       try {
         const res = await fetch(
-          `https://www.googleapis.com/books/v1/volumes/${volumeId}?key=${GOOGLE_BOOKS_API_KEY}`
+          `https://www.googleapis.com/books/v1/volumes/${volumeId}?key=${GOOGLE_BOOKS_API_KEY}`,
         );
         const data = await res.json();
         setBookInCache(volumeId, data);
@@ -97,31 +116,33 @@ const BookInfo = () => {
     const author = book.volumeInfo?.authors?.[0];
     const title = book.volumeInfo?.title?.toLowerCase().trim();
     if (!category && !author) return;
-    const simplifiedGenre = category ? category.split(/[\/-]/)[0].trim() : "Fiction";
+    const simplifiedGenre = category
+      ? category.split(/[\/-]/)[0].trim()
+      : "Fiction";
 
     const fetchRelated = async () => {
       try {
         let related = [];
         if (author) {
           const authorRes = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=inauthor:${encodeURIComponent(author)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
+            `https://www.googleapis.com/books/v1/volumes?q=inauthor:${encodeURIComponent(author)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`,
           );
           const authorData = await authorRes.json();
           const authorBooks = (authorData.items || []).filter(
             (b) =>
               b.id !== book.id &&
               b.volumeInfo?.authors?.some((a) =>
-                a.toLowerCase().includes(author.toLowerCase())
+                a.toLowerCase().includes(author.toLowerCase()),
               ) &&
               b.volumeInfo?.title?.toLowerCase().trim() !== title &&
-              b.volumeInfo?.imageLinks?.thumbnail
+              b.volumeInfo?.imageLinks?.thumbnail,
           );
           related = authorBooks;
         }
 
         if (related.length < 4 && simplifiedGenre) {
           const genreRes = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(simplifiedGenre)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
+            `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(simplifiedGenre)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`,
           );
           const genreData = await genreRes.json();
           const genreBooks = (genreData.items || []).filter(
@@ -129,7 +150,7 @@ const BookInfo = () => {
               b.id !== book.id &&
               b.volumeInfo?.title?.toLowerCase().trim() !== title &&
               !related.some((r) => r.id === b.id) &&
-              b.volumeInfo?.imageLinks?.thumbnail
+              b.volumeInfo?.imageLinks?.thumbnail,
           );
           related = [...related, ...genreBooks];
         }
@@ -169,7 +190,9 @@ const BookInfo = () => {
     if (sortBy === "highest") {
       return sorted.sort((a, b) => b.rating - a.rating);
     } else {
-      return sorted.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      return sorted.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt),
+      );
     }
   };
 
@@ -221,11 +244,15 @@ const BookInfo = () => {
             receiverEmail: friend.email,
             volumeId: book.id,
             title: book.volumeInfo.title,
-            coverUrl: book.volumeInfo.imageLinks?.thumbnail?.replace("http://", "https://") || null,
+            coverUrl:
+              book.volumeInfo.imageLinks?.thumbnail?.replace(
+                "http://",
+                "https://",
+              ) || null,
             author: book.volumeInfo.authors?.[0] || null,
             type: "book_recommendation",
-          })
-        )
+          }),
+        ),
       );
       setShowSuccess(true);
       resetShareModal();
@@ -257,14 +284,21 @@ const BookInfo = () => {
                   Remove from Bookshelf
                 </button>
               ) : (
-                <button className="bookinfo-add-btn" onClick={handleAddToBookshelf}>
+                <button
+                  className="bookinfo-add-btn"
+                  onClick={handleAddToBookshelf}
+                >
                   Add to Bookshelf
                 </button>
               )}
             </div>
 
             <div className="bookinfo-rating-share-row">
-              <BookRating volumeId={volumeId} showRatingValue={true} showNoRatings={true}/>
+              <BookRating
+                volumeId={volumeId}
+                showRatingValue={true}
+                showNoRatings={true}
+              />
               <button
                 className="bookinfo-share-btn"
                 onClick={() => {
@@ -277,43 +311,59 @@ const BookInfo = () => {
             </div>
 
             <div className="bookinfo-details-text">
-              <p>
-                <strong>Author:</strong>{" "}
-                {info.authors ? info.authors.join(", ") : "Unknown"}
-              </p>
-              <p>
-                <strong>Genre(s):</strong>{" "}
-                {info.categories ? (
-                  <>
-                    {genresExpanded
-                      ? info.categories.join(", ")
-                      : info.categories.slice(0, 2).join(", ")}
-                    {info.categories.length > 2 && (
-                      <button
-                        onClick={() => setGenresExpanded(!genresExpanded)}
-                        className="genre-toggle"
-                      >
-                        {genresExpanded
-                          ? "Show less"
-                          : `+${info.categories.length - 2} more`}
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  "Unknown"
-                )}
-              </p>
-              <p>
-                <strong>Published:</strong> {info.publishedDate || "Unknown"}
-              </p>
+              <div className="author-text-section">
+                <strong id="author-heading">Author(s):</strong>{" "}
+                <p className="authors-display">
+                  {info.authors ? info.authors.join(", ") : "Unknown"}
+                </p>
+              </div>
+              <div className="genre-text-section">
+                <strong id="genre-heading">Genre(s):</strong>{" "}
+                <div className="genres-display">
+                  {info.categories ? (
+                    <div className="genre-wrapper">
+                      {(genresExpanded
+                        ? info.categories
+                        : info.categories.slice(0, GENRE_LIMIT)
+                      )
+                        .map(formatGenre)
+                        .join(", ")}
+
+                      {info.categories.length > GENRE_LIMIT && (
+                        <div className="genres-toggle-wrapper">
+                          <button
+                            onClick={() => setGenresExpanded(!genresExpanded)}
+                            className={`genre-toggle ${genresExpanded ? "show-more" : "show-less"}`}
+                          >
+                            {genresExpanded
+                              ? "Show less"
+                              : `+${info.categories.length - GENRE_LIMIT} more`}
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    "Unknown"
+                  )}
+                </div>
+              </div>
+              <div className="published-section">
+                <strong id="published-heading">Published:</strong>
+                <p className="published-display">
+                  {info.publishedDate ? info.publishedDate : "Unknown"}
+                </p>
+              </div>
             </div>
 
             <div
               className={`bookinfo-summary-expandable${expanded ? " expanded" : ""}`}
             >
-              <strong>Summary:</strong>{" "}
+              <strong id="summary-heading">Summary:</strong>{" "}
               {info.description ? (
-                <span dangerouslySetInnerHTML={{ __html: info.description }} />
+                <span
+                  className="book-description-text"
+                  dangerouslySetInnerHTML={{ __html: info.description }}
+                />
               ) : (
                 "No summary available."
               )}
@@ -324,7 +374,7 @@ const BookInfo = () => {
                 onClick={() => setExpanded(true)}
                 aria-label="Expand summary"
               >
-                <ArrowDropDownIcon fontSize="large" />
+                <ArrowDropDownIcon className="arrow-icon" fontSize="large" />
               </button>
             )}
             {expanded && (
@@ -333,7 +383,7 @@ const BookInfo = () => {
                 onClick={() => setExpanded(false)}
                 aria-label="Collapse summary"
               >
-                <ArrowDropUpIcon fontSize="large" />
+                <ArrowDropUpIcon className="arrow-icon" fontSize="large" />
               </button>
             )}
           </div>
@@ -360,7 +410,7 @@ const BookInfo = () => {
         <div className="bookinfo-reviews-section">
           <div className="bookinfo-reviews-list">
             {reviews.length === 0 ? (
-              <p>No reviews for this book</p>
+              <p className="no-reviews-available">No reviews for this book</p>
             ) : (
               getSortedReviews().map((r, idx) => (
                 <div key={idx} className="bookinfo-review">
@@ -374,7 +424,7 @@ const BookInfo = () => {
                   </div>
                   <div className="bookinfo-review-content">
                     {/* {renderStars(r.rating)} */}
-                    <Stars rating={r.rating}/>
+                    <Stars rating={r.rating} />
                   </div>
                   <div className="bookinfo-review-content">{r.reviewText}</div>
                 </div>
@@ -390,7 +440,9 @@ const BookInfo = () => {
       {relatedBooks.length > 0 && (
         <div className="bookinfo-related-section">
           <h2 className="bookinfo-related-header">You May Also Like</h2>
-          <p className="bookinfo-related-subtitle">Books related to {info.title}</p>
+          <p className="bookinfo-related-subtitle">
+            Books related to {info.title}
+          </p>
           <div className="bookinfo-related-list">
             {relatedBooks.map((bk) => (
               <div
@@ -402,10 +454,15 @@ const BookInfo = () => {
                 }}
               >
                 <img
-                  src={bk.volumeInfo.imageLinks?.thumbnail || "/placeholder-book.png"}
+                  src={
+                    bk.volumeInfo.imageLinks?.thumbnail ||
+                    "/placeholder-book.png"
+                  }
                   alt={bk.volumeInfo.title}
                 />
-                <p className="bookinfo-related-title-text">{bk.volumeInfo.title}</p>
+                <p className="bookinfo-related-title-text">
+                  {bk.volumeInfo.title}
+                </p>
                 <p className="bookinfo-related-author">
                   {bk.volumeInfo.authors
                     ? bk.volumeInfo.authors.join(", ")
@@ -420,7 +477,7 @@ const BookInfo = () => {
       {showShare && (
         <div className="share-modal-overlay" onClick={resetShareModal}>
           <div className="share-modal" onClick={(e) => e.stopPropagation()}>
-            <h3>Share this book</h3>
+            <h3 id="share-heading">Share this book</h3>
             {selectedFriends.length > 0 && (
               <div className="share-selected">
                 {selectedFriends.map((friend, idx) => (
@@ -429,7 +486,7 @@ const BookInfo = () => {
                     className="share-selected-chip"
                     onClick={() =>
                       setSelectedFriends((prev) =>
-                        prev.filter((f) => f.email !== friend.email)
+                        prev.filter((f) => f.email !== friend.email),
                       )
                     }
                   >
@@ -440,14 +497,23 @@ const BookInfo = () => {
             )}
             <div className="share-friends-container">
               {friends
-                .filter((f) => !selectedFriends.some((s) => s.email === f.email))
+                .filter(
+                  (f) => !selectedFriends.some((s) => s.email === f.email),
+                )
                 .map((friend, idx) => (
                   <div
                     key={idx}
                     className="share-friend-chip"
+                    tabIndex={0}
+                    role="button"
                     onClick={() =>
                       setSelectedFriends((prev) => [...prev, friend])
                     }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        setSelectedFriends((prev) => [...prev, friend]);
+                      }
+                    }}
                   >
                     {friend.name || friend.email}
                   </div>
@@ -458,10 +524,19 @@ const BookInfo = () => {
                 className="share-confirm-btn"
                 onClick={handleShare}
                 disabled={selectedFriends.length === 0}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    {
+                      handleShare;
+                    }
+                  }
+                }}
               >
                 Confirm
               </button>
-              <button className="bookinfo-in-shelf" onClick={resetShareModal}>
+              <button className="bookinfo-cancel" onClick={resetShareModal}>
                 Cancel
               </button>
             </div>
@@ -469,12 +544,23 @@ const BookInfo = () => {
         </div>
       )}
       {showSuccess && (
-        <div className="share-modal-overlay" onClick={() => setShowSuccess(false)}>
-          <div className="share-modal success-modal" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="share-modal-overlay"
+          onClick={() => setShowSuccess(false)}
+        >
+          <div
+            className="share-modal success-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="success-icon">✓</div>
-            <h3>Recommendation Sent!</h3>
-            <p>Your friend(s) will receive your book recommendation.</p>
-            <button className="share-confirm-btn" onClick={() => setShowSuccess(false)}>
+            <h3 id="recommendation-sent">Recommendation Sent!</h3>
+            <p className="recommendation-confirmation">
+              Your friend(s) will receive your book recommendation.
+            </p>
+            <button
+              className="share-confirm-btn"
+              onClick={() => setShowSuccess(false)}
+            >
               Done
             </button>
           </div>
