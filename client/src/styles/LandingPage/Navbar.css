@@ -15,6 +15,10 @@
   border-bottom: 1px solid #dbdbdb;
 }
 
+.logo {
+  width: 50px;
+  height: 50px;
+}
 .navbar.scrolled {
   border: none;
 }
@@ -138,7 +142,7 @@ li {
 
 .left, .right {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   align-items: center;
   margin: 0;
   padding: 0;
@@ -352,7 +356,9 @@ li {
 
 .user-initial.bg-scroll:hover {
   background-color: var(--hover);
+  color: var(--background-color);
 }
+
 :root[data-theme="dark"] .carrot.nav-scrolled {
   color: white;
 }
@@ -371,17 +377,19 @@ li {
   color: var(--background-color);
 }
 
+:root[data-theme="dark"] .link-text:hover {
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .left:not(.open) .link-text {
+  color: var(--background-color);
+}
+
 :root[data-theme="dark"] .nav-message-icon path {
   fill: var(--primary-color);
   stroke: #a97dd4;
 }
 
-
-/* @media (hover:none) and (pointer: coarse) {
-  .about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
-    display: none !important;
-  }
-} */
 @media (min-width:300px) and (max-width: 860px) {
   .about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
     display: none !important;
@@ -564,14 +572,31 @@ li {
   }
 
   .logged-in {
-    gap: 10px;
+    gap: 6px;
   }
 
   .auth-signout.not-scroll {
     padding: 0;
   }
 
-  .auth-signout.desktop-dropdown.not-scroll {
+  /* .auth-signout.desktop-dropdown.not-scroll {
     padding: 10px 20px;
+  } */
+
+  svg {
+    width: 25px;
+    height: 25px;
+  }
+
+  .auth-signout.desktop-dropdown.not-scroll {
+    padding: 5px;
+  }
+
+  .auth-signout.signout-nav {
+    padding: 5px;
+  }
+  .user-initial.not-scroll, .user-initial.bg-scroll {
+    width: 25px;
+    height: 25px;
   }
 }
