@@ -161,6 +161,11 @@
 
 /* ============ HIDE BOOK BUTTON ============ */
 
+.book-item-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .hide-book-btn {
   background-color: #f2f2f2;
   color: var(--secondary-color);
@@ -270,10 +275,6 @@
   );
   background: var(--purple-gradient);
 }
-
-/* :root[data-theme="dark"] .trending-section {
-  background: #273445;
-} */
 
 .book-title-display {
   max-width: 150px;

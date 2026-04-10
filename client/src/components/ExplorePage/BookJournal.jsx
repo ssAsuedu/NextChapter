@@ -60,9 +60,19 @@ const BookJournal = ({ volumeId }) => {
       setSaveStatus("saving");
       try {
         if (editingId) {
-          await updateJournalEntry({ email, entryId: editingId, title, content });
+          await updateJournalEntry({
+            email,
+            entryId: editingId,
+            title,
+            content,
+          });
         } else {
-          const res = await createJournalEntry({ email, volumeId, title, content });
+          const res = await createJournalEntry({
+            email,
+            volumeId,
+            title,
+            content,
+          });
           setEditingId(res.data.entry._id);
         }
         setSaveStatus("saved");
@@ -93,7 +103,12 @@ const BookJournal = ({ volumeId }) => {
       if (editingId) {
         await updateJournalEntry({ email, entryId: editingId, title, content });
       } else {
-        const res = await createJournalEntry({ email, volumeId, title, content });
+        const res = await createJournalEntry({
+          email,
+          volumeId,
+          title,
+          content,
+        });
         setEditingId(res.data.entry._id);
       }
       setSaveStatus("saved");
@@ -114,13 +129,22 @@ const BookJournal = ({ volumeId }) => {
 
     switch (type) {
       case "bold":
-        newText = content.substring(0, start) + `**${selected}**` + content.substring(end);
+        newText =
+          content.substring(0, start) +
+          `**${selected}**` +
+          content.substring(end);
         break;
       case "italic":
-        newText = content.substring(0, start) + `*${selected}*` + content.substring(end);
+        newText =
+          content.substring(0, start) +
+          `*${selected}*` +
+          content.substring(end);
         break;
       case "bullet":
-        newText = content.substring(0, start) + `\n- ${selected}` + content.substring(end);
+        newText =
+          content.substring(0, start) +
+          `\n- ${selected}` +
+          content.substring(end);
         break;
     }
 
@@ -176,18 +200,24 @@ const BookJournal = ({ volumeId }) => {
     ? entries.filter(
         (e) =>
           (e.content || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (e.title || "").toLowerCase().includes(searchQuery.toLowerCase())
+          (e.title || "").toLowerCase().includes(searchQuery.toLowerCase()),
       )
     : entries;
 
   if (!email) return null;
 
   return (
-    <section className="journal-section" aria-label="Book journal - private notes">
+    <section
+      className="journal-section"
+      aria-label="Book journal - private notes"
+    >
       <div className="journal-header">
         <div className="journal-header-left">
           <h3 className="journal-title">My Notes</h3>
-          <span className="journal-private-badge" aria-label="Only you can see this">
+          <span
+            className="journal-private-badge"
+            aria-label="Only you can see this"
+          >
             Private -- only you can see this
           </span>
         </div>
@@ -210,7 +240,11 @@ const BookJournal = ({ volumeId }) => {
       )}
 
       {showEditor && (
-        <div className="journal-editor" role="form" aria-label="Journal entry editor">
+        <div
+          className="journal-editor"
+          role="form"
+          aria-label="Journal entry editor"
+        >
           <input
             type="text"
             placeholder="Entry title (optional)"
@@ -220,7 +254,11 @@ const BookJournal = ({ volumeId }) => {
             maxLength={100}
           />
 
-          <div className="journal-toolbar" role="toolbar" aria-label="Text formatting">
+          <div
+            className="journal-toolbar"
+            role="toolbar"
+            aria-label="Text formatting"
+          >
             <button
               type="button"
               className="journal-fmt-btn"
