@@ -138,6 +138,7 @@ const MoodFinder = () => {
           {selectedMoods.map((id) => {
             const mood = moods.find((m) => m.id === id);
             return (
+              <div className="mood-tag-wrapper">
               <span key={id} className="mood-tag">
                 {mood?.label}
                 <button
@@ -148,6 +149,7 @@ const MoodFinder = () => {
                   x
                 </button>
               </span>
+              </div>
             );
           })}
         </div>

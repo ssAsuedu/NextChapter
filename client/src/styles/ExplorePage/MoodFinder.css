@@ -7,7 +7,7 @@
   margin: 0 auto;
   padding: 24px;
   padding-top: 100px;
-  background: #ffffff;
+  background: var(--background-color);
   border-radius: 12px;
   font-family: "Sen", Arial, Helvetica, sans-serif;
   min-height: calc(100vh - 80px);
@@ -17,7 +17,8 @@
   text-align: center;
   font-size: 2.2rem;
   font-family: "Sen", sans-serif;
-  color: #222;
+  color: var(--text-color);
+  font-weight: 700;
   margin-bottom: 8px;
 }
 
@@ -50,26 +51,33 @@
   justify-content: center;
   padding: 16px 28px;
   min-width: 140px;
-  background: #fff;
-  border: 2px solid #e8e8e8;
+  background: var(--purple-gradient);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.09);
 }
 
 .mood-card:hover {
   border-color: var(--primary-color, #222);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--primary-color);
 }
 
 .mood-card--selected {
   border-color: var(--primary-color, #222);
-  background: var(--primary-color, #222);
+  background: var(--text-color, #222);
   color: #fff;
 }
 
+:root[data-theme="dark"] .mood-card--selected {
+  background-color: transparent;
+  border: none;
+  box-shadow: none;
+  border: 1px solid var(--primary-color);
+}
 .mood-card--selected .mood-card-label {
   color: #fff;
 }
@@ -118,21 +126,32 @@
   transition: opacity 0.2s, transform 0.1s;
 }
 
+:root[data-theme="dark"] .mood-find-btn {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .mood-find-btn:hover:not(:disabled) {
+  opacity: 1;
+  background-color: var(--text-color);
+}
 .mood-find-btn:hover:not(:disabled) {
   opacity: 0.85;
   transform: translateY(-1px);
 }
 
 .mood-find-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.6;
   cursor: not-allowed;
+}
+
+:root[data-theme="dark"] .mood-find-btn:disabled {
+  color: #000000;
 }
 
 .mood-surprise-btn {
   padding: 12px 24px;
-  background: transparent;
-  border: 2px solid var(--primary-color, #222);
-  color: var(--primary-color, #222);
+  background: var(--hover);
+  color: white;
   border-radius: 10px;
   font-size: 1rem;
   font-weight: 600;
@@ -141,9 +160,21 @@
   transition: all 0.2s;
 }
 
+:root[data-theme="dark"] .mood-surprise-btn {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .mood-surprise-btn:hover:not(:disabled) {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
 .mood-surprise-btn:hover:not(:disabled) {
-  background: var(--primary-color, #222);
   color: #fff;
+  border: none;
+  transform: scale(1.07);
+  background-color: var(--text-color);
 }
 
 .mood-surprise-btn:disabled {
@@ -153,18 +184,30 @@
 
 .mood-clear-btn {
   padding: 12px 20px;
-  background: transparent;
+  background-color: #f2f2f2;
   border: 1px solid #ccc;
-  color: #888;
+  color: var(--secondary-color);
   border-radius: 10px;
   font-size: 0.9rem;
   font-family: inherit;
   cursor: pointer;
 }
 
+:root[data-theme="dark"] .mood-clear-btn {
+  color: white;
+  background-color: transparent;
+}
+
+:root[data-theme="dark"] .mood-clear-btn:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
 .mood-clear-btn:hover {
-  border-color: #999;
-  color: #555;
+  color: white;
+  border: none;
+  transform: scale(1.07);
+  background-color: var(--text-color);
 }
 
 /* Selected mood tags */
@@ -176,16 +219,19 @@
   flex-wrap: wrap;
 }
 
-.mood-tag {
-  display: inline-flex;
+.mood-tag-wrapper {
+  display: flex;
+  justify-content: center;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
-  background: #f5f5f5;
   border-radius: 20px;
   font-size: 0.85rem;
-  color: var(--primary-color, #222);
   font-weight: 500;
+  color: var(--primary-color);
+  font-weight: 600;
+  background: rgba(133, 97, 180, 0.1);
+  padding: 2px 10px;
+  border-radius: 999px;
 }
 
 .mood-tag-remove {
@@ -196,12 +242,16 @@
   cursor: pointer;
   padding: 0;
   line-height: 1;
+  margin-left: 6px;
 }
 
 .mood-tag-remove:hover {
   color: #e53935;
 }
 
+:root[data-theme="dark"] .mood-tag-remove:hover {
+  color: var(--error-state);
+}
 /* Loading */
 .mood-loading {
   display: flex;
@@ -237,7 +287,7 @@
 .mood-results-title {
   font-size: 1.2rem;
   font-weight: 600;
-  color: var(--primary-color, #222);
+  color: var(--text-color, #222);
   margin: 0 0 20px 0;
   text-align: center;
 }
