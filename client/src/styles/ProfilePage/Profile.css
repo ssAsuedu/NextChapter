@@ -229,6 +229,15 @@
   font-family: 'Sen', Arial, Helvetica, sans-serif;
 }
 
+.profile-info > :nth-last-child(2) {
+  margin-top: 30px;
+}
+
+.profile-info > :last-child {
+  margin-top: 25px;
+}
+
+
 .profile-username {
   font-size: 3rem;
   font-weight: 500;
@@ -598,17 +607,6 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-/* 
-.detail-modal-box {
-  width: calc(100vw - 24px);
-  max-width: 900px;
-  max-height: calc(100vh - 24px);
-  margin: 12px auto;
-  padding: 20px 16px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: hidden;
-} */
 
 .detail-modal-header {
   margin-bottom: 16px;
@@ -1005,6 +1003,43 @@
     0 0 20px rgba(171, 124, 231, 0.25);
 }
 
+.profile-badge-slide.is-active:hover {
+  transform: translateX(-50%) scale(1.10) translateY(-6px);
+  z-index: 5;
+  box-shadow:
+    0 0 0 1px rgba(171, 124, 231, 0.35),
+    0 0 30px rgba(171, 124, 231, 0.4);
+}
+
+.profile-badge-slide {
+  position: absolute;
+  overflow: hidden;
+}
+
+.profile-badge-slide::after {
+  content: "Click to share with friends!";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background: rgba(171, 124, 231, 0.65);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px;
+
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  border-radius: 18px;
+}
+
+.profile-badge-slide.is-active:hover::after {
+  opacity: 1;
+}
+
 .profile-badge-slide.is-prev {
   transform: translateX(-70%) scale(0.92);
   z-index: 2;
@@ -1185,6 +1220,9 @@
   transform: scale(1.05);
 }
 
+.share-badge-btn {
+  display: none;
+}
 @media (max-width: 768px) {
   .profile-content {
     padding: 0 16px;
@@ -1293,8 +1331,27 @@
     margin: 0;
     border-radius: 0;
   }
-  
+
+  .share-badge-btn {
+    background-color: #ab7ce7;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .profile-badge-slide::after {
+    display: none;
+  }
+
 }
+
 /* friends page list responsive styling */
 @media (max-width: 768px) {
   .friend-profile-back {

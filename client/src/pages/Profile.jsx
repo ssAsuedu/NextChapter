@@ -10,6 +10,7 @@ import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
 import Button from "@mui/material/Button";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import ReplyIcon from '@mui/icons-material/Reply';
 import HalfwayBadge from "../assets/HalfwayBadge.svg";
 import JourneyComplete from "../assets/JourneyComplete.svg";
 import NewChapter from "../assets/NewChapter.svg";
@@ -585,6 +586,15 @@ const handleBadgeShare = async () => {
               </button>
             )}
           </div>
+          <button
+            className="share-badge-btn"
+            onClick={() => {
+              const [type, count] = groupedBadges[activeProfileBadgeIndex];
+              openBadgeShareModal(type, count);
+            }}
+          >
+            Share Badge <ReplyIcon className="share-icon" />
+          </button>
         </div>
       </div>
 
