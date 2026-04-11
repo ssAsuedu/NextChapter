@@ -221,9 +221,6 @@ function Messages() {
               </div>
               <div className="dm-chat-messages">
                 {chronological.map((msg, idx) => {
-                  console.log("FULL MESSAGE:", msg);
-                  console.log("badgeType from message:", msg.badgeType);
-                  console.log("badge icon found:", badgeIcons[msg.badgeType]);
                   const isSent = msg.sender === email;
                   const bookData = msg.volumeId ? {
                     thumb: msg.coverUrl || null,
