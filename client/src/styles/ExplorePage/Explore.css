@@ -82,6 +82,14 @@
   transform: translateY(-50%);
 }
 
+:root[data-theme="dark"] .scroll-btn.left, .scroll-btn.right {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .scroll-btn.right:hover {
+  color: var(--background-color);
+}
+
 .scroll-btn.left {
   border-radius: 40px 0 0 40px;
   left: -50px;

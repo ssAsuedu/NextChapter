@@ -19,6 +19,11 @@ const BookCard = ({
   const closeTimeout = useRef();
   const navigate = useNavigate();
 
+  const cover = `https://books.google.com/books/content/images/frontcover/${volumeId}?fife=w400-h600&source=gbs_api`;
+  const fallback = info.imageLinks?.thumbnail ||
+  info.imageLinks?.smallThumbnail ||
+  "/default-book.png";
+  
   useEffect(() => {
     setSaved(bookshelf.includes(volumeId));
   }, [bookshelf, volumeId]);
@@ -76,7 +81,10 @@ const BookCard = ({
         role="button"
       >
         <img
-          src={info.imageLinks?.thumbnail || "/default-book.png"}
+          src={cover}
+          onError={(e) => {
+            e.target.src = fallback;
+          }}
           alt={info.title}
           className="book-image"
         />
