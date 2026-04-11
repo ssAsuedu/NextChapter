@@ -302,6 +302,11 @@
     position: relative;
     z-index: 1;
   }
+
+  :root[data-theme="dark"] .filter-toggle-btn {
+    background-color: var(--filter-pane);
+    
+  }
   /* instead of a vertical nav bar, the pane now reveals a modal with the corresponding book filters */
   .filter-pane {
     position: fixed;

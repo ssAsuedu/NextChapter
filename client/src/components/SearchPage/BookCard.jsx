@@ -9,12 +9,18 @@ const BookCard = ({ info, volumeId }) => {
   const [showFullTitle, setShowFullTitle] = useState(false);
   const [bookshelf, setBookshelf] = useState([]);
 
+  const cover = `https://books.google.com/books/content/images/frontcover/${volumeId}?fife=w400-h600&source=gbs_api`;
+  const fallback = info.imageLinks?.thumbnail ||
+  info.imageLinks?.smallThumbnail ||
+  "/default-book.png";
+
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
 
   const title = info.title || "No Title Available";
   const titleWords = title.split(" ");
   const isLongTitle = titleWords.length > 8;
+  
   const shortTitle = isLongTitle
     ? titleWords.slice(0, 8).join(" ") + "..."
     : title;
@@ -59,7 +65,10 @@ const BookCard = ({ info, volumeId }) => {
       role="button"
     >
       <img
-        src={info.imageLinks?.thumbnail || "/default-book.png"}
+        src={cover}
+        onError={(e) => {
+          e.target.src = fallback;
+        }}
         alt={title}
         className="search-book-image"
       />
