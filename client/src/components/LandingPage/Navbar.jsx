@@ -5,6 +5,8 @@ import "../../styles/LandingPage/Navbar.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Logo from "/NextChapterLogoSVG.svg";
+import darkModeLogo from "/NextChapterLogoWhite.svg";
 import { IconButton } from "@mui/material";
 import { getMessages } from "../../api";
 
@@ -132,6 +134,9 @@ const Navbar = () => {
           <MenuIcon />
         </IconButton>
         <ul className={`left ${menuOpen ? "open" : ""}`}>
+          <li>
+            <img className="logo" src={menuOpen || scrolled ? darkModeLogo : Logo}></img>
+          </li>
           <li className="">
             <Link
               className={`link ${scrolled ? "link-scrolled" : "not-scroll"}`}
@@ -198,12 +203,12 @@ const Navbar = () => {
                 </div>
               </li>
               {dropDown ? (
-                <KeyboardArrowDownIcon
+                <KeyboardArrowUpIcon
                   className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
                   onClick={() => setDropDown(false)}
                 />
               ) : (
-                <KeyboardArrowUpIcon
+                <KeyboardArrowDownIcon
                   className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
                   onClick={() => setDropDown(!dropDown)}
                 />
@@ -340,12 +345,12 @@ const Navbar = () => {
                     </div>
                   </li>
                   {profileDrop ? (
-                    <KeyboardArrowDownIcon
+                    <KeyboardArrowUpIcon
                       className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
                       onClick={() => setProfileDrop(false)}
                     />
                   ) : (
-                    <KeyboardArrowUpIcon
+                    <KeyboardArrowDownIcon
                       className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
                       onClick={() => setProfileDrop(!profileDrop)}
                     />
