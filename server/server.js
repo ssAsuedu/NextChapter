@@ -1000,7 +1000,8 @@ app.get('/api/friends/status', async (req, res) => {
 
 app.post("/api/messages/send", async (req, res) => {
   try {
-    const { senderEmail, receiverEmail, volumeId, title, messageText, type, coverUrl, author } = req.body;
+    
+    const { senderEmail, receiverEmail, volumeId, title, messageText, type, coverUrl, author, badgeType, badgeCount } = req.body;
 
     if (!senderEmail || !receiverEmail) {
       return res.status(400).json({ error: "Missing fields" });
@@ -1015,6 +1016,8 @@ app.post("/api/messages/send", async (req, res) => {
       coverUrl: coverUrl || null,
       author: author || null,
       messageText: messageText || (volumeId ? "Hi! I think you should give this book a try:" : ""),
+      badgeType: badgeType ?? null,
+      badgeCount: badgeCount ?? null,
       unread: "unread",
     });
 
