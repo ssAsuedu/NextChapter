@@ -197,7 +197,7 @@ const Explore = () => {
 
       {/* ===== TRENDING SECTION ===== */}
       <div
-        className="category-section trending-section"
+        className="category-section section-container"
         role="region"
         aria-labelledby="trending-heading"
       >
@@ -286,16 +286,17 @@ const Explore = () => {
       {categories.map((cat) => (
         <div
           key={cat.label}
-          className="category-section"
+          className="category-section section-container"
           role="region"
           aria-labelledby={`${cat.label.toLowerCase()}-heading`}
         >
           <h2
-            className="category-title"
+            className="trending-title"
             id={`${cat.label.toLowerCase()}-heading`}
           >
             {cat.label}
           </h2>
+
           <div
             className="category-scroll-wrapper"
             aria-label={`${cat.label} books horizontal list`}
@@ -307,16 +308,13 @@ const Explore = () => {
             >
               &#8249;
             </button>
+
             <div
               className="category-scroll"
               ref={(el) => (scrollRefs.current[cat.label] = el)}
             >
               {loading[cat.label] ? (
-                <div
-                  className="category-loading"
-                  role="status"
-                  aria-live="polite"
-                >
+                <div className="category-loading" role="status" aria-live="polite">
                   Loading...
                 </div>
               ) : booksByCategory[cat.label]?.length > 0 ? (
@@ -349,15 +347,12 @@ const Explore = () => {
                     </div>
                   ))
               ) : (
-                <div
-                  className="category-loading"
-                  role="status"
-                  aria-live="polite"
-                >
+                <div className="category-loading" role="status" aria-live="polite">
                   No books found.
                 </div>
               )}
             </div>
+
             <button
               className="scroll-btn right"
               aria-label={`Scroll ${cat.label} right`}

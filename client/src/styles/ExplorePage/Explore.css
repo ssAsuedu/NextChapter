@@ -26,14 +26,6 @@
   margin-top: 25px;
   max-width: 1100px;
   margin-bottom: 70px;
-  
-}
-
-.category-title {
-  font-size: 1.8rem;
-  color: var(--text-color);
-  margin-bottom: 12px;
-  font-weight: 600;
 }
 
 .category-scroll-wrapper {
@@ -47,15 +39,28 @@
   display: flex;
   overflow-x: auto;
   gap: 20px;
-  padding-bottom: 10px;
-  scrollbar-width: none; /* Hide scrollbar for Firefox */
-  -ms-overflow-style: none; /* Hide scrollbar for IE and Edge */
+  padding-bottom: 14px;
   scroll-behavior: smooth;
   width: 100%;
+  scrollbar-gutter: stable;
 }
 
 .category-scroll::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome, Safari, Opera */
+  height: 8px;
+}
+
+.category-scroll::-webkit-scrollbar-track {
+  background: rgba(171, 124, 231, 0.15);
+  border-radius: 999px;
+}
+
+.category-scroll::-webkit-scrollbar-thumb {
+  background: #ab7ce7;
+  border-radius: 999px;
+}
+
+.category-scroll::-webkit-scrollbar-thumb:hover {
+  background: #9663d9;
 }
 
 .scroll-btn {
@@ -115,7 +120,7 @@
   color: var(--secondary-color);
 }
 
-.trending-section {
+.section-container {
   background: linear-gradient(
     135deg,
     rgba(171, 124, 231, 0.12),
@@ -131,7 +136,7 @@
     0 10px 24px rgba(171, 124, 231, 0.1);
 }
 
-:root[data-theme="dark"] .trending-section {
+:root[data-theme="dark"] .section-container {
   background: linear-gradient(
   135deg,
   rgba(171, 124, 231, 0.12),  /* soft pastel purple */
@@ -318,6 +323,17 @@
   color: var(--secondary-color);
 }
 
+@media (min-width: 768px) {
+  .category-scroll {
+    scrollbar-width: none; 
+    -ms-overflow-style: none; 
+  }
+
+  .category-scroll::-webkit-scrollbar {
+    display: none; 
+  }
+
+}
 
 @media (max-width: 600px) {
   .mood-cta-banner {
@@ -346,4 +362,9 @@
     flex-shrink: 0;
     width: 140px;
   }
+
+   .scroll-btn {
+    display: none;
+  }
 }
+
