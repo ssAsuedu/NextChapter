@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBookshelf, getAllUsers, getFriends } from "../api";
-import { createList, getUserLists, deleteList, updateList} from "../api";
+import { createList, getUserLists, deleteList, updateList, sendMessage } from "../api";
 import axios from "axios";
 import BookCard from "../components/ProfilePage/BookShelfCard";
 import "../styles/ProfilePage/Profile.css";
@@ -10,6 +10,7 @@ import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
 import Button from "@mui/material/Button";
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
+import ReplyIcon from '@mui/icons-material/Reply';
 import HalfwayBadge from "../assets/HalfwayBadge.svg";
 import JourneyComplete from "../assets/JourneyComplete.svg";
 import NewChapter from "../assets/NewChapter.svg";
@@ -70,6 +71,12 @@ const Profile = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [listToDelete, setListToDelete] = useState(null);
 
+  const [showBadgeShare, setShowBadgeShare] = useState(false);
+  const [selectedBadge, setSelectedBadge] = useState(null);
+  const [badgeShareFriends, setBadgeShareFriends] = useState([]);
+  const [selectedBadgeFriends, setSelectedBadgeFriends] = useState([]);
+  const [showBadgeShareSuccess, setShowBadgeShareSuccess] = useState(false);
+
   // badge state
   const [badges, setBadges] = useState([]);
   const badgeIcons = {
@@ -91,6 +98,26 @@ const Profile = () => {
     NEWCOMER: Newcomer,
     READING_ROUTINE: ReadingRoutine,
   };
+
+  const badgeDisplayNames = {
+  HALFWAY: "Halfway",
+  FINISHED: "Journey Complete",
+  NEW_CHAPTER: "New Chapter",
+  FUTURE_LIBRARIAN: "Future Librarian",
+  CRITIC_IN_THE_MAKING: "Critic In The Making",
+  FIRST_CONNECTION: "FirstConnection",
+  CONVERSATION_STARTER: "Conversation Starter",
+  BOOK_MARATHONER: "Book Marathoner",
+  BOOKWORM_BEGINNER: "Bookworm Beginner",
+  DAILY_READER: "Daily Reader",
+  DEEP_DIVER: "Deep Diver",
+  EXPLORER: "Explorer",
+  GENRE_JUMPER: "Genre Jumper",
+  LIBRARY_LEGEND: "Library Legend",
+  MULTITASKER: "Multitasker",
+  NEWCOMER: "Newcomer",
+  READING_ROUTINE: "Reading Routine",
+};
 
   const startAutoScroll = (direction) => {
     if (scrollIntervalRef.current) return;
@@ -125,6 +152,71 @@ const Profile = () => {
       stopAutoScroll();
     }
   };
+
+  const openBadgeShareModal = async (type, count) => {
+  try {
+    const res = await getFriends(email);
+    const fetchedFriends = res.data.friends || res.data || [];
+
+    setBadgeShareFriends(fetchedFriends);
+    setSelectedBadge({
+      type,
+      count,
+      icon: badgeIcons[type],
+    });
+    setSelectedBadgeFriends([]);
+    setShowBadgeShare(true);
+  } catch (err) {
+    console.error("Error fetching friends:", err);
+    setBadgeShareFriends([]);
+    setSelectedBadge({
+      type,
+      count,
+      icon: badgeIcons[type],
+    });
+    setSelectedBadgeFriends([]);
+    setShowBadgeShare(true);
+  }
+};
+
+const resetBadgeShareModal = () => {
+  setShowBadgeShare(false);
+  setSelectedBadge(null);
+  setSelectedBadgeFriends([]);
+};
+
+const handleBadgeShare = async () => {
+  if (!email) {
+    alert("Please log in to share badges.");
+    return;
+  }
+
+  if (!selectedBadge || selectedBadgeFriends.length === 0) {
+    alert("Please select at least one friend.");
+    return;
+  }
+
+  try {
+    await Promise.all(
+      selectedBadgeFriends.map((friend) =>
+        sendMessage({
+          senderEmail: email,
+          receiverEmail: friend.email || friend.friendEmail,
+          messageText: "I earned this badge, check it out!",
+          type: "badge_share",
+          badgeType: selectedBadge.type,
+          badgeCount: selectedBadge.count,
+        })
+      )
+    );
+
+    resetBadgeShareModal();
+    setShowBadgeShareSuccess(true);
+  } catch (err) {
+    console.error(err);
+    alert("Failed to share badge.");
+  }
+};
 
   useEffect(() => {
     const fetchBookshelf = async () => {
@@ -471,10 +563,13 @@ const Profile = () => {
                   <div
                     className={`profile-badge-slide ${positionClass}`}
                     key={type}
+                    onClick={() => openBadgeShareModal(type, count)}
+                    style={{ cursor: "pointer" }}
                   >
                     <img
                       src={badgeIcons[type]}
                       className="profile-badge-icon"
+                      alt={type}
                     />
                     <span className="profile-badge-count">×{count}</span>
                   </div>
@@ -491,6 +586,15 @@ const Profile = () => {
               </button>
             )}
           </div>
+          <button
+            className="share-badge-btn"
+            onClick={() => {
+              const [type, count] = groupedBadges[activeProfileBadgeIndex];
+              openBadgeShareModal(type, count);
+            }}
+          >
+            Share Badge <ReplyIcon className="share-icon" />
+          </button>
         </div>
       </div>
 
@@ -915,6 +1019,117 @@ const Profile = () => {
             </button>
             <button className="delete-btn" onClick={confirmDeleteList}>
               Delete
+            </button>
+          </div>
+        </Box>
+      </Modal>
+      {/* share badge overlay*/}
+      {showBadgeShare && (
+        <div className="badge-share-overlay" onClick={resetBadgeShareModal}>
+          <div
+            className="badge-share-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>Share Badge</h3>
+
+            <div className="badge-preview">
+              <img src={selectedBadge?.icon} alt="badge" />
+            </div>
+
+            {selectedBadgeFriends.length > 0 && (
+              <div className="badge-selected">
+                {selectedBadgeFriends.map((friend, idx) => {
+                  const email = friend.email || friend.friendEmail;
+                  const name = friend.name || friend.friendName || email;
+
+                  return (
+                    <div
+                      key={idx}
+                      className="badge-selected-chip"
+                      onClick={() =>
+                        setSelectedBadgeFriends((prev) =>
+                          prev.filter(
+                            (f) => (f.email || f.friendEmail) !== email
+                          )
+                        )
+                      }
+                    >
+                      {name} ✕
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            <div className="badge-friends-container">
+              {badgeShareFriends
+                .filter(
+                  (friend) =>
+                    !selectedBadgeFriends.some(
+                      (selected) =>
+                        (selected.email || selected.friendEmail) ===
+                        (friend.email || friend.friendEmail)
+                    )
+                )
+                .map((friend, idx) => {
+                  const friendEmail = friend.email || friend.friendEmail;
+                  const friendName = friend.name || friend.friendName || friendEmail;
+
+                  return (
+                    <div
+                      key={idx}
+                      className="badge-friend-chip"
+                      onClick={() =>
+                        setSelectedBadgeFriends((prev) => [...prev, friend])
+                      }
+                    >
+                      {friendName}
+                    </div>
+                  );
+                })}
+            </div>
+
+            <div className="badge-actions">
+              <button
+                className="badge-confirm-btn"
+                onClick={handleBadgeShare}
+                disabled={selectedBadgeFriends.length === 0}
+              >
+                Confirm
+              </button>
+              <button
+                className="badge-cancel-btn"
+                onClick={resetBadgeShareModal}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      <Modal
+        open={showBadgeShareSuccess}
+        onClose={() => setShowBadgeShareSuccess(false)}
+        hideBackdrop
+      >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            outline: "none",
+          }}
+        >
+          <div className="share-modal success-modal">
+            <div className="success-icon">✓</div>
+            <h3>Badge Sent!</h3>
+            <p>Your friend(s) will receive your badge.</p>
+            <button
+              className="share-confirm-btn"
+              onClick={() => setShowBadgeShareSuccess(false)}
+            >
+              Done
             </button>
           </div>
         </Box>

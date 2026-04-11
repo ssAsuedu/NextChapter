@@ -229,6 +229,15 @@
   font-family: 'Sen', Arial, Helvetica, sans-serif;
 }
 
+.profile-info > :nth-last-child(2) {
+  margin-top: 30px;
+}
+
+.profile-info > :last-child {
+  margin-top: 25px;
+}
+
+
 .profile-username {
   font-size: 3rem;
   font-weight: 500;
@@ -598,17 +607,6 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
 }
-/* 
-.detail-modal-box {
-  width: calc(100vw - 24px);
-  max-width: 900px;
-  max-height: calc(100vh - 24px);
-  margin: 12px auto;
-  padding: 20px 16px;
-  box-sizing: border-box;
-  overflow-y: auto;
-  overflow-x: hidden;
-} */
 
 .detail-modal-header {
   margin-bottom: 16px;
@@ -965,6 +963,8 @@
   width: 100%;
   max-width: 320px;
   margin: 10px auto 0;
+  padding: 0 36px;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1001,6 +1001,43 @@
   box-shadow:
     0 0 0 1px rgba(171, 124, 231, 0.28),
     0 0 20px rgba(171, 124, 231, 0.25);
+}
+
+.profile-badge-slide.is-active:hover {
+  transform: translateX(-50%) scale(1.10) translateY(-6px);
+  z-index: 5;
+  box-shadow:
+    0 0 0 1px rgba(171, 124, 231, 0.35),
+    0 0 30px rgba(171, 124, 231, 0.4);
+}
+
+.profile-badge-slide {
+  position: absolute;
+  overflow: hidden;
+}
+
+.profile-badge-slide::after {
+  content: "Click to share with friends!";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  background: rgba(171, 124, 231, 0.65);
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px;
+
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  border-radius: 18px;
+}
+
+.profile-badge-slide.is-active:hover::after {
+  opacity: 1;
 }
 
 .profile-badge-slide.is-prev {
@@ -1053,6 +1090,139 @@
   right: -16px;  
 }
 
+.badge-share-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 12px; 
+}
+
+.badge-share-modal {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  width: min(300px, 100%);            
+  max-height: calc(100vh - 24px);     
+  overflow-y: auto;                   
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+}
+
+.badge-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 4px;
+}
+
+.badge-preview img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+}
+
+.badge-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.badge-friends-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.badge-friend-chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background-color: #f2f2f2;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.badge-friend-chip:hover {
+  background-color: #e6e0f8;
+}
+
+.badge-selected {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.badge-selected-chip {
+  background-color: #6c3fc5;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.badge-selected-chip:hover {
+  background-color: #4b2ca3;
+}
+
+.badge-confirm-btn {
+  background-color: var(--primary-color);
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 24px;
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  outline: none;
+}
+
+.badge-confirm-btn:hover {
+  background-color: #6c3fc5;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.badge-confirm-btn:disabled {
+  background: #bbb;
+  cursor: not-allowed;
+  border-color: #bbb;
+}
+
+.badge-cancel-btn {
+  background-color: #f2f2f2;
+  border: 1px solid #ccc;
+  color: var(--secondary-color);
+  padding: 8px 24px;
+  font-size: 1rem;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+
+.badge-cancel-btn:hover {
+  background-color: #6c3fc5;
+  color: #fff;
+  transform: scale(1.05);
+}
+
+.share-badge-btn {
+  display: none;
+}
 @media (max-width: 768px) {
   .profile-content {
     padding: 0 16px;
@@ -1161,8 +1331,27 @@
     margin: 0;
     border-radius: 0;
   }
-  
+
+  .share-badge-btn {
+    background-color: #ab7ce7;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .profile-badge-slide::after {
+    display: none;
+  }
+
 }
+
 /* friends page list responsive styling */
 @media (max-width: 768px) {
   .friend-profile-back {
@@ -1231,5 +1420,28 @@
 
   .detail-controls {
     flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .badge-share-modal {
+    padding: 18px 14px;
+    gap: 14px;
+    border-radius: 14px;
+  }
+
+  .badge-actions {
+    flex-direction: column;   
+    gap: 10px;
+  }
+
+  .badge-confirm-btn,
+  .badge-cancel-btn {
+    width: 100%;              
+  }
+
+  .badge-preview img {
+    width: 70px;
+    height: 70px;
   }
 }

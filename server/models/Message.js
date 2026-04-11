@@ -8,7 +8,9 @@ const messageSchema = new mongoose.Schema({
   coverUrl: { type: String, default: null },
   author: { type: String, default: null },
   messageText: { type: String },
-  type: { type: String, enum: ["book_recommendation", "share_badge", "text"], default: "book_recommendation" },
+  type: { type: String, enum: ["book_recommendation", "badge_share", "text"], default: "book_recommendation" },
+  badgeType: { type: String, default: null },
+  badgeCount: { type: Number, default: null },
   unread: { type: String, enum: ["unread", "read"], default: "unread" },
   sentAt: { type: Date, default: Date.now },
 });

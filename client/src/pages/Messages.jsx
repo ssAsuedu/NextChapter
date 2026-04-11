@@ -2,6 +2,24 @@ import React, { useEffect, useState, useRef } from "react";
 import { getMessages, markMessagesAsRead, getFriends, sendMessage } from "../api";
 import { useNavigate } from "react-router-dom";
 import "../styles/Messages.css";
+import HalfwayBadge from "../assets/HalfwayBadge.svg";
+import JourneyComplete from "../assets/JourneyComplete.svg";
+import NewChapter from "../assets/NewChapter.svg";
+import FutureLibrarian from "../assets/FutureLibrarian.svg";
+import CriticInTheMaking from "../assets/CriticInTheMaking.svg";
+import FirstConnection from "../assets/FirstConnection.svg";
+import ConversationStarter from "../assets/ConversationStarter.svg";
+import BookMarathoner from "../assets/BookMarathoner.png";
+import BookwormBeginner from "../assets/BookwormBeginner.png";
+import DailyReader from "../assets/DailyReader.png";
+import DeepDiver from "../assets/DeepDiver.png";
+import Explorer from "../assets/Explorer.png";
+import GenreJumper from "../assets/GenreJumper.png";
+import LibraryLegend from "../assets/LibraryLegend.png";
+import Multitasker from "../assets/Multitasker.png";
+import Newcomer from "../assets/Newcomer.png";
+import ReadingRoutine from "../assets/ReadingRoutine.png";
+
 
 const QUICK_REPLIES = {
   book_recommendation: [
@@ -10,6 +28,33 @@ const QUICK_REPLIES = {
     "Already read it!",
     "Not really my genre, but thanks!",
   ],
+  // badge quick replies 
+   badge_share: [
+    "Awesome!",
+    "Congrats!",
+    "Nice badge!",
+    "Good job!",
+  ],
+};
+
+const badgeIcons = {
+  HALFWAY: HalfwayBadge,
+  FINISHED: JourneyComplete,
+  NEW_CHAPTER: NewChapter,
+  FUTURE_LIBRARIAN: FutureLibrarian,
+  CRITIC_IN_THE_MAKING: CriticInTheMaking,
+  FIRST_CONNECTION: FirstConnection,
+  CONVERSATION_STARTER: ConversationStarter,
+  BOOK_MARATHONER: BookMarathoner,
+  BOOKWORM_BEGINNER: BookwormBeginner,
+  DAILY_READER: DailyReader,
+  DEEP_DIVER: DeepDiver,
+  EXPLORER: Explorer,
+  GENRE_JUMPER: GenreJumper,
+  LIBRARY_LEGEND: LibraryLegend,
+  MULTITASKER: Multitasker,
+  NEWCOMER: Newcomer,
+  READING_ROUTINE: ReadingRoutine,
 };
 
 function Messages() {
@@ -171,27 +216,33 @@ function Messages() {
           <>
             <div className="dm-chat-header">
               <button className="dm-back-btn" onClick={() => setSelectedSender(null)}>←</button>
-              <div className="dm-avatar sm">{displayName(selectedSender).charAt(0).toUpperCase()}</div>
-              <span>{displayName(selectedSender)}</span>
-            </div>
-            <div className="dm-chat-messages">
-              {chronological.map((msg, idx) => {
-                const isSent = msg.sender === email;
-                const bookData = msg.volumeId ? {
-                  thumb: msg.coverUrl || null,
-                  title: msg.title || null,
-                  author: msg.author || null,
-                } : null;
-                const type = getMessageType(msg);
-                const replies = !isSent && type ? QUICK_REPLIES[type] : null;
+                <div className="dm-avatar sm">{displayName(selectedSender).charAt(0).toUpperCase()}</div>
+                <span>{displayName(selectedSender)}</span>
+              </div>
+              <div className="dm-chat-messages">
+                {chronological.map((msg, idx) => {
+                  const isSent = msg.sender === email;
+                  const bookData = msg.volumeId ? {
+                    thumb: msg.coverUrl || null,
+                    title: msg.title || null,
+                    author: msg.author || null,
+                  } : null;
+                  const badgeData = msg.type === "badge_share" ? {
+                    type: msg.badgeType || null,
+                    count: msg.badgeCount || 1,
+                    icon: msg.badgeType ? badgeIcons[msg.badgeType] : null,
+                  } : null;
+                  const type = getMessageType(msg);
+                  const replies = !isSent && type ? QUICK_REPLIES[type] : null;
 
-                return (
-                  <div key={idx} className={`dm-bubble-wrapper ${isSent ? "sent" : ""}`}>
-                    <div
-                      className={`dm-bubble ${isSent ? "dm-bubble-sent" : ""}`}
-                      style={{ cursor: "default" }}
-                    >
-                      <p className="dm-bubble-intro">{msg.messageText}</p>
+
+                  return (
+                    <div key={idx} className={`dm-bubble-wrapper ${isSent ? "sent" : ""}`}>
+                      <div
+                        className={`dm-bubble ${isSent ? "dm-bubble-sent" : ""}`}
+                        style={{ cursor: "default" }}
+                      >
+                        <p className="dm-bubble-intro">{msg.messageText}</p>
                       {bookData && (
                         <div
                           className="dm-book-card"
@@ -205,6 +256,18 @@ function Messages() {
                             {bookData.title && <span className="dm-book-title">{bookData.title}</span>}
                             {bookData.author && <span className="dm-book-author">Author: {bookData.author}</span>}
                           </div>
+                        </div>
+                      )}
+                      {badgeData && (
+                        <div className="dm-badge-profile-card">
+                          {badgeData.icon && (
+                            <img
+                              src={badgeData.icon}
+                              alt={badgeData.type || "Badge"}
+                              className="dm-badge-profile-icon"
+                            />
+                          )}
+                          <span className="dm-badge-profile-count">×{badgeData.count}</span>
                         </div>
                       )}
                       <small>{new Date(msg.sentAt).toLocaleString()}</small>
