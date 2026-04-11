@@ -1245,7 +1245,18 @@ app.post("/api/users/self-delete", async (req, res) => {
     );
 
     // 3) Delete Mongo user
-    await User.deleteOne({ email: normalizedEmail });
+    // await User.deleteOne({ email: normalizedEmail });
+    await Promise.all([
+        Message.deleteMany({
+              $or: [
+                  { sender: normalizedEmail },
+                  { receiver: normalizedEmail },
+                ],
+              }),
+        User.deleteOne({ email: normalizedEmail }),
+    ]);
+
+
 
     return res.json({ message: "Account deleted successfully" });
   } catch (err) {
