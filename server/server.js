@@ -128,6 +128,13 @@ app.post("/api/signup", (req, res) => {
   const { email, password, name } = req.body;
   if (!email || !password || !name) return res.status(400).json({ error: "Missing fields" });
 
+  if (name.length > 15) {
+    return res.status(400).json({
+      error: "ValidationError",
+      message: "Name must be 15 characters or less.",
+    });
+  }
+
   const attributeList = [
     new CognitoUserAttribute({ Name: "email", Value: email }),
     new CognitoUserAttribute({ Name: "name", Value: name }),
