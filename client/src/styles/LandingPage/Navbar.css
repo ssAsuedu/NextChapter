@@ -307,9 +307,17 @@ li {
   border: none;
 }
 
+:root[data-theme="dark"] .new-user.open .auth-login.not-scroll:hover, .new-user.open {
+  background-color: transparent;
+  transform: none;
+  color: white;
+  text-decoration: underline;
+} 
+
 :root[data-theme="dark"] .auth-login.not-scroll:hover, .auth-login.login-nav:hover {
   transform: scale(1.07);
 }
+
 :root[data-theme="dark"] .link {
   color: var(--text-color);
 }
@@ -391,6 +399,10 @@ li {
 }
 
 @media (min-width:300px) and (max-width: 860px) {
+  .logo {
+    width: 60px;
+    height: 60px;
+  }
   .about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
     display: none !important;
   }
@@ -496,7 +508,16 @@ li {
   }
 
   .auth-signout.not-scroll {
+    display: block;
     color: white;
+  }
+
+  .auth-signout.not-scroll:hover {
+    transform: none;
+    text-decoration: underline;
+  }
+  :root[data-theme="dark"] .auth-signout.not-scroll:hover {
+    background-color: transparent;
   }
 
   .new-user {
@@ -568,35 +589,41 @@ li {
 @media (min-width: 860px) and (max-width: 1000px) {
 
   .left {
-    gap: 25px;
+    gap: 20px;
   }
 
   .logged-in {
-    gap: 6px;
+    gap: 10px;
   }
 
   .auth-signout.not-scroll {
     padding: 0;
   }
 
-  /* .auth-signout.desktop-dropdown.not-scroll {
-    padding: 10px 20px;
-  } */
+  .logo {
+    width: 55px;
+  }
 
   svg {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
   }
 
   .auth-signout.desktop-dropdown.not-scroll {
-    padding: 5px;
+    padding: 8px;
   }
 
   .auth-signout.signout-nav {
-    padding: 5px;
+    padding: 8px;
   }
   .user-initial.not-scroll, .user-initial.bg-scroll {
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
+  }
+}
+
+@media (min-width: 1000px) {
+  .logo {
+    width: 60px;
   }
 }
