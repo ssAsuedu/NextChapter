@@ -590,6 +590,9 @@ const Profile = () => {
               <button
                 className="scroll-btn right"
                 onClick={() => changeProfileBadge(1)}
+                style={{
+                  right: groupedBadges.length > 2 ? "-35px" : "-16px"
+                }}
               >
                 &#8250;
               </button>
