@@ -1,16 +1,22 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { getBookshelf, getAllUsers, getFriends } from "../api";
-import { createList, getUserLists, deleteList, updateList, sendMessage } from "../api";
+import {
+  createList,
+  getUserLists,
+  deleteList,
+  updateList,
+  sendMessage,
+} from "../api";
 import axios from "axios";
 import BookCard from "../components/ProfilePage/BookShelfCard";
 import "../styles/ProfilePage/Profile.css";
 import ProfileLogo from "../assets/profile2.svg";
 import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
 import Button from "@mui/material/Button";
-import Modal from '@mui/material/Modal';
-import Box from '@mui/material/Box';
-import ReplyIcon from '@mui/icons-material/Reply';
+import Modal from "@mui/material/Modal";
+import Box from "@mui/material/Box";
+import ReplyIcon from "@mui/icons-material/Reply";
 import HalfwayBadge from "../assets/HalfwayBadge.svg";
 import JourneyComplete from "../assets/JourneyComplete.svg";
 import NewChapter from "../assets/NewChapter.svg";
@@ -28,7 +34,6 @@ import LibraryLegend from "../assets/LibraryLegend.png";
 import Multitasker from "../assets/Multitasker.png";
 import Newcomer from "../assets/Newcomer.png";
 import ReadingRoutine from "../assets/ReadingRoutine.png";
-
 
 import { getBadges } from "../api";
 
@@ -100,24 +105,24 @@ const Profile = () => {
   };
 
   const badgeDisplayNames = {
-  HALFWAY: "Halfway",
-  FINISHED: "Journey Complete",
-  NEW_CHAPTER: "New Chapter",
-  FUTURE_LIBRARIAN: "Future Librarian",
-  CRITIC_IN_THE_MAKING: "Critic In The Making",
-  FIRST_CONNECTION: "FirstConnection",
-  CONVERSATION_STARTER: "Conversation Starter",
-  BOOK_MARATHONER: "Book Marathoner",
-  BOOKWORM_BEGINNER: "Bookworm Beginner",
-  DAILY_READER: "Daily Reader",
-  DEEP_DIVER: "Deep Diver",
-  EXPLORER: "Explorer",
-  GENRE_JUMPER: "Genre Jumper",
-  LIBRARY_LEGEND: "Library Legend",
-  MULTITASKER: "Multitasker",
-  NEWCOMER: "Newcomer",
-  READING_ROUTINE: "Reading Routine",
-};
+    HALFWAY: "Halfway",
+    FINISHED: "Journey Complete",
+    NEW_CHAPTER: "New Chapter",
+    FUTURE_LIBRARIAN: "Future Librarian",
+    CRITIC_IN_THE_MAKING: "Critic In The Making",
+    FIRST_CONNECTION: "FirstConnection",
+    CONVERSATION_STARTER: "Conversation Starter",
+    BOOK_MARATHONER: "Book Marathoner",
+    BOOKWORM_BEGINNER: "Bookworm Beginner",
+    DAILY_READER: "Daily Reader",
+    DEEP_DIVER: "Deep Diver",
+    EXPLORER: "Explorer",
+    GENRE_JUMPER: "Genre Jumper",
+    LIBRARY_LEGEND: "Library Legend",
+    MULTITASKER: "Multitasker",
+    NEWCOMER: "Newcomer",
+    READING_ROUTINE: "Reading Routine",
+  };
 
   const startAutoScroll = (direction) => {
     if (scrollIntervalRef.current) return;
@@ -128,22 +133,22 @@ const Profile = () => {
       }
     }, 16);
   };
-  
+
   const stopAutoScroll = () => {
     clearInterval(scrollIntervalRef.current);
     scrollIntervalRef.current = null;
   };
-  
+
   const handleDragOverWithScroll = (e, bookId) => {
     e.preventDefault();
     setDragOverBookId(bookId);
-  
+
     const container = editBookGridRef.current;
     if (!container) return;
-  
+
     const { top, bottom } = container.getBoundingClientRect();
     const threshold = 80;
-  
+
     if (e.clientY < top + threshold) {
       startAutoScroll("up");
     } else if (e.clientY > bottom - threshold) {
@@ -154,69 +159,69 @@ const Profile = () => {
   };
 
   const openBadgeShareModal = async (type, count) => {
-  try {
-    const res = await getFriends(email);
-    const fetchedFriends = res.data.friends || res.data || [];
+    try {
+      const res = await getFriends(email);
+      const fetchedFriends = res.data.friends || res.data || [];
 
-    setBadgeShareFriends(fetchedFriends);
-    setSelectedBadge({
-      type,
-      count,
-      icon: badgeIcons[type],
-    });
+      setBadgeShareFriends(fetchedFriends);
+      setSelectedBadge({
+        type,
+        count,
+        icon: badgeIcons[type],
+      });
+      setSelectedBadgeFriends([]);
+      setShowBadgeShare(true);
+    } catch (err) {
+      console.error("Error fetching friends:", err);
+      setBadgeShareFriends([]);
+      setSelectedBadge({
+        type,
+        count,
+        icon: badgeIcons[type],
+      });
+      setSelectedBadgeFriends([]);
+      setShowBadgeShare(true);
+    }
+  };
+
+  const resetBadgeShareModal = () => {
+    setShowBadgeShare(false);
+    setSelectedBadge(null);
     setSelectedBadgeFriends([]);
-    setShowBadgeShare(true);
-  } catch (err) {
-    console.error("Error fetching friends:", err);
-    setBadgeShareFriends([]);
-    setSelectedBadge({
-      type,
-      count,
-      icon: badgeIcons[type],
-    });
-    setSelectedBadgeFriends([]);
-    setShowBadgeShare(true);
-  }
-};
+  };
 
-const resetBadgeShareModal = () => {
-  setShowBadgeShare(false);
-  setSelectedBadge(null);
-  setSelectedBadgeFriends([]);
-};
+  const handleBadgeShare = async () => {
+    if (!email) {
+      alert("Please log in to share badges.");
+      return;
+    }
 
-const handleBadgeShare = async () => {
-  if (!email) {
-    alert("Please log in to share badges.");
-    return;
-  }
+    if (!selectedBadge || selectedBadgeFriends.length === 0) {
+      alert("Please select at least one friend.");
+      return;
+    }
 
-  if (!selectedBadge || selectedBadgeFriends.length === 0) {
-    alert("Please select at least one friend.");
-    return;
-  }
+    try {
+      await Promise.all(
+        selectedBadgeFriends.map((friend) =>
+          sendMessage({
+            senderEmail: email,
+            receiverEmail: friend.email || friend.friendEmail,
+            messageText: "I earned this badge, check it out!",
+            type: "badge_share",
+            badgeType: selectedBadge.type,
+            badgeCount: selectedBadge.count,
+          }),
+        ),
+      );
 
-  try {
-    await Promise.all(
-      selectedBadgeFriends.map((friend) =>
-        sendMessage({
-          senderEmail: email,
-          receiverEmail: friend.email || friend.friendEmail,
-          messageText: "I earned this badge, check it out!",
-          type: "badge_share",
-          badgeType: selectedBadge.type,
-          badgeCount: selectedBadge.count,
-        })
-      )
-    );
-
-    resetBadgeShareModal();
-    setShowBadgeShareSuccess(true);
-  } catch (err) {
-    console.error(err);
-    alert("Failed to share badge.");
-  }
-};
+      resetBadgeShareModal();
+      setShowBadgeShareSuccess(true);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to share badge.");
+    }
+  };
 
   useEffect(() => {
     const fetchBookshelf = async () => {
@@ -251,11 +256,11 @@ const handleBadgeShare = async () => {
         } else {
           try {
             const res = await axios.get(
-              `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`
+              `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`,
             );
             setBookInCache(id, res.data);
             results.push(res.data);
-            await new Promise(r => setTimeout(r, 200));
+            await new Promise((r) => setTimeout(r, 200));
           } catch (e) {}
         }
       }
@@ -269,12 +274,14 @@ const handleBadgeShare = async () => {
       if (!email) return;
       try {
         const usersRes = await getAllUsers();
-        const foundUser = usersRes.data.find(u => u.email === email);
+        const foundUser = usersRes.data.find((u) => u.email === email);
         if (foundUser) {
           setCreatedAt(foundUser.createdAt);
         }
         const friendsRes = await getFriends(email);
-        setFriendCount(Array.isArray(friendsRes.data) ? friendsRes.data.length : 0);
+        setFriendCount(
+          Array.isArray(friendsRes.data) ? friendsRes.data.length : 0,
+        );
       } catch (e) {
         setCreatedAt(null);
         setFriendCount(0);
@@ -297,11 +304,8 @@ const handleBadgeShare = async () => {
     if (!email) return;
     try {
       const res = await getUserLists(email);
-      console.log("fetched lists:", res.data);
       setLists(res.data || []);
-    } catch (err) {
-      console.error("Error fetching lists:", err);
-    }
+    } catch (err) {}
   };
 
   const openCreateListModal = () => {
@@ -342,7 +346,7 @@ const handleBadgeShare = async () => {
         name: listName,
         description: listDescription,
         privacy: listPrivacy,
-        books: Array.from(selectedBooks)
+        books: Array.from(selectedBooks),
       });
       fetchLists();
       closeCreateListModal();
@@ -355,7 +359,7 @@ const handleBadgeShare = async () => {
     setListToDelete(listId);
     setShowDeleteModal(true);
   };
-  
+
   const confirmDeleteList = async () => {
     try {
       await deleteList(listToDelete);
@@ -379,7 +383,7 @@ const handleBadgeShare = async () => {
       });
       await fetchLists();
       if (selectedList && selectedList._id === editListId) {
-        setSelectedList(prev => ({
+        setSelectedList((prev) => ({
           ...prev,
           name: editListName,
           description: editListDescription,
@@ -412,20 +416,16 @@ const handleBadgeShare = async () => {
   };
 
   const toggleEditBook = (bookId) => {
-    setEditSelectedBooks(prev =>
+    setEditSelectedBooks((prev) =>
       prev.includes(bookId)
-        ? prev.filter(id => id !== bookId)
-        : [...prev, bookId]
+        ? prev.filter((id) => id !== bookId)
+        : [...prev, bookId],
     );
   };
 
   const handleTogglePin = async (list, e) => {
     e.stopPropagation();
     const currentlyPinned = list.pinned === true;
-    console.log("listId:", list._id);
-    console.log("email:", email);
-    console.log("sending pinned:", !currentlyPinned);
-    
     try {
       const res = await updateList({
         email,
@@ -436,13 +436,8 @@ const handleBadgeShare = async () => {
         books: list.books,
         pinned: !currentlyPinned,
       });
-      console.log("response list:", res.data.list);
-      console.log("pinned in response:", res.data.list.pinned);
       await fetchLists();
-      console.log("lists after fetch:", lists);
-    } catch (err) {
-      console.error("Pin error:", err.response?.data || err.message);
-    }
+    } catch (err) {}
   };
 
   const openListDetail = (list) => {
@@ -466,7 +461,7 @@ const handleBadgeShare = async () => {
       setDragOverBookId(null);
       return;
     }
-    setEditSelectedBooks(prev => {
+    setEditSelectedBooks((prev) => {
       const ordered = [...prev];
       const fromIdx = ordered.indexOf(draggedBookId);
       const toIdx = ordered.indexOf(dragOverBookId);
@@ -481,40 +476,49 @@ const handleBadgeShare = async () => {
   const getDetailBooks = () => {
     if (!selectedList) return [];
     let listBooks = selectedList.books
-      .map(id => books.find(b => b.id === id))
+      .map((id) => books.find((b) => b.id === id))
       .filter(Boolean);
 
     if (detailSearch.trim()) {
       const q = detailSearch.toLowerCase();
-      listBooks = listBooks.filter(b =>
-        b.volumeInfo?.title?.toLowerCase().includes(q) ||
-        b.volumeInfo?.authors?.join(", ").toLowerCase().includes(q)
+      listBooks = listBooks.filter(
+        (b) =>
+          b.volumeInfo?.title?.toLowerCase().includes(q) ||
+          b.volumeInfo?.authors?.join(", ").toLowerCase().includes(q),
       );
     }
 
     if (detailSort === "title") {
       listBooks = [...listBooks].sort((a, b) =>
-        (a.volumeInfo?.title || "").localeCompare(b.volumeInfo?.title || "")
+        (a.volumeInfo?.title || "").localeCompare(b.volumeInfo?.title || ""),
       );
     } else if (detailSort === "author") {
       listBooks = [...listBooks].sort((a, b) =>
-        (a.volumeInfo?.authors?.[0] || "").localeCompare(b.volumeInfo?.authors?.[0] || "")
+        (a.volumeInfo?.authors?.[0] || "").localeCompare(
+          b.volumeInfo?.authors?.[0] || "",
+        ),
       );
     }
     return listBooks;
   };
 
-  const sortedLists = [...lists].sort((a, b) => (b.pinned === true ? 1 : 0) - (a.pinned === true ? 1 : 0));
+  const sortedLists = [...lists].sort(
+    (a, b) => (b.pinned === true ? 1 : 0) - (a.pinned === true ? 1 : 0),
+  );
 
   const formattedDate = createdAt
-    ? new Date(createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })
+    ? new Date(createdAt).toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
     : "N/A";
   // group the badges instead of accumulating
   const groupedBadges = Object.entries(
     badges.reduce((acc, badge) => {
       acc[badge.type] = (acc[badge.type] || 0) + 1;
       return acc;
-    }, {})
+    }, {}),
   );
 
   const changeProfileBadge = (direction) => {
@@ -524,10 +528,9 @@ const handleBadgeShare = async () => {
       return (prev + direction + groupedBadges.length) % groupedBadges.length;
     });
   };
-  
+
   return (
     <div className="profile-page">
-
       {/* Top Profile Section */}
       <div className="profile-top-section">
         <div className="profile-logo-container">
@@ -535,8 +538,14 @@ const handleBadgeShare = async () => {
         </div>
         <div className="profile-info">
           <h2 className="profile-username">{userName || "User"}</h2>
-          <p className="profile-created">Joined: {formattedDate}</p>
-          <p className="profile-followers">Friends: {friendCount}</p>
+          <div className="profile-info-wrapper">
+            <span className="profile-created">Joined:</span>
+            <p className="profile-date-joined">{formattedDate}</p>
+          </div>
+          <div className="profile-info-wrapper">
+            <span className="profile-friends">Friends:</span>
+            <p className="profile-followers">{friendCount}</p>
+          </div>
           <div className="profile-badges-wrap">
             {groupedBadges.length > 1 && (
               <button
@@ -598,10 +607,8 @@ const handleBadgeShare = async () => {
         </div>
       </div>
 
-
       {/* Main Content */}
       <div className="profile-content">
-
         {/* Bookshelf */}
         <div className="profile-bookshelf-container">
           <div className="profile-header-row">
@@ -609,10 +616,10 @@ const handleBadgeShare = async () => {
           </div>
           <div className="bookshelf-grid">
             {books.length > 0 ? (
-              books.map(book => (
+              books.map((book, index) => (
                 <div
                   className="bookshelf-item"
-                  key={book.id}
+                  key={`${book.id}-${index}`}
                   onClick={() => navigate(`/book/${book.id}`)}
                 >
                   <BookCard info={book.volumeInfo} volumeId={book.id} />
@@ -627,14 +634,13 @@ const handleBadgeShare = async () => {
         {/* Lists Section */}
         <div className="profile-lists-container">
           <div className="lists-section">
-
             <div className="profile-header-row">
               <h1>Your Lists</h1>
             </div>
 
             <div className="lists-grid">
               {sortedLists.length > 0 ? (
-                sortedLists.map(list => (
+                sortedLists.map((list) => (
                   <div
                     key={list._id}
                     className={`list-card ${list.pinned === true ? "list-card-pinned" : ""}`}
@@ -642,9 +648,23 @@ const handleBadgeShare = async () => {
                   >
                     {list.pinned && (
                       <span className="pin-badge">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#6c3fc5" xmlns="http://www.w3.org/2000/svg">
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="#6c3fc5"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
                           <path d="M16 2H8a1 1 0 0 0-1 1v1.5a1 1 0 0 0 .4.8L9 7v4l-2 2h10l-2-2V7l1.6-1.7a1 1 0 0 0 .4-.8V3a1 1 0 0 0-1-1z" />
-                          <line x1="12" y1="13" x2="12" y2="21" stroke="#6c3fc5" strokeWidth="2" strokeLinecap="round" />
+                          <line
+                            x1="12"
+                            y1="13"
+                            x2="12"
+                            y2="21"
+                            stroke="#6c3fc5"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                          />
                         </svg>
                         Pinned
                       </span>
@@ -653,7 +673,9 @@ const handleBadgeShare = async () => {
                       className="list-options-btn"
                       onClick={(e) => {
                         e.stopPropagation();
-                        setOpenMenuListId(openMenuListId === list._id ? null : list._id);
+                        setOpenMenuListId(
+                          openMenuListId === list._id ? null : list._id,
+                        );
                       }}
                     >
                       ⋯
@@ -697,7 +719,7 @@ const handleBadgeShare = async () => {
                     <div className="list-card-body">
                       <div className="list-thumbnail">
                         {list.books.slice(0, 3).map((bookId, index) => {
-                          const book = books.find(b => b.id === bookId);
+                          const book = books.find((b) => b.id === bookId);
                           return book ? (
                             <img
                               key={bookId}
@@ -712,14 +734,16 @@ const handleBadgeShare = async () => {
                       <div className="list-card-info">
                         <h3 className="list-card-title">{list.name}</h3>
                         {list.description && (
-                          <p className="list-card-description">{list.description}</p>
+                          <p className="list-card-description">
+                            {list.description}
+                          </p>
                         )}
                       </div>
                     </div>
                   </div>
                 ))
               ) : (
-                <p>No lists created yet.</p>
+                <p className="no-list-created">No lists created yet.</p>
               )}
             </div>
             <div className="create-list-footer">
@@ -736,13 +760,27 @@ const handleBadgeShare = async () => {
       </div>
 
       {/* ── List Detail Modal ── */}
-      <Modal open={!!selectedList} onClose={closeListDetail} className="review-modal">
-      <Box
-        sx={{ width: { xs: 'calc(100vw - 24px)', sm: 'min(1000px, calc(100vw - 24px))' }, maxHeight: '90vh', overflowY: 'auto', boxSizing: 'border-box' }}
-        className="review-modal-box large detail-modal-box"
+      <Modal
+        open={!!selectedList}
+        onClose={closeListDetail}
+        className="review-modal"
       >
+        <Box
+          sx={{
+            width: {
+              xs: "calc(100vw - 24px)",
+              sm: "min(1000px, calc(100vw - 24px))",
+            },
+            maxHeight: "90vh",
+            overflowY: "auto",
+            boxSizing: "border-box",
+          }}
+          className="review-modal-box large detail-modal-box"
+        >
           <div className="detail-modal-header">
-            <div className="modal-back" onClick={closeListDetail}>← Back to Lists</div>
+            <div className="modal-back" onClick={closeListDetail}>
+              ← Back to Lists
+            </div>
             <div>
               <h2 className="review-modal-title">{selectedList?.name}</h2>
               {selectedList?.description && (
@@ -755,12 +793,12 @@ const handleBadgeShare = async () => {
               className="modal-input detail-search"
               placeholder="Search by title or author..."
               value={detailSearch}
-              onChange={e => setDetailSearch(e.target.value)}
+              onChange={(e) => setDetailSearch(e.target.value)}
             />
             <select
               className="detail-sort-select"
               value={detailSort}
-              onChange={e => setDetailSort(e.target.value)}
+              onChange={(e) => setDetailSort(e.target.value)}
             >
               <option value="custom">Default</option>
               <option value="title">Sort by Title</option>
@@ -770,25 +808,42 @@ const handleBadgeShare = async () => {
 
           <div className="book-selection-wrapper">
             <div className="detail-books-grid">
-              {getDetailBooks().length > 0 ? getDetailBooks().map(book => (
-                <div
-                  key={book.id}
-                  className="detail-book-item"
-                  onClick={() => navigate(`/book/${book.id}`)}
-                  style={{ cursor: "pointer" }}
-                >
-                  <img
-                    src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x195?text=No+Cover"}
-                    alt={book.volumeInfo?.title}
-                    className="detail-book-img"
-                  />
-                  <div className="detail-book-info">
-                    <p className="detail-book-title">{book.volumeInfo?.title}</p>
-                    <p className="detail-book-author">{book.volumeInfo?.authors?.join(", ")}</p>
+              {getDetailBooks().length > 0 ? (
+                getDetailBooks().map((book) => (
+                  <div
+                    key={book.id}
+                    className="detail-book-item"
+                    onClick={() => navigate(`/book/${book.id}`)}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <img
+                      src={
+                        book.volumeInfo?.imageLinks?.thumbnail ||
+                        "https://via.placeholder.com/128x195?text=No+Cover"
+                      }
+                      alt={book.volumeInfo?.title}
+                      className="detail-book-img"
+                    />
+                    <div className="detail-book-info">
+                      <p className="detail-book-title">
+                        {book.volumeInfo?.title}
+                      </p>
+                      <p className="detail-book-author">
+                        {book.volumeInfo?.authors?.join(", ")}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              )) : (
-                <p style={{ textAlign: "center", color: "#888", gridColumn: "1 / -1" }}>No books match your search.</p>
+                ))
+              ) : (
+                <p
+                  style={{
+                    textAlign: "center",
+                    color: "#888",
+                    gridColumn: "1 / -1",
+                  }}
+                >
+                  No books match your search.
+                </p>
               )}
             </div>
           </div>
@@ -796,24 +851,30 @@ const handleBadgeShare = async () => {
       </Modal>
 
       {/* ── Create List Modal ── */}
-      <Modal open={showCreateListModal} onClose={closeCreateListModal} className="review-modal">
-      <Box
-        sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: { xs: 'calc(100vw - 24px)', sm: '500px' },
-          maxHeight: '90vh',
-          overflowY: 'auto',
-          boxSizing: 'border-box',
-          bgcolor: 'background.paper',
-          borderRadius: '12px',
-          padding: { xs: '16px 12px', sm: '24px' },
-          outline: 'none',
-        }}
-        onClick={(e) => e.stopPropagation()}
+      <Modal
+        open={showCreateListModal}
+        onClose={closeCreateListModal}
+        className="review-modal"
+        disableScrollLock
       >
+        <Box
+          className="review-modal-box"
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "calc(100vw - 24px)", sm: "500px" },
+            maxHeight: "90vh",
+            overflowY: "auto",
+            boxSizing: "border-box",
+            bgcolor: "background.paper",
+            borderRadius: "12px",
+            padding: { xs: "16px 12px", sm: "24px" },
+            outline: "none",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
           {createListStep === 1 ? (
             <>
               <h2 className="review-modal-title">Create New List</h2>
@@ -842,35 +903,65 @@ const handleBadgeShare = async () => {
                   <label className="modal-label">Privacy</label>
                   <div className="radio-group">
                     <label className="radio-label">
-                      <input type="radio" value="private" checked={listPrivacy === "private"} onChange={(e) => setListPrivacy(e.target.value)} />
+                      <input
+                        type="radio"
+                        value="private"
+                        checked={listPrivacy === "private"}
+                        onChange={(e) => setListPrivacy(e.target.value)}
+                      />
                       <span>Private</span>
                     </label>
                     <label className="radio-label">
-                      <input type="radio" value="public" checked={listPrivacy === "public"} onChange={(e) => setListPrivacy(e.target.value)} />
+                      <input
+                        type="radio"
+                        value="public"
+                        checked={listPrivacy === "public"}
+                        onChange={(e) => setListPrivacy(e.target.value)}
+                      />
                       <span>Public</span>
                     </label>
                   </div>
                 </div>
                 <div className="modal-actions">
-                  <button type="button" className="cancel-btn" onClick={closeCreateListModal}>Cancel</button>
-                  <button type="button" className="submit-btn" onClick={handleNextStep} disabled={!listName.trim()}>Next</button>
+                  <button
+                    type="button"
+                    className="cancel-btn"
+                    onClick={closeCreateListModal}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className="submit-btn"
+                    onClick={handleNextStep}
+                    disabled={!listName.trim()}
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </>
           ) : (
             <>
-              <div className="modal-back" onClick={handleBackStep}>← Back</div>
-              <h2 className="review-modal-title">Select Books for "{listName}"</h2>
+              <div className="modal-back" onClick={handleBackStep}>
+                ← Back
+              </div>
+              <h2 className="review-modal-title">
+                Select Books for "{listName}"
+              </h2>
               <div className="book-selection-wrapper">
                 <div className="book-selection-grid">
-                  {books.map(book => (
+                  {books.map((book) => (
                     <div
                       key={book.id}
                       onClick={() => toggleBookSelection(book.id)}
                       className={`book-selection-item ${selectedBooks.has(book.id) ? "selected" : ""}`}
                     >
                       <img
-                        src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x195?text=No+Cover"}
+                        src={
+                          book.volumeInfo?.imageLinks?.thumbnail ||
+                          "https://via.placeholder.com/128x195?text=No+Cover"
+                        }
                         alt={book.volumeInfo?.title}
                         className="book-selection-img"
                       />
@@ -879,8 +970,20 @@ const handleBadgeShare = async () => {
                 </div>
               </div>
               <div className="modal-actions">
-                <button type="button" className="cancel-btn" onClick={closeCreateListModal}>Cancel</button>
-                <button type="button" className="submit-btn" onClick={handleCreateList}>Create List</button>
+                <button
+                  type="button"
+                  className="cancel-btn"
+                  onClick={closeCreateListModal}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  className="submit-btn"
+                  onClick={handleCreateList}
+                >
+                  Create List
+                </button>
               </div>
             </>
           )}
@@ -888,24 +991,34 @@ const handleBadgeShare = async () => {
       </Modal>
 
       {/* ── Edit List Modal ── */}
-      <Modal open={showEditListModal} onClose={closeEditListModal} className="review-modal">
-      <Box
+      <Modal
+        open={showEditListModal}
+        onClose={closeEditListModal}
+        className="review-modal"
         sx={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: { xs: 'calc(100vw - 24px)', sm: '500px' },
-          maxHeight: '90vh',
-          overflowY: 'auto',
-          boxSizing: 'border-box',
-          bgcolor: 'background.paper',
-          borderRadius: '12px',
-          padding: { xs: '16px 12px', sm: '24px' },
-          outline: 'none',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          px: 1,
         }}
-        onClick={(e) => e.stopPropagation()}
       >
+        <Box
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            width: { xs: "calc(100vw - 24px)", sm: "500px" },
+            maxHeight: "90vh",
+            overflowY: "auto",
+            boxSizing: "border-box",
+            bgcolor: "background.paper",
+            borderRadius: "12px",
+            padding: { xs: "16px 12px", sm: "24px" },
+            outline: "none",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
           {editListStep === 1 ? (
             <>
               <h2 className="review-modal-title">Edit List</h2>
@@ -933,44 +1046,74 @@ const handleBadgeShare = async () => {
                   <label className="modal-label">Privacy</label>
                   <div className="radio-group">
                     <label className="radio-label">
-                      <input type="radio" value="private" checked={editListPrivacy === "private"} onChange={(e) => setEditListPrivacy(e.target.value)} />
+                      <input
+                        type="radio"
+                        value="private"
+                        checked={editListPrivacy === "private"}
+                        onChange={(e) => setEditListPrivacy(e.target.value)}
+                      />
                       <span>Private</span>
                     </label>
                     <label className="radio-label">
-                      <input type="radio" value="public" checked={editListPrivacy === "public"} onChange={(e) => setEditListPrivacy(e.target.value)} />
+                      <input
+                        type="radio"
+                        value="public"
+                        checked={editListPrivacy === "public"}
+                        onChange={(e) => setEditListPrivacy(e.target.value)}
+                      />
                       <span>Public</span>
                     </label>
                   </div>
                 </div>
                 <div className="modal-actions">
-                  <button className="cancel-btn" onClick={closeEditListModal}>Cancel</button>
-                  <button className="submit-btn" onClick={() => setEditListStep(2)} disabled={!editListName.trim()}>Next</button>
+                  <button className="cancel-btn" onClick={closeEditListModal}>
+                    Cancel
+                  </button>
+                  <button
+                    className="submit-btn"
+                    onClick={() => setEditListStep(2)}
+                    disabled={!editListName.trim()}
+                  >
+                    Next
+                  </button>
                 </div>
               </div>
             </>
           ) : (
             <>
-              <div className="modal-back" onClick={() => setEditListStep(1)}>← Back</div>
-              <h2 className="review-modal-title">Edit Books for "{editListName}"</h2>
+              <div className="modal-back" onClick={() => setEditListStep(1)}>
+                ← Back
+              </div>
+              <h2 className="review-modal-title">
+                Edit Books for "{editListName}"
+              </h2>
               <div className="book-selection-wrapper" ref={editBookGridRef}>
-                <p className="drag-hint">✦ Drag to reorder · Click to add/remove</p>
+                <p className="drag-hint">
+                  ✦ Drag to reorder · Click to add/remove
+                </p>
                 <div className="book-selection-grid">
                   {Array.from(editSelectedBooks)
-                    .map(id => books.find(b => b.id === id))
+                    .map((id) => books.find((b) => b.id === id))
                     .filter(Boolean)
-                    .map(book => (
+                    .map((book) => (
                       <div
                         key={book.id}
                         draggable
                         onDragStart={() => handleDragStart(book.id)}
                         onDragOver={(e) => handleDragOverWithScroll(e, book.id)}
-                        onDrop={() => { handleEditDrop(); stopAutoScroll(); }}
+                        onDrop={() => {
+                          handleEditDrop();
+                          stopAutoScroll();
+                        }}
                         onDragEnd={stopAutoScroll}
                         className={`book-selection-item selected ${dragOverBookId === book.id ? "drag-over" : ""}`}
                       >
                         <div className="drag-handle">⠿</div>
                         <img
-                          src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x195?text=No+Cover"}
+                          src={
+                            book.volumeInfo?.imageLinks?.thumbnail ||
+                            "https://via.placeholder.com/128x195?text=No+Cover"
+                          }
                           alt={book.volumeInfo?.title}
                           className="book-selection-img"
                           onClick={() => toggleEditBook(book.id)}
@@ -978,15 +1121,18 @@ const handleBadgeShare = async () => {
                       </div>
                     ))}
                   {books
-                    .filter(b => !editSelectedBooks.includes(b.id))
-                    .map(book => (
+                    .filter((b) => !editSelectedBooks.includes(b.id))
+                    .map((book) => (
                       <div
                         key={book.id}
                         onClick={() => toggleEditBook(book.id)}
                         className="book-selection-item"
                       >
                         <img
-                          src={book.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/128x195?text=No+Cover"}
+                          src={
+                            book.volumeInfo?.imageLinks?.thumbnail ||
+                            "https://via.placeholder.com/128x195?text=No+Cover"
+                          }
                           alt={book.volumeInfo?.title}
                           className="book-selection-img"
                         />
@@ -995,12 +1141,16 @@ const handleBadgeShare = async () => {
                 </div>
               </div>
               <div className="modal-actions">
-                <button className="cancel-btn" onClick={closeEditListModal}>Cancel</button>
-                <button className="submit-btn" onClick={handleUpdateList}>Save Changes</button>
+                <button className="cancel-btn" onClick={closeEditListModal}>
+                  Cancel
+                </button>
+                <button className="submit-btn" onClick={handleUpdateList}>
+                  Save Changes
+                </button>
               </div>
             </>
           )}
-        </Box>        
+        </Box>
       </Modal>
       {/* ── Delete Confirm Modal ── */}
       <Modal
@@ -1008,13 +1158,17 @@ const handleBadgeShare = async () => {
         onClose={() => setShowDeleteModal(false)}
         className="delete-modal"
       >
-        <Box className="delete-modal-box" onClick={e => e.stopPropagation()}>
+        <Box className="delete-modal-box" onClick={(e) => e.stopPropagation()}>
           <h2 className="delete-modal-title">Delete List</h2>
           <p className="delete-modal-text">
-            Are you sure you want to delete this list? This action cannot be undone.
+            Are you sure you want to delete this list? This action cannot be
+            undone.
           </p>
           <div className="delete-modal-actions">
-            <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>
+            <button
+              className="cancel-btn"
+              onClick={() => setShowDeleteModal(false)}
+            >
               Cancel
             </button>
             <button className="delete-btn" onClick={confirmDeleteList}>
@@ -1049,8 +1203,8 @@ const handleBadgeShare = async () => {
                       onClick={() =>
                         setSelectedBadgeFriends((prev) =>
                           prev.filter(
-                            (f) => (f.email || f.friendEmail) !== email
-                          )
+                            (f) => (f.email || f.friendEmail) !== email,
+                          ),
                         )
                       }
                     >
@@ -1068,12 +1222,13 @@ const handleBadgeShare = async () => {
                     !selectedBadgeFriends.some(
                       (selected) =>
                         (selected.email || selected.friendEmail) ===
-                        (friend.email || friend.friendEmail)
-                    )
+                        (friend.email || friend.friendEmail),
+                    ),
                 )
                 .map((friend, idx) => {
                   const friendEmail = friend.email || friend.friendEmail;
-                  const friendName = friend.name || friend.friendName || friendEmail;
+                  const friendName =
+                    friend.name || friend.friendName || friendEmail;
 
                   return (
                     <div
