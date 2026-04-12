@@ -18,6 +18,7 @@
   font-weight: 700;
   padding: 24px 20px 25px;
   border-bottom: 1px solid #dbdbdb;
+  color: var(--text-color);
 }
 
 :root[data-theme="dark"] .dm-sidebar-title {
@@ -41,6 +42,10 @@
   position: relative;
 }
 
+.dm-username {
+  color: var(--text-color);
+}
+
 :root[data-theme="dark"] .dm-sender-row:hover {
   background-color: var(--filter-pane);
 }
@@ -58,11 +63,11 @@
   background-color: var(--filter-pane);
 }
 .dm-sender-row:hover {
-  background: #fafafa;
+  background-color: #e4d2f75d;
 }
 
 .dm-sender-row.active {
-  background: #e3e1f1;
+  background-color: #e4d2f75d;
 }
 
 /* ── Avatar ── */
@@ -96,7 +101,7 @@
 
 .dm-sender-name {
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -112,7 +117,7 @@
 
 .dm-preview {
   font-size: 13px;
-  color: #999;
+  color: var(--secondary-color);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -182,7 +187,9 @@
 }
 
 .dm-bubble {
-  background: #efefef;
+  /* background: #efefef; */
+  
+
   border-radius: 18px;
   padding: 12px 16px;
   max-width: 70%;
@@ -201,11 +208,11 @@
 
 .dm-bubble small {
   font-size: 11px;
-  color: #999;
+  color: var(--secondary-color);
 }
 
 .dm-bubble {
-  background: #f7f5ff;
+  background: var(--purple-gradient);
   padding: 12px 16px;
   max-width: 70%;
   cursor: pointer;
@@ -214,19 +221,23 @@
   flex-direction: column;
   gap: 10px;
   border: 1px solid #e6e0f8;
+  box-shadow: 0 8px 28px rgba(170, 124, 231, 0.322);
 }
 
 .dm-bubble-intro {
   margin: 0;
   font-size: 14px;
   line-height: 1.4;
+  color: var(--text-color);
+  font-weight: 600;
 }
 
 .dm-book-card {
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #ab7ce7;
+  background: var(--hover);
+  
   border-radius: 12px;
   padding: 10px 12px;
   transition: background 0.2s, color 0.2s, transform 0.2s;
@@ -250,7 +261,7 @@
 }
 
 .dm-book-card:hover {
-  background-color: #8e67dc;
+  background-color: var(--text-color);
   color: #fff;
   transform: scale(1.05);
 }
@@ -282,7 +293,7 @@
 
 .dm-book-author {
   font-size: 12px;
-  color: rgba(255,255,255,0.75);
+  color: #ffffffc5;
 }
 
 :root[data-theme="dark"] .dm-bubble {
@@ -298,7 +309,8 @@
 
 .dm-bubble small {
   font-size: 11px;
-  color: #999;
+  color: var(--secondary-color);
+
   align-self: flex-end;
 }
 
@@ -342,7 +354,7 @@
 }
 
 .dm-bubble-sent small {
-  color: rgba(255,255,255,0.6);
+  color: rgba(255, 255, 255, 0.74);
 }
 
 .dm-back-btn {
@@ -367,13 +379,16 @@
 }
 
 .dm-quick-reply-btn {
-  background: #fff;
+  /* background: #fff; */
   border: 1.5px solid #6c3fc5;
-  color: #6c3fc5;
+  color: var(--text-color);
   border-radius: 20px;
   padding: 5px 12px;
   font-size: 12px;
   cursor: pointer;
+  background: rgba(133, 97, 180, 0.1);
+  padding: 2px 10px;
+  border-radius: 999px;
   transition: background 0.15s, color 0.15s;
   white-space: nowrap;
 }
@@ -421,16 +436,22 @@
   width: 150px;
   height: 110px;
   border-radius: 18px;
-  background: #f3eef8;
-  border: 1px solid rgba(23, 17, 31, 0.14);
+  background: var(--vibrant-header-gradient-soft);
+  border: 1px solid var(--primary-color);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
   padding-top: 10px;
   box-sizing: border-box;
+  transition: transform 0.25s ease;
 }
 
+.dm-badge-profile-card:hover {
+  transform: translateY(-6px);
+  cursor: pointer;
+  box-shadow: 0 8px 28px rgba(170, 124, 231, 0.322);
+}
 :root[data-theme="dark"] .dm-badge-profile-card {
   background-color: #e4d2f7;
   border: 3px solid var(--primary-color);
@@ -438,6 +459,7 @@
 
 :root[data-theme="dark"] .dm-badge-profile-card:hover {
   box-shadow: 0 8px 28px rgba(170, 124, 231, 0.322);
+
 }
 
 .dm-badge-profile-icon {
