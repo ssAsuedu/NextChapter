@@ -1071,6 +1071,11 @@ app.post("/api/messages/read", async (req, res) => {
 app.post('/api/users/update-name', async (req, res) => {
   const { email, name } = req.body;
   if (!email || !name) return res.status(400).json({ error: "Email and name required" });
+
+  if(name.length > 15) {
+    return res.status(400).json({ error: "Name must be 15 characters or less."});
+  }
+  
   try {
     const user = await User.findOneAndUpdate({ email }, { name }, { new: true });
     if (!user) return res.status(404).json({ error: "User not found" });
