@@ -5,8 +5,10 @@ import "../../styles/LandingPage/Navbar.css";
 import MenuIcon from "@mui/icons-material/Menu";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import Logo from "/NextChapterLogoSVG.svg";
-import darkModeLogo from "/NextChapterLogoWhite.svg";
+import Logo from "/MainColorLogo.svg";
+import whiteLogo from "/NextChapterLogoWhite.svg";
+import darkModeNotScrolledLogo from "/LighterColorLogo.svg";
+import useLocalStorage from "use-local-storage";
 import { IconButton } from "@mui/material";
 import { getMessages } from "../../api";
 
@@ -24,6 +26,16 @@ const Navbar = () => {
   const [dropDown, setDropDown] = useState(false);
   const [profileDrop, setProfileDrop] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
+
+  const[isDark] = useLocalStorage("isDark", false);
+
+  const isActive = scrolled || menuOpen; //active is if navbar is scrolled or if the burger menu is open
+  const currentLogo =
+  isActive //if the navbar is scrolled or the menu is ever open
+    ? whiteLogo //always display the white logo
+    : isDark //if we're on dark mode and we haven't scrolled on the navbar
+    ? darkModeNotScrolledLogo //always display the dark mode logo (light color)
+    : Logo; //otherwise, display the regular dark purple logo
 
   const changeBackground = () => {
     if (window.scrollY >= 80 && window.innerWidth > 768) {
@@ -84,6 +96,7 @@ const Navbar = () => {
     localStorage.removeItem("idToken");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
+    
     navigate("/");
   };
 
@@ -135,7 +148,7 @@ const Navbar = () => {
         </IconButton>
         <ul className={`left ${menuOpen ? "open" : ""}`}>
           <li>
-            <img className="logo" src={menuOpen || scrolled ? darkModeLogo : Logo}></img>
+            <img className="logo" src={currentLogo}></img>
           </li>
           <li className="">
             <Link

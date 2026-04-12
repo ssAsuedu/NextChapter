@@ -6,6 +6,14 @@ import useLocalStorage from "use-local-storage";
 
 const ThemeToggle = () => {
     const [isDark, setIsDark] = useLocalStorage("isDark", false); //use local storage that uses isDark state as key and false as the default value
+
+    useEffect(() => {
+        document.documentElement.setAttribute(
+            "data-theme",
+            isDark ? "dark" : "light"
+        );
+    }, [isDark]);
+    
     return (
         <button className="toggle-button"
         onClick={() => {
