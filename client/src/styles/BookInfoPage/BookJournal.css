@@ -6,7 +6,8 @@
   margin: 0 auto 48px auto;
   padding: 28px 24px;
   font-family: "Sen", Arial, Helvetica, sans-serif;
-  background: #fff;
+  background: var(--purple-gradient);
+  box-shadow: 0 8px 28px rgba(170, 124, 231, 0.322);
   border-radius: 12px;
   color: #333;
 }
@@ -38,11 +39,11 @@
 
 .journal-private-badge {
   font-size: 0.75rem;
-  color: #7e7e7e;
+  color: #505050;
   background: #f2effc;
   padding: 3px 10px;
   border-radius: 12px;
-  white-space: nowrap;
+  
 }
 
 :root[data-theme="dark"] .journal-private-badge {
@@ -218,7 +219,7 @@
 
 .journal-char-count {
   font-size: 0.75rem;
-  color: #aaa;
+  color: #555555;
 }
 
 .journal-editor-actions {
@@ -240,7 +241,7 @@
 }
 
 .journal-save-status.saved {
-  color: #4CAF50;
+  color: #2a602c;
 }
 
 :root[data-theme="dark"] .journal-save-status.saved {
@@ -317,14 +318,14 @@
 
 .journal-empty {
   text-align: center;
-  color: #999;
+  color: #4b4b4b;
   padding: 32px 0;
   font-size: 0.95rem;
 }
 
 .journal-entry-card {
   background: #fff;
-  border: 1px solid #e6e0f8;
+  border: 1px solid #aa7ce77a;
   border-radius: 12px;
   padding: 16px 20px;
   box-shadow: 0 2px 8px rgba(171, 124, 231, 0.08);
