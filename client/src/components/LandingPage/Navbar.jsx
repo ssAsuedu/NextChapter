@@ -96,6 +96,7 @@ const Navbar = () => {
     localStorage.removeItem("idToken");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
+    
     navigate("/");
   };
 

@@ -561,7 +561,16 @@ li {
     color: white;
   }
 
-  :root[data-theme="dark"] .auth-signup.not-scroll, :root[data-theme="dark"] .auth-login.not-scroll, :root[data-theme="dark"] .auth-signout.not-scroll{
+  :root[data-theme="dark"] .auth-signup.not-scroll {
+    color: white;
+  }
+
+  :root[data-theme="dark"] .auth-signup.not-scroll:hover {
+    transform: none;
+    text-decoration: underline;
+  }
+  
+  :root[data-theme="dark"] .auth-login.not-scroll, :root[data-theme="dark"] .auth-signout.not-scroll{
     background-color: transparent;
     border: none;
     color: white;
