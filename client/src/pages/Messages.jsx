@@ -210,14 +210,14 @@ function Messages() {
       <div className="dm-chat-panel">
         {!selectedSender ? (
           <div className="dm-placeholder">
-            <p>Select a conversation</p>
+            <p className="conversaton-placeholder">Select a conversation</p>
           </div>
         ) : (
           <>
             <div className="dm-chat-header">
               <button className="dm-back-btn" onClick={() => setSelectedSender(null)}>←</button>
                 <div className="dm-avatar sm">{displayName(selectedSender).charAt(0).toUpperCase()}</div>
-                <span>{displayName(selectedSender)}</span>
+                <span className="dm-username">{displayName(selectedSender)}</span>
               </div>
               <div className="dm-chat-messages">
                 {chronological.map((msg, idx) => {
