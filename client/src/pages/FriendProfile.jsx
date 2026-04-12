@@ -283,6 +283,9 @@ const FriendProfile = () => {
                   <button
                     className="scroll-btn right"
                     onClick={() => changeBadge(1)}
+                    style={{
+                      right: groupedBadges.length > 2 ? "-36px" : "-16px",
+                    }}
                   >
                     ›
                   </button>
