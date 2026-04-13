@@ -1249,19 +1249,17 @@ app.post("/api/users/self-delete", async (req, res) => {
       { AccessToken: accessToken }
     );
 
-    // 3) Delete Mongo user
-    // await User.deleteOne({ email: normalizedEmail });
+    // 3) Delete app data + remove from everyone's friends arrays
     await Promise.all([
-        Message.deleteMany({
-              $or: [
-                  { sender: normalizedEmail },
-                  { receiver: normalizedEmail },
-                ],
-              }),
-        User.deleteOne({ email: normalizedEmail }),
+      Message.deleteMany({
+        $or: [{ sender: normalizedEmail }, { receiver: normalizedEmail }],
+      }),
+      User.updateMany(
+        { friends: normalizedEmail },
+        { $pull: { friends: normalizedEmail } }
+      ),
+      User.deleteOne({ email: normalizedEmail }),
     ]);
-
-
 
     return res.json({ message: "Account deleted successfully" });
   } catch (err) {
