@@ -5,7 +5,9 @@ body {
 .leaderboard-page {
   width: 100%;
   max-width: 1100px;
-  margin: 90px auto 40px;
+  margin-right: auto;
+  margin-bottom: 40px;
+  margin-left: auto;
   padding: 24px;
   box-sizing: border-box;
   min-height: 100vh;
@@ -13,6 +15,7 @@ body {
 }
 
 .leaderboard-header {
+  padding-top: 90px;
   display: flex;
   align-items: flex-end;
   justify-content: space-between;

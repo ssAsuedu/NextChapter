@@ -591,7 +591,7 @@ const Profile = () => {
                 className="scroll-btn right"
                 onClick={() => changeProfileBadge(1)}
                 style={{
-                  right: groupedBadges.length > 2 ? "-36px" : "-16px"
+                  right: groupedBadges.length > 2 ? "-35px" : "-16px"
                 }}
               >
                 &#8250;
@@ -1187,7 +1187,7 @@ const Profile = () => {
             className="badge-share-modal"
             onClick={(e) => e.stopPropagation()}
           >
-            <h3>Share Badge</h3>
+            <h3 className="share-title">Share Badge</h3>
 
             <div className="badge-preview">
               <img src={selectedBadge?.icon} alt="badge" />

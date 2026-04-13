@@ -169,6 +169,10 @@
   align-items: start;
 }
 
+:root[data-theme="dark"] .bookshelf-grid p {
+  color: var(--secondary-color);
+}
+
 .bookshelf-item {
   display: flex;
   background: #f5f3ff;
@@ -199,6 +203,12 @@
   overflow: hidden;
 }
 
+.share-title {
+  color: var(--text-color);
+  text-align: center;
+  font-weight: 600;
+}
+
 .bookshelf-item .book-card,
 .bookshelf-item .book-card:hover,
 .bookshelf-item .book-card:focus,
@@ -226,7 +236,7 @@
   align-items: center;
   justify-content: center;
   padding: 32px 0 24px 0;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #eeeeee38;
   margin-top: 80px;
   margin-bottom: 32px;
   box-sizing: border-box;
@@ -320,6 +330,7 @@
   min-width: 0;
   max-width: 100%;
   box-sizing: border-box;
+  outline: none;
 }
 
 :root[data-theme="dark"] .review-modal-box {
@@ -576,7 +587,7 @@
 
 .list-card {
   background: #f7f5ff;
-  border: 1px solid #e6e0f8;
+  border: 1px solid #aa7ce77e;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(171, 124, 231, 0.08);
   padding: 20px 24px;
@@ -757,6 +768,15 @@
   min-width: 160px;
 }
 
+:root[data-theme="dark"] .detail-sort-select {
+  background-color: var(--filter-pane);
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .detail-sort-select:focus {
+  border-color: 1px solid var(--text-color);
+}
+
 .detail-sort-select:focus {
   border-color: #6c3fc5;
 }
@@ -790,6 +810,12 @@
   transition: all 0.15s ease;
 }
 
+:root[data-theme="dark"] .detail-book-item {
+  background-color: var(--filter-pane);
+}
+
+:root[data-theme="dark"] .detail-book-item:hover {
+}
 .detail-book-item:active {
   cursor: grabbing;
 }
@@ -817,6 +843,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  text-align: left;
 }
 
 .detail-book-title {
@@ -827,11 +854,20 @@
   margin: 0;
 }
 
+:root[data-theme="dark"] .detail-book-title {
+  color: var(--text-color);
+}
+
 .detail-book-author {
   color: #888;
   font-family: "Sen", sans-serif;
   font-size: 0.85rem;
   margin: 0;
+  text-align: left;
+}
+
+:root[data-theme="dark"] .detail-book-author {
+  color: var(--secondary-color);
 }
 
 .modal-textarea {
@@ -1030,6 +1066,10 @@
   grid-column: 1 / -1;
 }
 
+:root[data-theme="dark"] .detail-empty {
+  color: var(--secondary-color);
+}
+
 .detail-book-item {
   cursor: pointer;
 }
@@ -1045,6 +1085,10 @@
   cursor: pointer;
   transition: color 0.2s ease;
   z-index: 1;
+}
+
+:root[data-theme="dark"] .friend-profile-back {
+  color: var(--text-color);
 }
 
 .friend-profile-back:hover {
@@ -1070,14 +1114,21 @@
     transform 0.2s ease;
 }
 
+:root[data-theme="dark"] .add-to-library-btn {
+  color: var(--background-color);
+  background-color: var(--primary-color);
+}
 .add-to-library-btn:hover:not(:disabled) {
   background: #6c3fc5;
   transform: scale(1.05);
 }
 
+:root[data-theme="dark"] .add-to-library-btn:hover:not(:disabled) {
+  background-color: var(--text-color);
+}
 .add-to-library-btn.saved {
   background: #d0d0d0;
-  color: #888;
+  color: #444444;
   cursor: default;
 }
 
@@ -1180,6 +1231,10 @@
   z-index: 2;
 }
 
+:root[data-theme="dark"] .profile-badge-slide.is-next {
+  background-color: var(--filter-pane);
+}
+
 .profile-badge-slide.is-hidden {
   opacity: 0;
   pointer-events: none;
@@ -1235,7 +1290,16 @@
 }
 
 .badge-share-modal {
-  background: white;
+  background-color: white;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(170, 124, 231, 0.527) 0%,
+      rgba(171, 124, 231, 0.12) 100%
+    ),
+    white;
+
+  border: 2px solid #c49cf0;
   padding: 24px;
   border-radius: 12px;
   width: min(300px, 100%);
@@ -1244,7 +1308,24 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 4px 20px rgba(171, 124, 231, 0.15),
+    0 8px 40px rgba(157, 172, 255, 0.12),
+    0 0 60px rgba(231, 192, 243, 0.1);
+}
+
+:root[data-theme="dark"] .badge-share-modal {
+  background: linear-gradient(145deg, #1a1028, #2a1745);
+  border: 1.5px solid rgba(171, 124, 231, 0.35);
+  border-radius: 20px;
+  text-align: center;
+  box-shadow:
+    0 0 60px rgba(108, 63, 197, 0.25),
+    0 20px 40px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+  transition:
+    opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+    transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .badge-preview {
@@ -1254,8 +1335,8 @@
 }
 
 .badge-preview img {
-  width: 80px;
-  height: 80px;
+  width: 120px;
+  height: 120px;
   object-fit: contain;
 }
 
@@ -1275,15 +1356,34 @@
 .badge-friend-chip {
   padding: 8px 14px;
   border-radius: 999px;
-  background-color: #f2f2f2;
   border: 1px solid #ddd;
+  font-weight: 600;
+  background: linear-gradient(
+    135deg,
+    rgba(171, 124, 231, 0.9),
+    rgba(157, 172, 255, 0.85)
+  );
+  color: white;
+  border: none;
   cursor: pointer;
   font-size: 0.9rem;
   transition: 0.2s;
+  border: 1px solid var(--primary-color);
+}
+
+:root[data-theme="dark"] .badge-friend-chip {
+  background: transparent;
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"] .badge-friend-chip:hover {
+  background-color: var(--primary-color);
+  color: var(--background-color);
 }
 
 .badge-friend-chip:hover {
-  background-color: #e6e0f8;
+  background: transparent;
+  color: var(--text-color);
 }
 
 .badge-selected {
@@ -1303,8 +1403,23 @@
   transition: 0.2s;
 }
 
+:root[data-theme="dark"] .badge-selected-chip {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  font-weight: 600;
+}
+
+:root[data-theme="dark"] .badge-selected-chip:hover {
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--primary-color);
+}
+
 .badge-selected-chip:hover {
-  background-color: #4b2ca3;
+  background-color: transparent;
+  color: var(--text-color);
+  border: 1px solid var(--primary-color);
+  font-weight: 600;
 }
 
 .badge-confirm-btn {
@@ -1324,6 +1439,27 @@
   outline: none;
 }
 
+:root[data-theme="dark"] .badge-confirm-btn {
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .badge-confirm-btn:not(:disabled) ~ .badge-cancel-btn {
+  background-color: transparent;
+  border: 1px solid var(--primary-color);
+  color: var(--text-color);
+}
+
+:root[data-theme="dark"]
+  .badge-confirm-btn:not(:disabled)
+  ~ .badge-cancel-btn:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .badge-confirm-btn:hover {
+  background-color: var(--text-color);
+}
+
 .badge-confirm-btn:hover {
   background-color: #6c3fc5;
   color: #fff;
@@ -1334,6 +1470,7 @@
   background: #bbb;
   cursor: not-allowed;
   border-color: #bbb;
+  color: #363636;
 }
 
 .badge-cancel-btn {
@@ -1350,6 +1487,15 @@
     transform 0.2s;
 }
 
+:root[data-theme="dark"] .badge-cancel-btn {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+  border: none;
+}
+
+:root[data-theme="dark"] .badge-cancel-btn:hover {
+  background-color: var(--text-color);
+}
 .badge-cancel-btn:hover {
   background-color: #6c3fc5;
   color: #fff;
@@ -1558,10 +1704,6 @@
 }
 /* friends page list responsive styling */
 @media (max-width: 768px) {
-  .friend-profile-back {
-    margin: 12px 16px 0;
-  }
-
   .profile-content {
     padding: 0 16px;
   }
@@ -1657,7 +1799,13 @@
   }
 
   .badge-preview img {
-    width: 70px;
-    height: 70px;
+    width: 100px;
+    height: 100px;
+  }
+}
+
+@media (min-width: 300px) and (max-width: 500px) {
+  .friend-profile-back {
+    display: none;
   }
 }
