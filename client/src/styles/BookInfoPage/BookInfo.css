@@ -106,37 +106,45 @@
 .star {
   font-size: 0.9rem;
   margin-right: 1px;
-  color: #c3b1eb;
+  color: #c3b1eb !important;
   position: relative;
 }
 
+:root[data-theme="dark"] .star {
+  color: var(--primary-color) !important;
+}
+
 .star.full {
-  color: #ab7ce7;
+  color: #ab7ce7 !important;
+}
+
+:root[data-theme="dark"] .star.empty {
+  color: #aab5cbbe !important;
 }
 
 .star.quarter::before,
 .star.half::before,
 .star.three-quarter::before {
   content: "★";
-  color: #ab7ce7;
+  color: #ab7ce7 !important;
   position: absolute;
   left: 0;
   overflow: hidden;
 }
 :root[data-theme="dark"] .star.quarter::before {
-  color: var(--text-color);
+  color: var(--primary-color) !important;
 }
 
 :root[data-theme="dark"] .star.half::before {
-  color: var(--text-color);
+  color: var(--primary-color) !important;
 }
 
 :root[data-theme="dark"] .star.three-quarter::before {
-  color: var(--text-color);
+  color: var(--primary-color) !important;
 }
 
 :root[data-theme="dark"] .star.half {
-  color: #aab5cbbe;
+  color: var(--primary-color) !important;
 }
 
 .star.quarter::before {
@@ -225,8 +233,8 @@
 .bookinfo-summary-close {
   background: none;
   border: none;
-  color: var(--primary-color);
-  font-size: 1.3rem;
+  color: var(--text-color);
+  font-size: 16px;
   cursor: pointer;
   margin-top: 8px;
   transition: color 0.2s;
@@ -564,10 +572,6 @@
 
 :root[data-theme="dark"] .star.full {
   color: #ded4f2;
-}
-
-:root[data-theme="dark"] .star.empty {
-  color: #aab5cbbe;
 }
 
 :root[data-theme="dark"] .bookinfo-add-btn {

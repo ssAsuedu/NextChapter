@@ -374,6 +374,7 @@ const BookInfo = () => {
                 onClick={() => setExpanded(true)}
                 aria-label="Expand summary"
               >
+                Read More
                 <ArrowDropDownIcon className="arrow-icon" fontSize="large" />
               </button>
             )}
