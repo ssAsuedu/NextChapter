@@ -1,4 +1,4 @@
-@import url('../colors.css');
+@import url("../colors.css");
 
 /* ============================================
    FRIENDS PAGE
@@ -11,10 +11,9 @@
   padding: 120px 20px 60px;
   background-color: #fff;
   min-height: 100vh;
-  font-family: 'Sen', Arial, Helvetica, sans-serif;
+  font-family: "Sen", Arial, Helvetica, sans-serif;
   background-color: var(--background-color);
 }
-
 
 /* ============ TITLE ============ */
 .friends-title {
@@ -133,7 +132,9 @@
   font-family: inherit;
   border: 2px solid #e8e8e8;
   border-radius: 999px;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  transition:
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
   background-color: #fff;
   color: #333;
 }
@@ -165,7 +166,8 @@
 }
 
 /* ============ USER CARDS ============ */
-.user-card, .user-card.pending {
+.user-card,
+.user-card.pending {
   background: #fff;
   border: 1px solid #eee;
   border-radius: 16px;
@@ -180,7 +182,8 @@
   box-sizing: border-box;
 }
 
-:root[data-theme="dark"] .user-card, :root[data-theme="dark"] .user-card.pending {
+:root[data-theme="dark"] .user-card,
+:root[data-theme="dark"] .user-card.pending {
   background-color: var(--filter-pane);
 }
 
@@ -189,13 +192,15 @@
   box-shadow: 0 0 8px rgba(251, 191, 36, 0.4);
 }
 
-:root[data-theme="dark"] .user-card p, :root[data-theme="dark"] .user-card.pending p {
+:root[data-theme="dark"] .user-card p,
+:root[data-theme="dark"] .user-card.pending p {
   color: var(--text-color);
   font-style: italic;
   opacity: 0.8;
 }
 
-.user-card:hover, .user-card.pending:hover {
+.user-card:hover,
+.user-card.pending:hover {
   box-shadow: 0 6px 20px rgba(171, 124, 231, 0.15);
   border-color: var(--primary-color);
   transform: translateY(-2px);
@@ -209,10 +214,30 @@
   width: 100%;
 }
 
+.joined-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.join-date {
+  margin: 0 !important;
+  padding: 0;
+  color: var(--secondary-color);
+}
+
+.joined-text {
+  font-weight: bold;
+  padding: 0;
+  margin: 0;
+  color: var(--text-color);
+}
+
 .user-info h3 {
   margin: 0 0 6px 0;
   font-size: 1.1rem;
-  color: var(--hover);
+  color: var(--text-color);
   font-weight: 700;
   white-space: nowrap;
   overflow: hidden;
@@ -230,6 +255,10 @@
 .user-info small {
   color: #999;
   font-size: 0.8rem;
+}
+
+:root[data-theme="dark"] .user-info small {
+  color: var(--secondary-color);
 }
 
 /* ============ BUTTONS - BASE ============ */
@@ -269,7 +298,8 @@ button:disabled {
   transform: scale(1.03);
 }
 
-.btn-add, .btn-accept {
+.btn-add,
+.btn-accept {
   background-color: var(--primary-color);
   color: #fff;
   flex-shrink: 0;
@@ -279,7 +309,8 @@ button:disabled {
   color: var(--background-color);
 }
 
-.btn-add:hover, .btn-accept:hover {
+.btn-add:hover,
+.btn-accept:hover {
   background-color: #e8f5e9;
   color: #2e7d32;
   border: 1px solid #a5d6a7;
@@ -289,7 +320,8 @@ button:disabled {
   color: var(--background-color);
 }
 
-:root[data-theme="dark"] .btn-add:hover, :root[data-theme="dark"] .btn-accept:hover {
+:root[data-theme="dark"] .btn-add:hover,
+:root[data-theme="dark"] .btn-accept:hover {
   color: #2e7d32;
 }
 
@@ -312,7 +344,9 @@ button:disabled {
   border: 1px solid #ddd;
 }
 
-.btn-remove:hover, .btn-reject:hover, .btn-cancel:hover {
+.btn-remove:hover,
+.btn-reject:hover,
+.btn-cancel:hover {
   background-color: #fee2e2;
   color: #dc2626;
   border-color: #fca5a5;
@@ -398,8 +432,11 @@ button:disabled {
 /* ============ DELETE MODAL ============ */
 .modal-overlay {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -519,7 +556,8 @@ button:disabled {
     max-width: 100%;
   }
 
-  .user-card, .user-card.pending {
+  .user-card,
+  .user-card.pending {
     flex-direction: column;
     align-items: flex-start;
     gap: 16px;
