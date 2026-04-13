@@ -322,7 +322,7 @@
 }
 
 .dm-bubble-sent {
-  background: #6c3fc5;
+  background: var(--purple-gradient);
   color: #fff;
   transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   transform-origin: bottom;
@@ -333,7 +333,7 @@
 }
 
 :root[data-theme="dark"] .dm-bubble-sent {
-  background-color: var(--primary-color);
+  background-color: var(--filter-pane);
   border: none;
   box-shadow: 0 8px 28px rgba(170, 124, 231, 0.322);
 }
@@ -347,17 +347,21 @@
   font-weight: 600;
 }
 
+:root[data-theme="dark"] .dm-bubble-sent .dm-bubble-intro {
+  color: var(--text-color);
+}
+
 :root[data-theme="dark"] .dm-bubble-sent small {
-  color: #212224c9;
+  color: var(--secondary-color);
   font-weight: 600;
 }
 
 .dm-bubble-sent .dm-bubble-intro {
-  color: #fff;
+  color: var(--text-color);
 }
 
 .dm-bubble-sent small {
-  color: rgba(255, 255, 255, 0.74);
+  color: var(--secondary-color);
 }
 
 .dm-back-btn {
