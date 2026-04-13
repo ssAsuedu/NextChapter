@@ -172,7 +172,6 @@ const Profile = () => {
       setSelectedBadgeFriends([]);
       setShowBadgeShare(true);
     } catch (err) {
-      console.error("Error fetching friends:", err);
       setBadgeShareFriends([]);
       setSelectedBadge({
         type,
@@ -1193,7 +1192,12 @@ const Profile = () => {
               <img src={selectedBadge?.icon} alt="badge" />
             </div>
 
-            {selectedBadgeFriends.length > 0 && (
+            {friendCount === 0 ? (
+              <h4 className="add-friends-text">Add <a href="/friends" className="link-to-friends">friends</a> to get started!</h4>
+            ) : (
+              null
+            )}
+            {selectedBadgeFriends.length > 0 ? (
               <div className="badge-selected">
                 {selectedBadgeFriends.map((friend, idx) => {
                   const email = friend.email || friend.friendEmail;
@@ -1216,6 +1220,8 @@ const Profile = () => {
                   );
                 })}
               </div>
+            ) : (
+            null
             )}
 
             <div className="badge-friends-container">
