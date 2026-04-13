@@ -380,6 +380,14 @@
   margin-top: 20px;
 }
 
+:root[data-theme="dark"] .success-modal h3 {
+  color: var(--text-color) !important;
+}
+
+:root[data-theme="dark"] .success-modal p {
+  color: var(--secondary-color) !important;
+}
+
 .submit-btn {
   background-color: var(--hover) !important;
   color: #fff;
@@ -1391,6 +1399,23 @@
   flex-wrap: wrap;
   gap: 8px;
   margin-bottom: 10px;
+}
+
+.add-friends-text {
+  text-align: center;
+  color: var(--text-color);
+
+}
+
+.add-friends-text a {
+  font-weight: 700;
+  color: var(--text-color);
+  text-decoration: underline;
+}
+
+.add-friends-text a:hover {
+  text-decoration: none;
+  color: var(--primary-color);
 }
 
 .badge-selected-chip {
