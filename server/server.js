@@ -919,29 +919,29 @@ app.post('/api/friends/request/reject', async (req, res) => {
   }
 });
 
-// Get user's friends list
-app.get('/api/friends/:email', async (req, res) => {
-  try {
-    const { email } = req.params;
+// // Get user's friends list
+// app.get('/api/friends/:email', async (req, res) => {
+//   try {
+//     const { email } = req.params;
     
-    const user = await User.findOne({ email });
+//     const user = await User.findOne({ email });
     
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
+//     if (!user) {
+//       return res.status(404).json({ error: 'User not found' });
+//     }
     
-    // Get detailed info for each friend
-    const friends = await User.find(
-      { email: { $in: user.friends } },
-      'email name createdAt'
-    );
+//     // Get detailed info for each friend
+//     const friends = await User.find(
+//       { email: { $in: user.friends } },
+//       'email name createdAt'
+//     );
     
-    res.status(200).json(friends);
-  } catch (error) {
-    console.error('Error fetching friends:', error);
-    res.status(500).json({ error: 'Failed to fetch friends' });
-  }
-});
+//     res.status(200).json(friends);
+//   } catch (error) {
+//     console.error('Error fetching friends:', error);
+//     res.status(500).json({ error: 'Failed to fetch friends' });
+//   }
+// });
 
 // Remove a friend
 app.post('/api/friends/remove', async (req, res) => {
@@ -1002,6 +1002,30 @@ app.get('/api/friends/status', async (req, res) => {
   } catch (error) {
     console.error('Error checking friendship status:', error);
     res.status(500).json({ error: 'Failed to check friendship status' });
+  }
+});
+
+// Get user's friends list
+app.get('/api/friends/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    
+    const user = await User.findOne({ email });
+    
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+    
+    // Get detailed info for each friend
+    const friends = await User.find(
+      { email: { $in: user.friends } },
+      'email name createdAt'
+    );
+    
+    res.status(200).json(friends);
+  } catch (error) {
+    console.error('Error fetching friends:', error);
+    res.status(500).json({ error: 'Failed to fetch friends' });
   }
 });
 
