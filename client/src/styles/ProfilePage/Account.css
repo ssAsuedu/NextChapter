@@ -1,13 +1,13 @@
-@import url('../colors.css');
+@import url("../colors.css");
 
 .account-page {
   display: flex;
   /* margin-top: 80px; */
-  min-height: 100vh; 
+  min-height: 100vh;
   background-color: var(--background-color);
 }
 
-.account-title{
+.account-title {
   margin-bottom: 24px;
   color: var(--primary-color);
   font-size: 2 rem;
@@ -17,7 +17,6 @@
   margin: 40px auto;
   border-radius: 12px;
   gap: 30px;
-
 }
 
 .account-img {
@@ -29,12 +28,10 @@
 .account-user {
   color: var(--text-color);
   font-size: 28px;
-
 }
 
 .email-text {
   font-size: 20px;
-
 }
 
 .member-text {
@@ -64,7 +61,6 @@
 
 :root[data-theme="dark"] .info-display {
   background-color: var(--filter-pane);
-
 }
 .info-items {
   display: flex;
@@ -76,7 +72,7 @@
   margin-bottom: 24px;
   color: var(--text-color);
 }
-.account-title{
+.account-title {
   margin-bottom: 24px;
   color: var(--primary-color);
   font-size: 2.5rem;
@@ -119,7 +115,9 @@
   border-color: var(--text-color);
 }
 
-.name-input .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline {
+.name-input
+  .MuiOutlinedInput-root.Mui-focused
+  .MuiOutlinedInput-notchedOutline {
   border-color: var(--text-color);
 }
 
@@ -130,7 +128,6 @@
 
 .row-info h2 {
   color: var(--text-color);
-
 }
 .account-separator {
   border: none;
@@ -138,16 +135,19 @@
   margin: 0 0 0 0;
 }
 
-
-
-.edit-btn, .save-btn, .cancel-btn {
+.edit-btn,
+.save-btn,
+.cancel-btn {
   padding: 4px 10px;
   border: none;
   border-radius: 999px;
   color: #fff;
   cursor: pointer;
   font-size: 0.95rem;
-  transition: background 0.2s, color 0.2s, transform 0.2s
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
 }
 
 .save-btn {
@@ -158,22 +158,34 @@
   border: 1px solid #ccc;
   color: var(--secondary-color);
   min-width: 110px;
-  
 }
-.save-btn, .close-btn {
+.save-btn,
+.close-btn {
   background-color: var(--hover);
 }
 
-.save-btn, .cancel-btn, .close-btn {
-  padding: 10px 15px 10px 15px; 
+.save-btn,
+.cancel-btn,
+.close-btn {
+  padding: 10px 15px 10px 15px;
   width: 80px;
 }
 
-.cancel-btn:hover, .save-btn:hover, .close-btn:hover {
+:root[data-theme="dark"] .close-btn {
+  background-color: var(--primary-color);
+  color: var(--background-color);
+}
+
+:root[data-theme="dark"] .close-btn:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+.cancel-btn:hover,
+.save-btn:hover,
+.close-btn:hover {
   background-color: var(--text-color);
   transform: scale(1.07);
   color: white;
-
 }
 
 .display-items {
@@ -189,8 +201,11 @@
 
 .password-modal {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -206,14 +221,12 @@
   flex-direction: column;
   min-width: 500px;
   max-width: 600px;
-  
 }
 
 .password-modal form h3 {
   text-align: center;
   margin-bottom: 16px;
   color: var(--text-color);
-
 }
 .password-modal .modal-buttons {
   display: flex;
@@ -270,7 +283,7 @@
   border: none;
 }
 
-:root[data-theme="dark"] .name-input .MuiOutlinedInput-root fieldset{
+:root[data-theme="dark"] .name-input .MuiOutlinedInput-root fieldset {
   border-color: var(--text-color);
 }
 
@@ -304,10 +317,10 @@
 
 :root[data-theme="dark"] .save-btn:hover {
   background-color: var(--text-color);
-  
 }
 
-@media (max-width: 600px) { /* responsive styles */
+@media (max-width: 600px) {
+  /* responsive styles */
   .account-info {
     margin: 20px 16px;
   }
@@ -316,7 +329,8 @@
     height: 200px;
   }
 
-  .account-user, .account-secondary {
+  .account-user,
+  .account-secondary {
     margin: 0;
   }
 
@@ -334,7 +348,6 @@
   }
   .info-items {
     flex-direction: column;
-
   }
   .account-secondary {
     margin-bottom: 8px;
@@ -348,7 +361,8 @@
     display: flex;
     gap: 15px;
   }
-  .change-password, .save-changes {
+  .change-password,
+  .save-changes {
     padding: 10px 15px 10px 15px;
     margin-right: 0;
   }
@@ -370,16 +384,18 @@
     font-size: 12px;
   }
 
-  .account-info-buttons, .row-info {
+  .account-info-buttons,
+  .row-info {
     margin-bottom: 15px;
   }
-  
-  .save-btn, .cancel-btn {
+
+  .save-btn,
+  .cancel-btn {
     min-width: 80px;
   }
 }
 
-@media (min-width: 600px) and (max-width: 900px){
+@media (min-width: 600px) and (max-width: 900px) {
   .info-display {
     padding: 20px 40px;
     gap: 20px;
@@ -402,14 +418,15 @@
   width: 150px;
   font-size: 0.95rem;
   cursor: pointer;
-  transition: background 0.2s, color 0.2s, transform 0.2s; 
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
 }
 
 .delete-account-btn:hover {
- 
-  transform: scale(1.07);             
+  transform: scale(1.07);
   color: white;
-
 }
 
 .delete-modal-overlay {
@@ -460,14 +477,16 @@
   border: none;
   border-radius: 999px;
   padding: 10px 15px;
-  min-width: 110px;    
-  width: auto;         
-  white-space: nowrap;  
+  min-width: 110px;
+  width: auto;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s;
 }
 
 .delete-confirm-btn:hover {
