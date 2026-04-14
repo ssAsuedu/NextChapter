@@ -197,6 +197,10 @@ body {
   transition: transform 0.35s ease;
 }
 
+:root[data-theme="dark"] .leaderboard-badge-slide {
+  background-color: var(--filter-pane);
+}
+
 .leaderboard-badge-slide.is-active {
   transform: translateX(-50%) scale(1);
   z-index: 3;
@@ -385,4 +389,5 @@ body {
   .leaderboard-badges-wrap .scroll-btn {
     display: none;
   }
+
 }
