@@ -19,6 +19,9 @@ const About = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const token = localStorage.getItem("token"); //check to see if user is logged in
+  const isAuthenticated = !!token; //true -> user is logged in. false -> user is not logged in
+
   useEffect(() => {
     if (location.hash) {
       const element = document.querySelector(location.hash);
@@ -32,7 +35,11 @@ const About = () => {
   }, [location]);
 
   const teamMembers = [
-    { name: "Shifa Sadaat", role: "Full-stack Developer" },
+    {
+      name: "Shifa Sadaat",
+      role: "Full-stack Developer",
+      link: "https://www.linkedin.com/in/shifa-sadaat/",
+    },
     {
       name: "Tamara Grujicic",
       role: "Full-stack Developer",
@@ -45,7 +52,11 @@ const About = () => {
       image: tasnimImg,
       link: "https://www.linkedin.com/in/tasnim-haque-0443262b4/",
     },
-    { name: "Maimouna Gaye", role: "Full-stack Developer" },
+    {
+      name: "Maimouna Gaye",
+      role: "Full-stack Developer",
+      link: "https://www.linkedin.com/in/mai-gaye/",
+    },
     { name: "Diana Torres", role: "Full-stack Developer" },
   ];
 
@@ -161,17 +172,17 @@ const About = () => {
               aria-label={`Team member ${member.name}, ${member.role}`}
             >
               <div className="team-avatar">
-                {member.image ? (
-                  <a href={member.link} className="avatar-link">
+                <a href={member.link} className="avatar-link">
+                  {member.image ? (
                     <img
                       src={member.image}
                       alt={member.name}
                       className="avatar-img"
                     ></img>
-                  </a>
-                ) : (
-                  <PersonIcon className="avatar-icon" aria-hidden="true" />
-                )}
+                  ) : (
+                    <PersonIcon className="avatar-icon" aria-hidden="true" />
+                  )}
+                </a>
               </div>
               <h3>{member.name}</h3>
               <p>{member.role}</p>
@@ -204,20 +215,41 @@ const About = () => {
           books.
         </p>
         <div className="cta-buttons">
-          <button
-            className="cta-primary"
-            onClick={() => navigate("/signup")}
-            aria-label="Get started with Next Chapter"
-          >
-            Get Started
-          </button>
-          <button
-            className="cta-secondary"
-            onClick={() => navigate("/explore")}
-            aria-label="Browse books on Next Chapter"
-          >
-            Browse Books
-          </button>
+          {isAuthenticated ? (
+            <>
+              <button
+                className="cta-primary"
+                onClick={() => navigate("/explore")}
+                aria-label="Discover books on the explore page"
+              >
+                Browse Books
+              </button>
+              <button
+                className="cta-secondary"
+                onClick={() => navigate("/profile")}
+                aria-label="Go to Profile to view your books"
+              >
+                Your Library
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                className="cta-primary"
+                onClick={() => navigate("/explore")}
+                aria-label="Browse books on Next Chapter"
+              >
+                Browse Books
+              </button>
+              <button
+                className="cta-secondary"
+                onClick={() => navigate("/signup")}
+                aria-label="Get started with Next Chapter"
+              >
+                Get Started
+              </button>
+            </>
+          )}
         </div>
       </section>
     </div>
