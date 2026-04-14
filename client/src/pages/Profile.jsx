@@ -555,7 +555,28 @@ const Profile = () => {
               </button>
             )}
 
-            <div className="profile-badges-slider">
+            <div
+              className="profile-badges-slider"
+              onTouchStart={(e) => {
+                if (window.innerWidth > 768) return;
+                e.currentTarget.dataset.startX = e.touches[0].clientX;
+              }}
+              onTouchEnd={(e) => {
+                if (window.innerWidth > 768) return;
+
+                const startX = Number(e.currentTarget.dataset.startX);
+                if (!startX) return;
+
+                const endX = e.changedTouches[0].clientX;
+                const diff = startX - endX;
+
+                if (Math.abs(diff) > 40) {
+                  changeProfileBadge(diff > 0 ? 1 : -1);
+                }
+
+                e.currentTarget.dataset.startX = "";
+              }}
+            >
               {groupedBadges.map(([type, count], index, arr) => {
                 const current = activeProfileBadgeIndex;
                 const prevIndex = (current - 1 + arr.length) % arr.length;
