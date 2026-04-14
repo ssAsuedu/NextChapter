@@ -307,6 +307,9 @@ li {
   border: none;
 }
 
+.auth-signup.signup-nav:hover {
+  background-color: var(--hover);
+}
 :root[data-theme="dark"] .new-user.open .auth-login.not-scroll:hover, .new-user.open {
   background-color: transparent;
   transform: none;
