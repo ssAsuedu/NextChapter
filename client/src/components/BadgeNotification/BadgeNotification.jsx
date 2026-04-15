@@ -57,15 +57,20 @@ const BADGE_TRIGGER_URLS = [
 ];
 
 // ── Toast component ──
-const BadgeToast = ({ notification, onDismiss, autoDismissMs = 5000 }) => {
+// `notification` is now always an ARRAY of badge objects (or null).
+// When the array has 1 badge → single badge view
+// When the array has 2+ badges → grouped view with all icons in a row
+const BadgeToast = ({ notification, onDismiss, autoDismissMs = 6000 }) => {
   const [visible, setVisible] = useState(false);
   const [exiting, setExiting] = useState(false);
 
   useEffect(() => {
-    if (notification) {
+    if (notification && notification.length > 0) {
       setExiting(false);
       requestAnimationFrame(() => setVisible(true));
-      const timer = setTimeout(() => handleDismiss(), autoDismissMs);
+      // Longer auto-dismiss for grouped notifications so users can see all badges
+      const dismissTime = notification.length > 1 ? autoDismissMs + 2000 : autoDismissMs;
+      const timer = setTimeout(() => handleDismiss(), dismissTime);
       return () => clearTimeout(timer);
     } else {
       setVisible(false);
@@ -81,25 +86,60 @@ const BadgeToast = ({ notification, onDismiss, autoDismissMs = 5000 }) => {
     }, 400);
   };
 
-  if (!notification) return null;
+  if (!notification || notification.length === 0) return null;
+
+  const isGrouped = notification.length > 1;
+  const totalPoints = notification.reduce((sum, b) => sum + (b.points || 0), 0);
 
   return (
     <div
       className={`badge-notif-overlay ${visible && !exiting ? "badge-notif-enter" : ""} ${exiting ? "badge-notif-exit" : ""}`}
       onClick={handleDismiss}
     >
-      <div className="badge-notif-card" onClick={(e) => e.stopPropagation()}>
+      <div
+        className={`badge-notif-card ${isGrouped ? "badge-notif-card--grouped" : ""}`}
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="badge-notif-sparkle sparkle-1">✦</div>
         <div className="badge-notif-sparkle sparkle-2">✦</div>
         <div className="badge-notif-sparkle sparkle-3">⟡</div>
-        <div className="badge-notif-header">Badge Earned!</div>
-        <div className="badge-notif-icon-wrap">
-          <div className="badge-notif-glow" />
-          <img src={notification.icon} alt={notification.name} className="badge-notif-icon" />
+
+        <div className="badge-notif-header">
+          {isGrouped ? `You earned ${notification.length} new badges!` : "Badge Earned!"}
         </div>
-        <div className="badge-notif-name">{notification.name}</div>
-        <div className="badge-notif-desc">{notification.description}</div>
-        <div className="badge-notif-points">+{notification.points} pts</div>
+
+        {isGrouped ? (
+          // Grouped view — show all icons in a row
+          <>
+            <div className="badge-notif-group">
+              {notification.map((b, i) => (
+                <div
+                  key={i}
+                  className="badge-notif-group-item"
+                  style={{ animationDelay: `${0.15 + i * 0.1}s` }}
+                >
+                  <div className="badge-notif-group-icon-wrap">
+                    <img src={b.icon} alt={b.name} className="badge-notif-group-icon" />
+                  </div>
+                  <div className="badge-notif-group-name">{b.name}</div>
+                </div>
+              ))}
+            </div>
+            <div className="badge-notif-points">+{totalPoints} pts total</div>
+          </>
+        ) : (
+          // Single badge view (original layout)
+          <>
+            <div className="badge-notif-icon-wrap">
+              <div className="badge-notif-glow" />
+              <img src={notification[0].icon} alt={notification[0].name} className="badge-notif-icon" />
+            </div>
+            <div className="badge-notif-name">{notification[0].name}</div>
+            <div className="badge-notif-desc">{notification[0].description}</div>
+            <div className="badge-notif-points">+{notification[0].points} pts</div>
+          </>
+        )}
+
         <button className="badge-notif-dismiss" onClick={handleDismiss}>Nice!</button>
       </div>
     </div>
@@ -111,8 +151,8 @@ const BadgeContext = createContext();
 export const useBadgeCheck = () => useContext(BadgeContext);
 
 const BadgeProvider = ({ children }) => {
+  // `notification` is now an array of badges (batched from a single check)
   const [notification, setNotification] = useState(null);
-  const [queue, setQueue] = useState([]);
   const knownBadgesRef = useRef(null);
   const interceptorSetup = useRef(false);
 
@@ -158,15 +198,9 @@ const BadgeProvider = ({ children }) => {
       });
       knownBadgesRef.current = newMap;
 
+      // Batch: show all new badges from this check in a single grouped notification
       if (newBadges.length > 0) {
-        setNotification((curr) => {
-          if (!curr) {
-            if (newBadges.length > 1) setQueue((prev) => [...prev, ...newBadges.slice(1)]);
-            return newBadges[0];
-          }
-          setQueue((prev) => [...prev, ...newBadges]);
-          return curr;
-        });
+        setNotification(newBadges);
       }
     } catch (err) {
       console.error("Badge check failed:", err);
@@ -190,13 +224,6 @@ const BadgeProvider = ({ children }) => {
 
   const dismissNotification = useCallback(() => {
     setNotification(null);
-    setQueue((prev) => {
-      if (prev.length > 0) {
-        setTimeout(() => setNotification(prev[0]), 300);
-        return prev.slice(1);
-      }
-      return prev;
-    });
   }, []);
 
   return (
