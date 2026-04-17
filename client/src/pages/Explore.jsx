@@ -11,6 +11,7 @@ import {
   getBookFromCache,
   setBookInCache,
 } from "../../utils/apiCache";
+import { Link } from "react-router-dom";
 import BookRating from "../components/BookRating";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
@@ -36,10 +37,20 @@ const Explore = () => {
   const [trendingBooks, setTrendingBooks] = useState([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
   const [hiddenBooks, setHiddenBooks] = useState([]);
+  const [loginModal, setLoginModal] = useState(false);
 
   const scrollRefs = useRef({});
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
+
+  function Modal({ loginModal }) {
+    if (!loginModal) return null;
+  }
+  const handleOutsideClick = (e) => {
+    if (e.target.classList.contains("login-modal-wrapper")) {
+      setLoginModal(false);
+    }
+  };
 
   // Fetch user's bookshelf once on mount
   useEffect(() => {
@@ -163,7 +174,7 @@ const Explore = () => {
 
   const handleSaveBook = async (volumeId) => {
     if (!email) {
-      alert("Please log in to save books.");
+      setLoginModal(true);
       return;
     }
     try {
@@ -314,7 +325,11 @@ const Explore = () => {
               ref={(el) => (scrollRefs.current[cat.label] = el)}
             >
               {loading[cat.label] ? (
-                <div className="category-loading" role="status" aria-live="polite">
+                <div
+                  className="category-loading"
+                  role="status"
+                  aria-live="polite"
+                >
                   Loading...
                 </div>
               ) : booksByCategory[cat.label]?.length > 0 ? (
@@ -347,7 +362,11 @@ const Explore = () => {
                     </div>
                   ))
               ) : (
-                <div className="category-loading" role="status" aria-live="polite">
+                <div
+                  className="category-loading"
+                  role="status"
+                  aria-live="polite"
+                >
                   No books found.
                 </div>
               )}
@@ -388,6 +407,7 @@ const Explore = () => {
                 ? hoveredCard.info.authors.join(", ")
                 : "Unknown Author"}
             </p>
+
             <button
               className="save-book-btn"
               onClick={() => handleSaveBook(hoveredCard.volumeId)}
@@ -413,6 +433,27 @@ const Explore = () => {
           </div>,
           document.body,
         )}
+      {loginModal && (
+        <div className="login-modal-wrapper" onClick={handleOutsideClick}>
+          <div className="login-modal-content">
+            <div className="login-modal-title">
+              <h1>Login Required</h1>
+              <p>Please login to save this book to your bookshelf.</p>
+            </div>
+            <div className="button-display">
+              <Link to="/login" className="login-btn-display">
+                Login
+              </Link>
+              <button
+                className="close-btn-display"
+                onClick={() => setLoginModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
