@@ -27,15 +27,14 @@ const Navbar = () => {
   const [profileDrop, setProfileDrop] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  const[isDark] = useLocalStorage("isDark", false);
+  const [isDark] = useLocalStorage("isDark", false);
 
   const isActive = scrolled || menuOpen; //active is if navbar is scrolled or if the burger menu is open
-  const currentLogo =
-  isActive //if the navbar is scrolled or the menu is ever open
+  const currentLogo = isActive //if the navbar is scrolled or the menu is ever open
     ? whiteLogo //always display the white logo
     : isDark //if we're on dark mode and we haven't scrolled on the navbar
-    ? darkModeNotScrolledLogo //always display the dark mode logo (light color)
-    : Logo; //otherwise, display the regular dark purple logo
+      ? darkModeNotScrolledLogo //always display the dark mode logo (light color)
+      : Logo; //otherwise, display the regular dark purple logo
 
   const changeBackground = () => {
     if (window.scrollY >= 80 && window.innerWidth > 768) {
@@ -65,9 +64,7 @@ const Navbar = () => {
             .map((msg) => msg.sender),
         ).size;
         setUnreadCount(unread);
-      } catch (err) {
-        console.error(err);
-      }
+      } catch (err) {}
     };
 
     fetchUnread();
@@ -96,7 +93,7 @@ const Navbar = () => {
     localStorage.removeItem("idToken");
     localStorage.removeItem("userName");
     localStorage.removeItem("userEmail");
-    
+
     navigate("/");
   };
 
@@ -108,15 +105,16 @@ const Navbar = () => {
       return;
     }
 
-    if(!hash) { //if the user is already on the about page
-      window.scrollTo({top: 0, behavior: "smooth"});
+    if (!hash) {
+      //if the user is already on the about page
+      window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
 
     //scroll to the specific dropdown sections in the navbar
     const element = document.querySelector(hash);
-    if(element) {
-      element.scrollIntoView({behavior: "smooth"});
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
     }
   };
 
@@ -448,12 +446,15 @@ const Navbar = () => {
                   className="nav-message-icon"
                   onClick={() => navigate("/messages")}
                 >
-                  <svg width="33" height="33" viewBox="0 0 22 22" fill="none">
-                    <path d="M11 2C6.03 2 2 5.69 2 10.2c0 2.6 1.35 4.93 3.47 6.43L4.5 20l3.8-1.9C9.36 18.36 10.17 18.4 11 18.4c4.97 0 9-3.69 9-8.2C20 5.69 15.97 2 11 2Z" />
-                  </svg>
-                  {unreadCount > 0 && (
-                    <span className="nav-message-badge">{unreadCount}</span>
-                  )}
+                  <div className="message-wrapper">
+                    <svg width="33" height="33" viewBox="0 0 22 22" fill="none">
+                      <path d="M11 2C6.03 2 2 5.69 2 10.2c0 2.6 1.35 4.93 3.47 6.43L4.5 20l3.8-1.9C9.36 18.36 10.17 18.4 11 18.4c4.97 0 9-3.69 9-8.2C20 5.69 15.97 2 11 2Z" />
+                    </svg>
+                    {unreadCount > 0 && (
+                      <span className="nav-message-badge">{unreadCount}</span>
+                    )}
+                  </div>
+                  <span className="message-mobile-text">Messages</span>
                 </div>
                 <div
                   className={`user-initial ${scrolled ? "bg-scroll" : "not-scroll"}`}

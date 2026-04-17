@@ -15,6 +15,10 @@
   border-bottom: 1px solid #dbdbdb;
 }
 
+.message-mobile-text {
+  display: none;
+}
+
 .logo {
   width: 50px;
   height: 50px;
@@ -29,7 +33,6 @@
   align-items: center;
   cursor: pointer;
   margin-right: 4px;
-
 }
 
 .nav-message-icon path {
@@ -66,7 +69,6 @@ button.menu-btn {
 
 .scrolled {
   background-color: var(--text-color);
-  
 }
 
 li {
@@ -78,13 +80,13 @@ li {
   flex-direction: column;
 }
 
-.about-name-arrow, .profile-name-arrow{
+.about-name-arrow,
+.profile-name-arrow {
   display: flex;
   align-items: center;
   padding: 0;
   margin: 0;
   gap: 8px;
-  
 }
 
 .carrot {
@@ -112,14 +114,16 @@ li {
   min-width: 150px;
 }
 
-.about-links, .profile-links {
+.about-links,
+.profile-links {
   margin: 0;
   text-align: left;
   padding: 10px;
   color: white;
 }
 
-.about-links:hover, .profile-links:hover {
+.about-links:hover,
+.profile-links:hover {
   text-decoration: underline;
   cursor: pointer;
 }
@@ -140,22 +144,22 @@ li {
   padding-left: 8px;
 }
 
-.left, .right {
+.left,
+.right {
   display: flex;
   gap: 25px;
   align-items: center;
   margin: 0;
   padding: 0;
-  
 }
 
 .link {
   color: var(--text-color);
   font-size: 18px;
-  
 }
 
-.about-nav, .profile-nav {
+.about-nav,
+.profile-nav {
   display: flex;
   flex-direction: column;
   margin: 0;
@@ -170,8 +174,8 @@ li {
   gap: 5px;
 }
 
-
-.link.not-scroll, .link.link-scrolled {
+.link.not-scroll,
+.link.link-scrolled {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -182,7 +186,8 @@ li {
 }
 
 .link:hover {
-  color: var(--primary-color);
+  color: white;
+  text-decoration: underline;
 }
 .link-scrolled {
   color: white;
@@ -225,15 +230,20 @@ li {
   border-radius: 999px;
   color: #fff;
   padding: 8px 16px;
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
   font-size: 14px;
 }
 
-.about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
+.about-arrow:hover .dropdown-links,
+.profile-arrow:hover .dropdown-links {
   display: block;
 }
 
-.about-arrow, .profile-arrow {
+.about-arrow,
+.profile-arrow {
   position: relative;
 }
 
@@ -244,7 +254,8 @@ li {
   color: white;
 }
 
-.auth-signout.not-scroll, .auth-signout.signout-nav {
+.auth-signout.not-scroll,
+.auth-signout.signout-nav {
   margin: 0;
   border: none;
 }
@@ -254,7 +265,8 @@ li {
   color: var(--secondary-color);
 }
 
-.signout-nav:hover, .auth-signup:hover {
+.signout-nav:hover,
+.auth-signup:hover {
   background-color: var(--text-color);
   border: 1px solid #f2f2f2;
 }
@@ -269,7 +281,10 @@ li {
   border-radius: 999px;
   padding: 8px 16px;
   border: 1px solid #ccc;
-  transition: background 0.2s, color 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    color 0.2s,
+    transform 0.2s;
   font-size: 14px;
 }
 
@@ -279,7 +294,8 @@ li {
   gap: 15px;
 }
 
-.auth-signup:hover, .auth-signout:hover {
+.auth-signup:hover,
+.auth-signout:hover {
   background-color: var(--text-color);
   color: white;
   transform: scale(1.07);
@@ -287,22 +303,23 @@ li {
 
 :root[data-theme="dark"] .scrolled {
   background-color: var(--filter-pane);
-  
 }
 
-:root[data-theme="dark"] .auth-login.not-scroll, .auth-login.login-nav{
+:root[data-theme="dark"] .auth-login.not-scroll,
+.auth-login.login-nav {
   background-color: var(--background-color);
   border: 1px solid #ccc;
   color: var(--secondary-color);
 }
 
-:root[data-theme="dark"] .auth-login.not-scroll:hover, .auth-login.login-nav:hover {
+:root[data-theme="dark"] .auth-login.not-scroll:hover,
+.auth-login.login-nav:hover {
   background-color: var(--text-color);
   color: var(--background-color);
 }
 
-
-:root[data-theme="dark"] .auth-signup.not-scroll, .auth-signup.signup-nav {
+:root[data-theme="dark"] .auth-signup.not-scroll,
+.auth-signup.signup-nav {
   color: var(--background-color);
   border: none;
 }
@@ -310,14 +327,16 @@ li {
 .auth-signup.signup-nav:hover {
   background-color: var(--hover);
 }
-:root[data-theme="dark"] .new-user.open .auth-login.not-scroll:hover, .new-user.open {
+:root[data-theme="dark"] .new-user.open .auth-login.not-scroll:hover,
+.new-user.open {
   background-color: transparent;
   transform: none;
   color: white;
   text-decoration: underline;
-} 
+}
 
-:root[data-theme="dark"] .auth-login.not-scroll:hover, .auth-login.login-nav:hover {
+:root[data-theme="dark"] .auth-login.not-scroll:hover,
+.auth-login.login-nav:hover {
   transform: scale(1.07);
 }
 
@@ -336,16 +355,15 @@ li {
 :root[data-theme="dark"] .bg-scroll {
   background-color: var(--primary-color);
   color: white;
-
 }
 
-:root[data-theme="dark"] .auth-signout.not-scroll{
+:root[data-theme="dark"] .auth-signout.not-scroll {
   background-color: var(--primary-color);
   border: none;
   color: var(--background-color);
 }
 
-:root[data-theme="dark"] .auth-signout.not-scroll:hover{
+:root[data-theme="dark"] .auth-signout.not-scroll:hover {
   background-color: var(--text-color);
 }
 
@@ -353,7 +371,6 @@ li {
   color: var(--background-color);
   background-color: var(--primary-color);
   border: none;
-
 }
 
 :root[data-theme="dark"] .auth-signout.signout-nav:hover {
@@ -376,14 +393,15 @@ li {
 
 :root[data-theme="dark"] .dropdown-links {
   background-color: var(--text-color);
-  
 }
 
 :root[data-theme="dark"] .link-text {
   color: var(--background-color);
 }
 
-:root[data-theme="dark"] .link-text:hover, :root[data-theme="dark"] .about-links:hover, :root[data-theme="dark"] .profile-links:hover {
+:root[data-theme="dark"] .link-text:hover,
+:root[data-theme="dark"] .about-links:hover,
+:root[data-theme="dark"] .profile-links:hover {
   text-decoration: underline;
   color: var(--background-color);
 }
@@ -401,19 +419,22 @@ li {
   stroke: #a97dd4;
 }
 
-@media (min-width:300px) and (max-width: 860px) {
+@media (min-width: 300px) and (max-width: 860px) {
+  .nav-message-badge {
+    right: 90px;
+  }
   .logo {
     width: 60px;
     height: 60px;
   }
-  .about-arrow:hover .dropdown-links, .profile-arrow:hover .dropdown-links {
+  .about-arrow:hover .dropdown-links,
+  .profile-arrow:hover .dropdown-links {
     display: none !important;
   }
 
   .desktop-dropdown {
     display: none;
   }
-
 
   .carrot {
     display: block !important;
@@ -433,27 +454,29 @@ li {
 
   .nav-message-icon {
     margin-top: 30px;
-    margin-bottom: 30px;
+    margin-bottom: 60px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
   }
 
   button.menu-btn.open {
     margin-bottom: 8px;
   }
 
-  .about-nav, .profile-nav {
+  .about-nav,
+  .profile-nav {
     position: static;
-
   }
-  .dropdown-links{
+  .dropdown-links {
     position: static;
     background-color: transparent;
     box-shadow: none;
-
   }
   .link-text {
     font-size: 18px;
   }
-  
+
   .navbar {
     background-color: var(--text-color);
   }
@@ -476,7 +499,6 @@ li {
     padding: 0;
     margin: 0;
     align-items: flex-start;
-    
   }
 
   .logged-in {
@@ -491,6 +513,7 @@ li {
     align-items: flex-start;
     gap: 0;
   }
+
   .navbar-content {
     flex-direction: column;
     align-items: flex-start;
@@ -513,6 +536,7 @@ li {
   .auth-signout.not-scroll {
     display: block;
     color: white;
+    margin-bottom: 15px;
   }
 
   .auth-signout.not-scroll:hover {
@@ -526,7 +550,7 @@ li {
   .new-user {
     display: none;
   }
-  
+
   .new-user.open {
     display: flex;
     flex-direction: column;
@@ -536,14 +560,28 @@ li {
     gap: 0;
   }
 
-  .auth-signup.not-scroll, .auth-login.not-scroll {
+  .message-mobile-text {
+    display: block;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    padding: 0;
+    margin: 0;
+  }
+
+  .message-mobile-text:hover {
+    text-decoration: underline;
+  }
+
+  .auth-signup.not-scroll,
+  .auth-login.not-scroll {
     background: transparent;
     font-size: 18px;
     padding: 0;
     margin-top: 30px;
     border: none;
   }
-  
+
   .auth-login.not-scroll {
     margin-bottom: 10px;
   }
@@ -572,8 +610,9 @@ li {
     transform: none;
     text-decoration: underline;
   }
-  
-  :root[data-theme="dark"] .auth-login.not-scroll, :root[data-theme="dark"] .auth-signout.not-scroll{
+
+  :root[data-theme="dark"] .auth-login.not-scroll,
+  :root[data-theme="dark"] .auth-signout.not-scroll {
     background-color: transparent;
     border: none;
     color: white;
@@ -599,7 +638,6 @@ li {
 }
 
 @media (min-width: 860px) and (max-width: 1000px) {
-
   .left {
     gap: 20px;
   }
@@ -628,7 +666,8 @@ li {
   .auth-signout.signout-nav {
     padding: 8px;
   }
-  .user-initial.not-scroll, .user-initial.bg-scroll {
+  .user-initial.not-scroll,
+  .user-initial.bg-scroll {
     width: 30px;
     height: 30px;
   }
