@@ -186,10 +186,17 @@ li {
 }
 
 .link:hover {
-  color: white;
   text-decoration: underline;
 }
 .link-scrolled {
+  color: white;
+}
+
+.link.not-scroll:hover {
+  color: var(--text-color);
+}
+
+.left.open .link.not-scroll:hover {
   color: white;
 }
 
