@@ -30,8 +30,10 @@ const Progress = () => {
     height: window.innerHeight,
   });
 
-  const[errors, setErrors] = useState({});
-  useEffect(() => { //for react confetti so it can take up the whole width and height of the screen, no matter the size
+  const [errors, setErrors] = useState({});
+
+  // for react confetti so it can take up the whole width and height of the screen, no matter the size
+  useEffect(() => {
     const handleResize = () => {
       setWindowSize({
         width: window.innerWidth,
@@ -41,15 +43,15 @@ const Progress = () => {
 
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  })
-  const getImage = (imageLinks) => {
+  }, []); // empty deps so listener is only attached once
 
+  const getImage = (imageLinks) => {
     const url =
-    imageLinks?.extraLarge ||
-    imageLinks?.large ||
-    imageLinks?.medium ||
-    imageLinks?.thumbnail ||
-    imageLinks?.smallThumbnail;
+      imageLinks?.extraLarge ||
+      imageLinks?.large ||
+      imageLinks?.medium ||
+      imageLinks?.thumbnail ||
+      imageLinks?.smallThumbnail;
 
     return url ? url.replace("http://", "https://") : "default-book.png";
   };
@@ -69,63 +71,71 @@ const Progress = () => {
   useEffect(() => {
     const fetchBookDetails = async () => {
       if (bookshelf.length === 0) return;
-      const promises = bookshelf.map(id =>
-        axios.get(`https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`)
+      const promises = bookshelf.map((id) =>
+        axios.get(
+          `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`
+        )
       );
       const results = await Promise.all(promises);
-      setBooks(results.map(r => r.data));
+      setBooks(results.map((r) => r.data));
     };
     fetchBookDetails();
   }, [bookshelf]);
 
   const getBookProgress = (volumeId, totalPages) => {
-    const found = progress.find(p => p.volumeId === volumeId);
+    const found = progress.find((p) => p.volumeId === volumeId);
     return found
       ? found
       : { volumeId, currentPage: 0, totalPages: totalPages || 0 };
   };
 
-  const totalRead = progress.filter(p => p.totalPages > 0 && p.currentPage === p.totalPages).length;
+  const totalRead = progress.filter(
+    (p) => p.totalPages > 0 && p.currentPage === p.totalPages
+  ).length;
 
   const [displayTotalRead, setDisplayTotalRead] = useState(totalRead);
   const prevTotalRead = useRef(totalRead);
 
   useEffect(() => {
-    if(!dataLoaded) return;
-    if(!hasMounted.current) {
+    if (!dataLoaded) return;
+    if (!hasMounted.current) {
       hasMounted.current = true;
       prevTotalRead.current = totalRead;
-      setDisplayTotalRead(totalRead); //first load synced, now confetti won't play upon load
+      setDisplayTotalRead(totalRead); // first load synced, now confetti won't play upon load
       return;
     }
 
-    if (totalRead > prevTotalRead.current) { //if the total books read is greater than currently read books
-      setShowConfetti(true); //set confetti to true
-      setBookModal(true); //show the congrats book modal
+    if (totalRead > prevTotalRead.current) {
+      // if the total books read is greater than currently read books
+      setShowConfetti(true); // set confetti to true
+      setBookModal(true); // show the congrats book modal
       setTimeout(() => {
-        setDisplayTotalRead(prev => prev + 1);
-      }, 4000); //display the updated book count after 3 seconds
-    } else if(totalRead < prevTotalRead.current) { //if the total is less than the current books
-      setDisplayTotalRead(totalRead); //just set the current to the total
+        setDisplayTotalRead((prev) => prev + 1);
+      }, 4000); // display the updated book count after 4 seconds
+    } else if (totalRead < prevTotalRead.current) {
+      // if the total is less than the current books
+      setDisplayTotalRead(totalRead); // just set the current to the total
     }
     prevTotalRead.current = totalRead;
-  }, [totalRead]);
+  }, [totalRead, dataLoaded]);
 
   useEffect(() => {
-    if (showConfetti) { //if confetti is triggered (new book read)
-      window.scrollTo({ //scroll to the top of the screen smoothly
+    if (showConfetti) {
+      // if confetti is triggered (new book read)
+      window.scrollTo({
+        // scroll to the top of the screen smoothly
         top: 0,
         behavior: "smooth",
-      });;
+      });
     }
   }, [showConfetti]);
 
   useEffect(() => {
-    if(showConfetti) { //if the confetti is triggered
-
+    if (showConfetti) {
+      // if the confetti is triggered
       const fadeTimer = setTimeout(() => {
-        setFadeConfetti(true); //start fade
-      }, 4000); //start fade before it ends
+        setFadeConfetti(true); // start fade
+      }, 4000); // start fade before it ends
 
       const removeTimer = setTimeout(() => {
         setShowConfetti(false);
@@ -135,11 +145,13 @@ const Progress = () => {
       return () => {
         clearTimeout(fadeTimer);
         clearTimeout(removeTimer);
-      }
+      };
     }
   }, [showConfetti]);
 
-  const totalInProgress = progress.filter(p => p.totalPages > 0 && p.currentPage > 0 && p.currentPage < p.totalPages).length;
+  const totalInProgress = progress.filter(
+    (p) => p.totalPages > 0 && p.currentPage > 0 && p.currentPage < p.totalPages
+  ).length;
 
   const handleEditClick = (idx, currentPage) => {
     setEditIdx(idx);
@@ -148,14 +160,14 @@ const Progress = () => {
 
   const handleSave = async (volumeId, totalPages) => {
     const currentPage = Number(editPage);
-    if(currentPage < 0 || currentPage > totalPages) {
-      setErrors(prev => ({
+    if (currentPage < 0 || currentPage > totalPages) {
+      setErrors((prev) => ({
         ...prev,
         [volumeId]: `Please enter a valid page number.`,
       }));
       return;
     }
-    setErrors(prev => ({
+    setErrors((prev) => ({
       ...prev,
       [volumeId]: null,
     }));
@@ -166,11 +178,13 @@ const Progress = () => {
       currentPage,
       totalPages,
     });
-    setProgress(prev => {
-      const exists = prev.find(p => p.volumeId === volumeId);
+    setProgress((prev) => {
+      const exists = prev.find((p) => p.volumeId === volumeId);
       if (exists) {
         return prev.map((item) =>
-          item.volumeId === volumeId ? { ...item, currentPage, totalPages } : item
+          item.volumeId === volumeId
+            ? { ...item, currentPage, totalPages }
+            : item
         );
       } else {
         return [...prev, { volumeId, currentPage, totalPages }];
@@ -186,23 +200,28 @@ const Progress = () => {
       <div className="progress-top-section">
         {showConfetti && (
           <div className={`confetti ${fadeConfetti ? "fade-out" : ""}`}>
-          <Confetti
-          width={windowSize.width}
-          height={windowSize.height}
-          />
+            <Confetti width={windowSize.width} height={windowSize.height} />
           </div>
         )}
-        <h1 id="progress-heading" className="progress-title">Your Progress</h1>
+        <h1 id="progress-heading" className="progress-title">
+          Your Progress
+        </h1>
+        <div
+          className="progress-stats"
+          role="region"
+          aria-label="Reading statistics"
+        >
           <div
-            className="progress-stats"
-            role="region"
-            aria-label="Reading statistics"
+            className="books-read-container"
+            aria-label={`Total books read: ${displayTotalRead}`}
           >
-          <div className="books-read-container" aria-label={`Total books read: ${displayTotalRead}`}>
             <h2 className="total-read">{displayTotalRead}</h2>
             <h3>Books Read</h3>
           </div>
-          <div className="in-progress-container" aria-label={`Total in progress: ${totalInProgress}`}>
+          <div
+            className="in-progress-container"
+            aria-label={`Total in progress: ${totalInProgress}`}
+          >
             <h2 className="currently-reading">{totalInProgress}</h2>
             <h3>In Progress</h3>
           </div>
@@ -211,19 +230,25 @@ const Progress = () => {
           <div className="completed-book-overlay">
             <div className="completed-book-content">
               <div className="success-image">
-                <img src={BookCelebration}></img>
-                </div>
-                <div className="completed-book-text">
-                  <h3>Congratulations! You finished a book!</h3>
-                  <h4>Your journey doesn't end here, keep reading!</h4>
-                  </div>
-                  <button className="keep-reading-btn" 
-                  onClick={() => {
-                    setBookModal(false);
-                  }}
-                  >Keep Reading</button>
+                <img
+                  src={BookCelebration}
+                  alt="Celebration illustration for completing a book"
+                />
               </div>
+              <div className="completed-book-text">
+                <h3>Congratulations! You finished a book!</h3>
+                <h4>Your journey doesn't end here, keep reading!</h4>
+              </div>
+              <button
+                className="keep-reading-btn"
+                onClick={() => {
+                  setBookModal(false);
+                }}
+              >
+                Keep Reading
+              </button>
             </div>
+          </div>
         )}
         <div className="progress-streak-wrapper">
           <ReadingStreak />
@@ -261,125 +286,140 @@ const Progress = () => {
                       alt={`Cover of ${book.volumeInfo.title}`}
                       className="progress-book-image"
                     />
-                    </div>
-                    <div className="right-side">
-                      <div className="progress-book-info">
-                        <h3>{book.volumeInfo.title}</h3>
-                        <p>{book.volumeInfo.authors?.join(", ")}</p>
+                  </div>
+                  <div className="right-side">
+                    <div className="progress-book-info">
+                      <h3>{book.volumeInfo.title}</h3>
+                      <p>{book.volumeInfo.authors?.join(", ")}</p>
 
-                    <div
-                      className="progress-bar-container"
-                      role="progressbar"
-                      aria-valuenow={percent}
-                      aria-valuemin={0}
-                      aria-valuemax={100}
-                      aria-label={`Reading progress: ${percent}%`}
-                    >
-                      <div className="progress-bar" style={{ width: `${percent}%` }} />
-                    </div>
+                      <div
+                        className="progress-bar-container"
+                        role="progressbar"
+                        aria-valuenow={percent}
+                        aria-valuemin={0}
+                        aria-valuemax={100}
+                        aria-label={`Reading progress: ${percent}%`}
+                      >
+                        <div
+                          className="progress-bar"
+                          style={{ width: `${percent}%` }}
+                        />
+                      </div>
 
-                    <div className="progress-inputs">
-                      {editIdx === idx ? (
-                        <>
-                        <div className="progress-input-wrapper">
-                          <label htmlFor={`page-input-${idx}`}>
-                            Page:
-                          </label>
-                          <TextField
-                            id={`page-input-${idx}`}
-                            type="number"
-                            variant="outlined"
-                            size="small"
-                            value={editPage}
-                            onChange={e => {
-                              setEditPage(e.target.value);
-                              setErrors(prev => ({
-                              ...prev,
-                              [volumeId]: null,
-                              }));
-                            }}
-                            inputProps={{
-                              min: 0,
-                              max: totalPages,
-                              "aria-label": `Current page for ${book.volumeInfo.title}`,
-                              style: { background: "#faf8ff", textAlign: "center" }
-                            }}
-                            sx={{
-                              // width: 70,
-                              minWidth: 0,
-                              marginLeft: 1,
-                              "& .MuiOutlinedInput-root": {
-                                background: "#faf8ff",
-                                "& fieldset": { borderColor: "#e6e0f8" },
-                                "&:hover fieldset": { borderColor: "#ab7ce7" },
-                                "&.Mui-focused fieldset": { borderColor: "#6c3fc5" },
-                              }
-                            }}
-                          />
-                          <span aria-hidden="true">/ {totalPages || "?"}</span>
-                          </div>
-                          <div className="progress-buttons">
-                          <IconButton
-                            className="progress-cancel-btn"
-                            onClick={() => setEditIdx(null)}
-                            size="small"
-                            aria-label="Cancel editing"
-                            sx={{
-                              height: 36,
-                              width: 36,
-                              background: "#bbb",
-                              color: "#fff",
-                              "&:hover": { background: "#888" }
-                            }}
-                          >
-                            <CloseIcon fontSize="small"/>
-                          </IconButton>
-                          <IconButton
-                            className="progress-save-btn"
-                            onClick={() => handleSave(volumeId, totalPages)}
-                            size="small"
-                            aria-label={`Save progress for ${book.volumeInfo.title}`}
-                            sx={{
-                              marginLeft: 1,
-                              background: "#ab7ce7",
-                              color: "#fff",
-                              "&:hover": { background: "#6c3fc5" }
-                            }}
-                          >
-                            <CheckIcon />
-                          </IconButton>
-                          </div>
-                          {errors[volumeId] && (
-                            <span className="error-styling">{errors[volumeId]}</span>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <span aria-label={`Page ${p.currentPage} of ${totalPages || "unknown"}`}>
-                            Page: {p.currentPage} / {totalPages || "?"}
-                          </span>
-                        </>
-                      )}
-                    </div>
-                    <button
+                      <div className="progress-inputs">
+                        {editIdx === idx ? (
+                          <>
+                            <div className="progress-input-wrapper">
+                              <label htmlFor={`page-input-${idx}`}>
+                                Page:
+                              </label>
+                              <TextField
+                                id={`page-input-${idx}`}
+                                type="number"
+                                variant="outlined"
+                                size="small"
+                                value={editPage}
+                                onChange={(e) => {
+                                  setEditPage(e.target.value);
+                                  setErrors((prev) => ({
+                                    ...prev,
+                                    [volumeId]: null,
+                                  }));
+                                }}
+                                inputProps={{
+                                  min: 0,
+                                  max: totalPages,
+                                  "aria-label": `Current page for ${book.volumeInfo.title}`,
+                                  style: {
+                                    background: "#faf8ff",
+                                    textAlign: "center",
+                                  },
+                                }}
+                                sx={{
+                                  minWidth: 0,
+                                  marginLeft: 1,
+                                  "& .MuiOutlinedInput-root": {
+                                    background: "#faf8ff",
+                                    "& fieldset": { borderColor: "#e6e0f8" },
+                                    "&:hover fieldset": {
+                                      borderColor: "#ab7ce7",
+                                    },
+                                    "&.Mui-focused fieldset": {
+                                      borderColor: "#6c3fc5",
+                                    },
+                                  },
+                                }}
+                              />
+                              <span aria-hidden="true">
+                                / {totalPages || "?"}
+                              </span>
+                            </div>
+                            <div className="progress-buttons">
+                              <IconButton
+                                className="progress-cancel-btn"
+                                onClick={() => setEditIdx(null)}
+                                size="small"
+                                aria-label="Cancel editing"
+                                sx={{
+                                  height: 36,
+                                  width: 36,
+                                  background: "#bbb",
+                                  color: "#fff",
+                                  "&:hover": { background: "#888" },
+                                }}
+                              >
+                                <CloseIcon fontSize="small" />
+                              </IconButton>
+                              <IconButton
+                                className="progress-save-btn"
+                                onClick={() => handleSave(volumeId, totalPages)}
+                                size="small"
+                                aria-label={`Save progress for ${book.volumeInfo.title}`}
+                                sx={{
+                                  marginLeft: 1,
+                                  background: "#ab7ce7",
+                                  color: "#fff",
+                                  "&:hover": { background: "#6c3fc5" },
+                                }}
+                              >
+                                <CheckIcon />
+                              </IconButton>
+                            </div>
+                            {errors[volumeId] && (
+                              <span className="error-styling">
+                                {errors[volumeId]}
+                              </span>
+                            )}
+                          </>
+                        ) : (
+                          <>
+                            <span
+                              aria-label={`Page ${p.currentPage} of ${totalPages || "unknown"}`}
+                            >
+                              Page: {p.currentPage} / {totalPages || "?"}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                      <button
                         className="progress-edit-btn"
                         onClick={() => {
-                          handleEditClick(idx, p.currentPage)
-                          setErrors(prev => ({
-                              ...prev,
-                              [volumeId]: null,
-                              }));
+                          handleEditClick(idx, p.currentPage);
+                          setErrors((prev) => ({
+                            ...prev,
+                            [volumeId]: null,
+                          }));
                         }}
                         aria-label={`Update progress for ${book.volumeInfo.title}`}
-                    >
-                    Update
-                    </button>
-                    <div className="progress-percent" aria-hidden="true">
-                      {percent}% complete
+                      >
+                        Update
+                      </button>
+                      <div className="progress-percent" aria-hidden="true">
+                        {percent}% complete
+                      </div>
                     </div>
                   </div>
-                  </div>
-                  </div>
+                </div>
               );
             })
           )}

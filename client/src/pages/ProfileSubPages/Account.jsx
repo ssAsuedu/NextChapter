@@ -31,47 +31,28 @@ const Account = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
+  // Pure validation function - just returns errors, no side effects
   const validatePassword = (oldPassword, newPassword, confirmPassword) => {
-    const errors = {
-      length: "",
-      uppercase: "",
-      number: "",
-      special: "",
-      newPass: "",
-      currPass: "",
-    };
-
+    const errors = {};
     const specialSymbols = "!@#$%^&*";
+
     if (!oldPassword || !newPassword || !confirmPassword) {
-      setShowPasswordModal(true); // show modal when there are errors
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      errors.fields = "All fields are required."; //first error type is all fields are required
+      errors.fields = "All fields are required.";
+      return errors; // short-circuit: no point checking other rules if fields are empty
     }
 
     if (newPassword !== confirmPassword) {
-      setShowPasswordModal(true); // show modal when there are errors
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      errors.newPass = "New passwords do not match."; //second error type is passwords dont match
+      errors.newPass = "New passwords do not match.";
     }
     if (newPassword.length < 8) {
-      setShowPasswordModal(true); // show modal when there are errors
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      errors.length = "Password must be at least 8 characters."; //third error stype is that password must be 8 characters at least
+      errors.length = "Password must be at least 8 characters.";
     }
     if (!/[A-Z]/.test(newPassword)) {
       errors.uppercase = "Password must include at least one uppercase letter.";
     }
-
     if (!/[0-9]/.test(newPassword)) {
       errors.number = "Password must include at least one number.";
     }
-
     if (
       !specialSymbols.split("").some((symbol) => newPassword.includes(symbol))
     ) {
@@ -120,7 +101,7 @@ const Account = () => {
       localStorage.setItem("userName", newName.trim());
       setUsernameUpdated("Username successfully updated.");
     } catch (err) {
-      setNameErrors(err.response?.data?.error);
+      setNameErrors(err.response?.data?.error || "Failed to update name.");
     }
     setTimeout(() => {
       setUsernameUpdated("");
@@ -133,41 +114,36 @@ const Account = () => {
     e.preventDefault();
     setPasswordError({});
     setPasswordSuccess("");
+
+    // Validate FIRST - don't call API if validation fails
     const errorsList = validatePassword(
       oldPassword,
       newPassword,
       confirmPassword,
     );
+    const hasErrors = Object.values(errorsList).some((v) => v);
+    if (hasErrors) {
+      setPasswordError(errorsList);
+      return;
+    }
 
+    setPasswordLoading(true);
     try {
-      await changePassword({ email, oldPassword, newPassword }); // Use the API function here
-      setPasswordLoading(true);
-      setShowPasswordModal(true); // show modal when there are errors
+      await changePassword({ email, oldPassword, newPassword });
       setOldPassword("");
       setNewPassword("");
       setConfirmPassword("");
       setPasswordSuccess("Password changed successfully!");
     } catch (err) {
-      if (err.response?.status === 401) {
-        errorsList.currPass = "Current password is incorrect.";
-        setPasswordLoading(false);
-      }
-      setShowPasswordModal(true);
-      setOldPassword("");
-      setNewPassword("");
-      setConfirmPassword("");
-      setPasswordLoading(false);
       const apiError =
         err.response?.data?.error || "Failed to change password.";
+      if (err.response?.status === 401) {
+        setPasswordError({ currPass: "Current password is incorrect." });
+      } else {
+        setPasswordError({ fields: apiError });
+      }
     }
-    setPasswordError(errorsList);
-
-    if (passwordSuccess != " ") {
-      setShowPasswordModal(true);
-    }
-    setTimeout(() => {
-      setPasswordSuccess("");
-    }, 3000);
+    setPasswordLoading(false);
   };
 
   const handleDeleteAccount = async () => {
@@ -245,6 +221,7 @@ const Account = () => {
           <h2>Name</h2>
           <TextField
             className="name-input"
+            value={newName}
             placeholder="Enter new name"
             onChange={(e) => {
               setNewName(e.target.value);
@@ -308,37 +285,18 @@ const Account = () => {
                     value={newPassword}
                     onChange={(e) => {
                       setNewPassword(e.target.value);
-                      if (passwordError.length) {
-                        setPasswordError((prev) => ({
-                          ...prev,
-                          length: "",
-                        }));
-                      }
-                      if (passwordError.uppercase) {
-                        setPasswordError((prev) => ({
-                          ...prev,
-                          uppercase: "",
-                        }));
-                      }
-                      if (passwordError.number) {
-                        setPasswordError((prev) => ({
-                          ...prev,
-                          number: "",
-                        }));
-                      }
-                      if (passwordError.special) {
-                        setPasswordError((prev) => ({
-                          ...prev,
-                          special: "",
-                        }));
-                      }
+                      setPasswordError((prev) => ({
+                        ...prev,
+                        length: "",
+                        uppercase: "",
+                        number: "",
+                        special: "",
+                      }));
                     }}
                   />
                   {passwordError && (
                     <div className="error-styles">
-                      {passwordError.length != "" && (
-                        <p>{passwordError.length}</p>
-                      )}
+                      {passwordError.length && <p>{passwordError.length}</p>}
                       {passwordError.uppercase && (
                         <p>{passwordError.uppercase}</p>
                       )}
@@ -372,9 +330,9 @@ const Account = () => {
               </div>
 
               <div className="button-styles">
-                {!passwordSuccess ? ( //if the password is not successful, that means the user has not changed their password yet
+                {!passwordSuccess ? (
                   <>
-                    <button //display the cancel and save button when the password has not been changed yet
+                    <button
                       className="cancel-btn"
                       type="button"
                       onClick={() => {
@@ -385,17 +343,22 @@ const Account = () => {
                         setPasswordError({});
                         setPasswordSuccess("");
                       }}
+                      disabled={passwordLoading}
                     >
                       Cancel
                     </button>
-                    <button className="save-btn" type="submit">
-                      Save
+                    <button
+                      className="save-btn"
+                      type="submit"
+                      disabled={passwordLoading}
+                    >
+                      {passwordLoading ? "Saving..." : "Save"}
                     </button>
                   </>
                 ) : (
-                  //otherwise, if the password change was successful, then create a button that will close the password modal when clicked on
                   <button
                     className="close-btn"
+                    type="button"
                     onClick={() => {
                       setShowPasswordModal(false);
                       setPasswordSuccess("");
