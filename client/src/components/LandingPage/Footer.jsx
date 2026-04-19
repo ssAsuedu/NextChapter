@@ -1,60 +1,139 @@
 import React from "react";
-import '../../styles/LandingPage/Footer.css'
+import "../../styles/LandingPage/Footer.css";
 import { useLocation } from "react-router-dom";
-import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const Footer = () => {
-    const location = useLocation();
-    const hiddenRoute = ["/login", "/signup", "/confirm"];
-    const token = localStorage.getItem("token") //check to see if user is logged in
-    const isAuthenticated = !!token; //true -> user is logged in. false -> user is not logged in
-    if (hiddenRoute.includes(location.pathname)) {
-        return null;
-    }
-    
-    return ( 
-        <footer>
-            <div className="content-wrapper">
-                <div className="team-info">
-                    <p className="team-content name">Next Chapter</p> 
-                    <p className="team-content description">Discover books, track your progress, and celebrate every chapter.</p>
-                    <p className="project-built">Built with <FavoriteIcon className="heart-icon" aria-hidden="true" /> using React, Node.js, Express, and MongoDB</p>
-                </div>
-                <div className="navigation-links">
-                    <nav className="nav-sections">
-                        <ul className="discover-section"><span className="footer-header">Discover</span>
-                            <li><a className="footer-links" href="/">Home</a></li>
-                            <li><a className="footer-links" href="/search">Search Books</a></li>
-                            <li><a className="footer-links desktop-only" href="/explore">Explore Books</a></li>
-                        </ul>
-                        <ul className="about-us-section"><span className="footer-header">About</span>
-                        <li><a className="footer-links" href="/about">About Us</a></li>
-                            <li><a className="footer-links" href="/about#mission">Our Mission</a></li>
-                            <li><a className="footer-links" href="/about#what-we-offer">What We Offer</a></li>
-                        </ul>
-                        {isAuthenticated ? (
-                            <ul className="profile-section"><span className="footer-header">Profile</span>
-                                <li><a className="footer-links" href="/profile"> My Profile</a></li>
-                                <li><a className="footer-links" href="/progress">Book Progress</a></li>
-                                <li><a className="footer-links desktop-only" href="/reviews">Reviews</a></li>
-                                <li><a className="footer-links desktop-only" href="/friends">Friends</a></li>
-                            </ul>
-                        ) : (
-                            <ul className="profile-section"><span className="footer-header">Profile</span>
-                                <li><a className="footer-links" href="/signup">Sign Up</a></li>
-                                <li><a className="footer-links" href="/login">Login</a></li>
-                                
-                            </ul>
-                        )}
-                        <ul className="support-section"><span className="footer-header">Support</span>
-                            <li><a className="footer-links" href="/privacyPolicy">Privacy Policy</a></li>
-                            <li><a className="footer-links" href="/account">Account</a></li>
-                        </ul>
-                    </nav>
-                </div>
-            </div>
-        </footer>
-    )
-}
+  const location = useLocation();
+  const hiddenRoute = ["/login", "/signup", "/confirm"];
+  const token = localStorage.getItem("token"); //check to see if user is logged in
+  const isAuthenticated = !!token; //true -> user is logged in. false -> user is not logged in
+  if (hiddenRoute.includes(location.pathname)) {
+    return null;
+  }
+
+  return (
+    <footer>
+      <div className="content-wrapper">
+        <div className="team-info">
+          <p className="team-content name">Next Chapter</p>
+          <p className="team-content description">
+            Discover books, track your progress, and celebrate every chapter.
+          </p>
+          <p className="project-built">
+            Built with{" "}
+            <FavoriteIcon className="heart-icon" aria-hidden="true" /> using
+            React, Node.js, Express, and MongoDB
+          </p>
+        </div>
+        <div className="navigation-links">
+          <nav className="nav-sections">
+            <ul className="discover-section">
+              <span className="footer-header">Discover</span>
+              <li>
+                <a className="footer-links" href="/">
+                  Home
+                </a>
+              </li>
+              <li>
+                <a className="footer-links" href="/search">
+                  Search Books
+                </a>
+              </li>
+              <li>
+                <a className="footer-links desktop-only" href="/explore">
+                  Explore Books
+                </a>
+              </li>
+            </ul>
+            <ul className="about-us-section">
+              <span className="footer-header">About</span>
+              <li>
+                <a className="footer-links" href="/about">
+                  About Us
+                </a>
+              </li>
+              <li>
+                <a className="footer-links" href="/about#mission">
+                  Our Mission
+                </a>
+              </li>
+              <li>
+                <a className="footer-links" href="/about#what-we-offer">
+                  What We Offer
+                </a>
+              </li>
+            </ul>
+            {isAuthenticated ? (
+              <>
+                <ul className="profile-section">
+                  <span className="footer-header">Profile</span>
+                  <li>
+                    <a className="footer-links" href="/profile">
+                      {" "}
+                      My Profile
+                    </a>
+                  </li>
+                  <li>
+                    <a className="footer-links" href="/progress">
+                      Book Progress
+                    </a>
+                  </li>
+                  <li>
+                    <a className="footer-links desktop-only" href="/reviews">
+                      Reviews
+                    </a>
+                  </li>
+                  <li>
+                    <a className="footer-links desktop-only" href="/friends">
+                      Friends
+                    </a>
+                  </li>
+                </ul>
+                <ul className="support-section">
+                  <span className="footer-header">Support</span>
+                  <li>
+                    <a className="footer-links" href="/privacyPolicy">
+                      Privacy Policy
+                    </a>
+                  </li>
+                  <li>
+                    <a className="footer-links" href="/account">
+                      Account
+                    </a>
+                  </li>
+                </ul>
+              </>
+            ) : (
+              <>
+                <ul className="profile-section">
+                  <span className="footer-header">Profile</span>
+                  <li>
+                    <a className="footer-links" href="/signup">
+                      Sign Up
+                    </a>
+                  </li>
+                  <li>
+                    <a className="footer-links" href="/login">
+                      Login
+                    </a>
+                  </li>
+                </ul>
+                <ul className="support-section">
+                  <span className="footer-header">Support</span>
+                  <li>
+                    <a className="footer-links" href="/privacyPolicy">
+                      Privacy Policy
+                    </a>
+                  </li>
+                </ul>
+              </>
+            )}
+          </nav>
+        </div>
+      </div>
+    </footer>
+  );
+};
 
 export default Footer;
