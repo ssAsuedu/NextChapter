@@ -2,7 +2,7 @@ import React from "react";
 import "../styles/LandingPage/PrivacyPolicy.css";
 
 const PrivacyPolicy = () => {
-  const lastUpdatedDate = "April 4, 2026";
+  const lastUpdatedDate = "April 19, 2026";
   const universityName = "Arizona State University";
 
   return (
@@ -37,27 +37,27 @@ const PrivacyPolicy = () => {
           <p>
             We collect information necessary to provide and improve our
             services. This includes:
-            <div className="feature-descriptions">
-              <ul>
-                <li>
-                  <strong>Account Information:</strong> email, username, and
-                  encrypted password
-                </li>
-                <li>
-                  <strong>Reading Data:</strong> books added to lists, reading
-                  progress, ratings, and reviews
-                </li>
-                <li>
-                  <strong>User-generated Content:</strong> reviews, book
-                  recommendations to friends, and profile customizations
-                </li>
-                <li>
-                  <strong>Technical Data:</strong> IP address, browser type,
-                  device information, and cookies used for authentication
-                </li>
-              </ul>
-            </div>
           </p>
+          <div className="feature-descriptions">
+            <ul>
+              <li>
+                <strong>Account Information:</strong> email, username, and
+                encrypted password
+              </li>
+              <li>
+                <strong>Reading Data:</strong> books added to lists, reading
+                progress, ratings, and reviews
+              </li>
+              <li>
+                <strong>User-generated Content:</strong> reviews, book
+                recommendations to friends, and profile customizations
+              </li>
+              <li>
+                <strong>Technical Data:</strong> IP address, browser type,
+                device information, and cookies used for authentication
+              </li>
+            </ul>
+          </div>
         </section>
 
         {/* 2. How We Use Your Information */}
@@ -253,9 +253,11 @@ const PrivacyPolicy = () => {
         <section className="privacy-section contact-section">
           <h2>10. Contact Us</h2>
           <p>
-            If you have any questions or concerns regarding this Privacy Policy,
-            your data, or data requests, please reach out through your account
-            settings or the support page within the application.
+            This application is a group capstone project and is not intended for
+            commerical use. As such, we do not provide direct customer support
+            or customer service. For any questions or concerns, you may contact
+            the development team by reaching our LinkedIn profiles in the About
+            section.
           </p>
         </section>
       </div>
