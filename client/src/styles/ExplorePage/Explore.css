@@ -86,9 +86,12 @@
   border-radius: 999px;
 }
 
-:root[data-theme="dark"] .login-btn-display,
-.close-btn-display {
+:root[data-theme="dark"] 
+.login-btn-display{
   color: var(--background-color) !important;
+}
+.close-btn-display {
+  color: var(--primary-color) !important;
 }
 
 .login-btn-display:hover,
