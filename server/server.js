@@ -1322,3 +1322,38 @@ async function callCognitoUserApi(target, payload) {
   }
   return data;
 }
+
+// Get user's not-interested books
+app.get("/api/users/not-interested/:email", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.params.email }, "notInterestedBooks");
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    res.json({ notInterestedBooks: user.notInterestedBooks || [] });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to fetch not interested books" });
+  }
+});
+
+// Add a book to user's not-interested list
+app.post("/api/users/not-interested/add", async (req, res) => {
+  try {
+    const { email, volumeId } = req.body;
+    if (!email || !volumeId) {
+      return res.status(400).json({ error: "Email and volumeId are required" });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (!user.notInterestedBooks) user.notInterestedBooks = [];
+    if (!user.notInterestedBooks.includes(volumeId)) {
+      user.notInterestedBooks.push(volumeId);
+      await user.save();
+    }
+
+    res.json({ message: "Book added to not interested list", notInterestedBooks: user.notInterestedBooks });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to update not interested list" });
+  }
+});

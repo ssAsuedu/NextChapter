@@ -251,3 +251,11 @@ export const getMessages = async (email) => {
 export const markMessagesAsRead = async (email, senderEmail) => {
   return axios.post(`${API_BASE_URL}/messages/read`, { email, senderEmail });
 };
+
+export const getNotInterestedBooks = async (email) => {
+  return axios.get(`${API_BASE_URL}/users/not-interested/${email}`);
+};
+
+export const addNotInterestedBook = async ({ email, volumeId }) => {
+  return axios.post(`${API_BASE_URL}/users/not-interested/add`, { email, volumeId });
+};
