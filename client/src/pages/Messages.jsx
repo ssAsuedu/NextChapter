@@ -52,6 +52,21 @@ function Messages() {
     }
   }, [selectedSender, messages]);
 
+  useEffect(() => {
+    const poll = async () => {
+      if (!email) return;
+      try {
+        const res = await getMessages(email);
+        setMessages(res.data.messages);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    const interval = setInterval(poll, 30000);
+    return () => clearInterval(interval);
+  }, [email]);
+
   const grouped = messages.reduce((acc, msg) => {
     const otherPerson = msg.sender === email ? msg.receiver : msg.sender;
     if (!acc[otherPerson]) acc[otherPerson] = [];
