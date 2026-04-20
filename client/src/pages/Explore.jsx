@@ -3,7 +3,13 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import BookCard from "../components/ExplorePage/ExploreCard";
 import "../styles/ExplorePage/Explore.css";
-import { getBookshelf, addBookToBookshelf, getTrendingBooks } from "../api";
+import {
+  getBookshelf,
+  addBookToBookshelf,
+  getTrendingBooks,
+  getNotInterestedBooks,
+  addNotInterestedBook,
+} from "../api";
 import { createPortal } from "react-dom";
 import {
   getSearchFromCache,
@@ -35,7 +41,9 @@ const Explore = () => {
   const [hoveredCard, setHoveredCard] = useState(null);
   const [trendingBooks, setTrendingBooks] = useState([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
-  const [hiddenBooks, setHiddenBooks] = useState([]);
+  const [notInterestedBooks, setNotInterestedBooks] = useState([]);
+
+  const hiddenBookIds = new Set(notInterestedBooks.map(String));
 
   const scrollRefs = useRef({});
   const email = localStorage.getItem("userEmail");
@@ -52,7 +60,19 @@ const Explore = () => {
         setBookshelf([]);
       }
     };
+
+    const fetchNotInterested = async () => {
+      if (!email) return;
+      try {
+        const res = await getNotInterestedBooks(email);
+        setNotInterestedBooks(res.data.notInterestedBooks || []);
+      } catch {
+        setNotInterestedBooks([]);
+      }
+    };
+
     fetchBookshelf();
+    fetchNotInterested();
   }, [email]);
 
   // Fetch trending books
@@ -174,11 +194,18 @@ const Explore = () => {
     }
   };
 
-  const handleHideBook = (volumeId) => {
-    setHiddenBooks((prev) =>
-      prev.includes(volumeId) ? prev : [...prev, volumeId],
-    );
-    if (hoveredCard?.volumeId === volumeId) setHoveredCard(null);
+  const handleHideBook = async (volumeId) => {
+    if (!email) return;
+
+    try {
+      await addNotInterestedBook({ email, volumeId });
+      setNotInterestedBooks((prev) =>
+        prev.includes(volumeId) ? prev : [...prev, volumeId],
+      );
+      if (hoveredCard?.volumeId === volumeId) setHoveredCard(null);
+    } catch {
+      alert("Failed to hide book.");
+    }
   };
 
   return (
@@ -229,7 +256,7 @@ const Explore = () => {
               </div>
             ) : trendingBooks.length > 0 ? (
               trendingBooks
-                .filter((book) => !hiddenBooks.includes(book.id))
+                .filter((book) => !hiddenBookIds.has(book.id))
                 .map((book) => (
                   <div
                     key={book.id}
@@ -319,7 +346,7 @@ const Explore = () => {
                 </div>
               ) : booksByCategory[cat.label]?.length > 0 ? (
                 booksByCategory[cat.label]
-                  .filter((book) => !hiddenBooks.includes(book.id))
+                  .filter((book) => !hiddenBookIds.has(book.id))
                   .map((book) => (
                     <div key={book.id} className="book-item-display">
                       <BookCard

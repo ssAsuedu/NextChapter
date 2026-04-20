@@ -7,6 +7,10 @@ const userSchema = new mongoose.Schema({
   friends: [{ type: String }],
   createdAt: { type: Date, default: Date.now },
   bookshelf: [{ type: String }],
+
+  // Books hidden from Explore
+  notInterestedBooks: [{ type: String, default: [] }],
+
   progress: [
     {
       volumeId: String,
