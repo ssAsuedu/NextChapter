@@ -1,4 +1,4 @@
-@import url('../../styles/colors.css');
+@import url("../../styles/colors.css");
 
 /* ============================================
    PRIVACY POLICY PAGE
@@ -10,7 +10,7 @@
 .privacy-page {
   width: 100%;
   overflow-x: hidden;
-  font-family: 'Sen', Arial, Helvetica, sans-serif;
+  font-family: "Sen", Arial, Helvetica, sans-serif;
   background-color: var(--background-color);
 }
 
@@ -19,11 +19,11 @@
   width: 100%;
   padding: 140px 20px 60px;
   background: linear-gradient(
-  135deg,
-  rgba(171, 124, 231, 0.18), 
-  rgba(140, 180, 255, 0.16), 
-  rgba(255, 170, 210, 0.14) 
-);
+    135deg,
+    rgba(171, 124, 231, 0.18),
+    rgba(140, 180, 255, 0.16),
+    rgba(255, 170, 210, 0.14)
+  );
   text-align: center;
 }
 
@@ -102,7 +102,8 @@
   margin: 0;
 }
 
-.privacy-section p strong, .feature-descriptions li strong {
+.privacy-section p strong,
+.feature-descriptions li strong {
   color: var(--hover);
   font-weight: 600;
 }
@@ -132,9 +133,9 @@
   padding: 28px;
   border-radius: 16px;
   margin-top: 2.5rem;
-  box-shadow: 
-    0 6px 16px rgba(0,0,0,0.06),
-    0 12px 32px rgba(171,124,231,0.12);
+  box-shadow:
+    0 6px 16px rgba(0, 0, 0, 0.06),
+    0 12px 32px rgba(171, 124, 231, 0.12);
 }
 
 :root[data-theme="dark"] .privacy-section.contact-section {

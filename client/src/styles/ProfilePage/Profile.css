@@ -1241,6 +1241,7 @@
   border-radius: 18px;
 }
 
+
 .profile-page:not(.friend-profile-page) .profile-badge-slide.is-active:hover::after {
   opacity: 1;
 }
@@ -1499,6 +1500,10 @@
 
 :root[data-theme="dark"] .badge-confirm-btn:hover {
   background-color: var(--text-color);
+}
+
+:root[data-theme="dark"] .profile-badge-slide {
+  background-color: var(--filter-pane);
 }
 
 .badge-confirm-btn:hover {

@@ -47,6 +47,12 @@
               transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Grouped card — wider to fit multiple badges */
+.badge-notif-card--grouped {
+  max-width: 480px;
+  padding: 28px 32px 24px;
+}
+
 .badge-notif-enter .badge-notif-card {
   opacity: 1;
   transform: scale(1) translateY(0);
@@ -106,7 +112,7 @@
   margin-bottom: 20px;
 }
 
-/* ── Icon ── */
+/* ── Single badge icon ── */
 .badge-notif-icon-wrap {
   position: relative;
   display: inline-block;
@@ -142,6 +148,71 @@
 @keyframes badge-bounce {
   0% { transform: scale(0.3) rotate(-15deg); opacity: 0; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+/* ── Grouped badge display ── */
+.badge-notif-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px 20px;
+  margin: 8px 0 20px;
+  max-width: 100%;
+}
+
+.badge-notif-group-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+  opacity: 0;
+  animation: group-item-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes group-item-in {
+  0% {
+    opacity: 0;
+    transform: translateY(15px) scale(0.7);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.badge-notif-group-icon-wrap {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+
+.badge-notif-group-icon-wrap::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(171, 124, 231, 0.3) 0%, transparent 70%);
+}
+
+.badge-notif-group-icon {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  filter: drop-shadow(0 3px 8px rgba(108, 63, 197, 0.35));
+}
+
+.badge-notif-group-name {
+  font-size: 11px;
+  font-weight: 600;
+  color: #f0e6ff;
+  line-height: 1.2;
+  text-align: center;
+  min-height: 26px;
 }
 
 /* ── Text ── */
@@ -201,7 +272,8 @@
     0 20px 40px rgba(0, 0, 0, 0.08);
 }
 
-[data-theme="light"] .badge-notif-name {
+[data-theme="light"] .badge-notif-name,
+[data-theme="light"] .badge-notif-group-name {
   color: #2a1745;
 }
 
@@ -219,10 +291,15 @@
 }
 
 /* ── Mobile ── */
-@media (max-width: 480px) {
+@media (max-width: 520px) {
   .badge-notif-card {
     padding: 24px 20px 22px;
     max-width: 280px;
+  }
+
+  .badge-notif-card--grouped {
+    max-width: 320px;
+    padding: 22px 18px 20px;
   }
 
   .badge-notif-icon {
@@ -237,5 +314,23 @@
 
   .badge-notif-name {
     font-size: 18px;
+  }
+
+  .badge-notif-group {
+    gap: 12px 14px;
+  }
+
+  .badge-notif-group-item {
+    width: 70px;
+  }
+
+  .badge-notif-group-icon-wrap,
+  .badge-notif-group-icon {
+    width: 56px;
+    height: 56px;
+  }
+
+  .badge-notif-group-name {
+    font-size: 10px;
   }
 }

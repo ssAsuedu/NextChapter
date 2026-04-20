@@ -89,7 +89,7 @@
   background-color: var(--hover);
   border: none;
   border-radius: 999px; /* More oval */
-  padding: 12px 32px;
+  padding: 12px 25px;
   font-size: 1.1rem;
   font-family: inherit;
   font-weight: 600;
