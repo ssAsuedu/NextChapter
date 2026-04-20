@@ -207,7 +207,7 @@ const FriendProfile = () => {
 
   const handleAddToLibrary = async (bookId) => {
     try {
-      await addBookToBookshelf({ email: currentUserEmail, bookId });
+      await addBookToBookshelf({ email: currentUserEmail, volumeId: bookId });
       setUserBookshelf((prev) => [...prev, bookId]);
     } catch (e) {}
   };
