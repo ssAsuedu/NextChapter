@@ -17,6 +17,7 @@ import BookJournal from "../components/ExplorePage/BookJournal";
 import ReplyIcon from "@mui/icons-material/Reply";
 import Stars from "../components/Stars";
 import BookRating from "../components/BookRating";
+import { Link } from "react-router-dom";
 
 const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 const GENRE_LIMIT = 3;
@@ -46,6 +47,7 @@ const BookInfo = () => {
   const [friends, setFriends] = useState([]);
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [loginModal, setLoginModal] = useState(false);
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
 
@@ -53,7 +55,12 @@ const BookInfo = () => {
     setSelectedFriends([]);
     setShowShare(false);
   };
-
+  const handleOutsideClick = (e) => {
+  if (e.target.classList.contains("login-modal-wrapper")) {
+    setLoginModal(false);
+  }
+};
+ 
   useEffect(() => {
     const fetchBook = async () => {
       const cached = getBookFromCache(volumeId);
@@ -202,9 +209,9 @@ const BookInfo = () => {
 
   const handleAddToBookshelf = async () => {
     if (!email) {
-      alert("Please log in to add books.");
-      return;
-    }
+    setLoginModal(true);
+    return;
+  }
     try {
       await addBookToBookshelf({ email, volumeId });
       setBookshelf((prev) => [...prev, volumeId]);
@@ -216,7 +223,8 @@ const BookInfo = () => {
 
   const handleRemoveFromBookshelf = async () => {
     if (!email) {
-      alert("Please log in to remove books.");
+       setLoginModal(true);
+      resetShareModal();
       return;
     }
     try {
@@ -262,6 +270,10 @@ const BookInfo = () => {
     }
   };
 
+  const handleLogin = () => {
+    setLoginModal(true);
+  };
+
   if (!book) {
     return <div className="bookinfo-loading">Loading...</div>;
   }
@@ -302,6 +314,10 @@ const BookInfo = () => {
               <button
                 className="bookinfo-share-btn"
                 onClick={() => {
+                  if (!email) {
+                    setLoginModal(true);
+                    return;
+                  }
                   setSelectedFriends([]);
                   setShowShare(true);
                 }}
@@ -566,7 +582,28 @@ const BookInfo = () => {
             </button>
           </div>
         </div>
-      )}
+      )}      
+      {loginModal && (
+  <div className="login-modal-wrapper" onClick={handleOutsideClick}>
+    <div className="login-modal-content">
+      <div className="login-modal-title">
+        <h1>Login Required</h1>
+        <p>Please login to continue.</p>
+      </div>
+      <div className="button-display">
+        <Link to="/login" className="login-btn-display">
+          Login
+        </Link>
+        <button
+          className="close-btn-display"
+          onClick={() => setLoginModal(false)}
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
