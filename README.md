@@ -32,48 +32,77 @@ Next Chapter is a sleek and modern web application designed for book lovers. It 
 ### **Frontend**
 ```
 client/
+├── .env
+├── .gitignore
+├── README.md
+├── eslint.config.js
+├── index.html
+├── package-lock.json
+├── package.json
+├── vite.config.js
 ├── public/
-│   └── vite.svg
 ├── src/
+│   ├── api.js
+│   ├── App.css
+│   ├── App.jsx
+│   ├── index.css
+│   ├── main.jsx
 │   ├── assets/
-│   │   ├── books.jpg
-│   │   ├── loginImage.jpg
-│   │   └── react.svg
 │   ├── components/
+│   │   ├── BadgeNotification/
+│   │   ├── ExplorePage/
 │   │   ├── LandingPage/
-│   │   │   └── Navbar.jsx
-│   │   └── LoginPage/
+│   │   ├── ProfilePage/
+│   │   ├── SearchPage/
+│   │   ├── BookRating.jsx
+│   │   └── Stars.jsx
 │   ├── pages/
 │   │   ├── About.jsx
-│   │   ├── Contact.jsx
+│   │   ├── BookInfo.jsx
+│   │   ├── ConfirmEmail.jsx
+│   │   ├── Explore.jsx
+│   │   ├── FriendProfile.jsx
 │   │   ├── Home.jsx
 │   │   ├── Login.jsx
+│   │   ├── Messages.jsx
+│   │   ├── MoodFinder.jsx
+│   │   ├── PrivacyPolicy.jsx
 │   │   ├── Profile.jsx
-│   │   └── SignUp.jsx
+│   │   ├── Search.jsx
+│   │   ├── SignUp.jsx
+│   │   └── ProfileSubPages/
+│   │       ├── Account.jsx
+│   │       ├── Friends.jsx
+│   │       ├── Leaderboard.jsx
+│   │       ├── Progress.jsx
+│   │       └── Reviews.jsx
 │   ├── styles/
+│   │   ├── BookInfoPage/
+│   │   ├── ExplorePage/
 │   │   ├── LandingPage/
-│   │   │   ├── Home.css
-│   │   │   └── Navbar.css
-│   │   └── LoginPage/
-│   │       ├── Login.css
-│   │       └── SignUp.css
-│   ├── App.jsx
-│   ├── App.css
-│   ├── index.css
-│   └── main.jsx
-├── .gitignore
-├── package.json
-├── README.md
-└── vite.config.js
+│   │   ├── LoginPage/
+│   │   ├── ProfilePage/
+│   │   ├── SearchPage/
+│   │   ├── colors.css
+│   │   └── Messages.css
+│   └── utils/
+│       └── apiCache.js
 ```
 
 ### **Backend**
 ```
 server/
 ├── .env
-├── server.js
+├── package-lock.json
 ├── package.json
-└── .gitignore
+├── server.js
+└── models/
+   ├── User.js
+   ├── FriendRequest.js
+   ├── Message.js
+   ├── Review.js
+   ├── List.js
+   └── featureRoutes.js
 ```
 
 ---
@@ -90,6 +119,15 @@ Create a `.env` file in the `server/` directory with the following variables:
 MONGO_URI=<your_mongodb_connection_string>
 COGNITO_USER_POOL_ID=<your_cognito_user_pool_id>
 COGNITO_APP_CLIENT_ID=<your_cognito_app_client_id>
+NODE_ENV=development
+CORS_ORIGINS=http://localhost:5173
+VITE_GOOGLE_BOOKS_API=<your_google_books_api>
+
+```
+Create a `.env` file in the `client/` directory with the following variables:
+
+```env
+VITE_GOOGLE_BOOKS_API=<your_google_books_api> 
 ```
 
 ### **Installation**
@@ -126,6 +164,8 @@ COGNITO_APP_CLIENT_ID=<your_cognito_app_client_id>
 
 3. Open the application in your browser at `http://localhost:5173`.
 
+
+To view the live, deployed site rather than manually run the project, visit: http://nextchapter-web.s3-website.us-east-2.amazonaws.com/ 
 ---
 
 ## **Usage**
