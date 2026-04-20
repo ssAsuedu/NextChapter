@@ -139,7 +139,6 @@ const Friends = () => {
       if (filtered.length === 0) {
       }
     } catch (error) {
-      console.error("Error loading users:", error);
       showMessage("Failed to load users", "error");
     } finally {
       setLoading(false);
@@ -467,7 +466,7 @@ const Friends = () => {
             <form onSubmit={handleSearch} className="search-form">
               <input
                 type="text"
-                placeholder="Search by name or email"
+                placeholder="Search users by name"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="search-input"
