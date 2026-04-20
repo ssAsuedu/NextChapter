@@ -421,7 +421,7 @@
   color: var(--secondary-color);
 }
 
-@media (min-width: 768px) {
+ @media (min-width: 768px) {
   .category-scroll {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -430,9 +430,11 @@
   .category-scroll::-webkit-scrollbar {
     display: none;
   }
-}
+} 
 
-@media (max-width: 600px) {
+
+
+@media (max-width: 767px) {
   .login-modal-content {
     margin: 15px;
   }
@@ -463,7 +465,7 @@
     width: 140px;
   }
 
-  .scroll-btn {
+   .scroll-btn {
     display: none;
-  }
+  } 
 }
