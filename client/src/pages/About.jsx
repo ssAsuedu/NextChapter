@@ -171,18 +171,20 @@ const About = () => {
               className="team-card"
               aria-label={`Team member ${member.name}, ${member.role}`}
             >
-              <div className="team-avatar">
-                <a href={member.link} className="avatar-link">
-                  {member.image ? (
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="avatar-img"
-                    ></img>
-                  ) : (
-                    <PersonIcon className="avatar-icon" aria-hidden="true" />
-                  )}
-                </a>
+              <div className="avatar-wrapper">
+                <div className="team-avatar">
+                  <a href={member.link} className="avatar-link">
+                    {member.image ? (
+                      <img
+                        src={member.image}
+                        alt={member.name}
+                        className="avatar-img"
+                      ></img>
+                    ) : (
+                      <PersonIcon className="avatar-icon" aria-hidden="true" />
+                    )}
+                  </a>
+                </div>
               </div>
               <h3>{member.name}</h3>
               <p>{member.role}</p>
