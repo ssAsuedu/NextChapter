@@ -1,4 +1,4 @@
-@import url('../../styles/colors.css');
+@import url("../../styles/colors.css");
 
 /* ============================================
    ABOUT PAGE - Matching Home/Explore Vibe
@@ -9,7 +9,7 @@
 .about-container {
   width: 100%;
   overflow-x: hidden;
-  font-family: 'Sen', Arial, Helvetica, sans-serif;
+  font-family: "Sen", Arial, Helvetica, sans-serif;
   background-color: var(--background-color);
 }
 
@@ -57,7 +57,6 @@
 /* ============ MISSION SECTION ============ */
 .mission-section {
   background-color: var(--background-color);
-  
 }
 
 .mission-text {
@@ -102,8 +101,11 @@
   padding: 32px 24px;
   text-align: center;
   border: 1px solid transparent;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  transition: transform 0.3s, box-shadow 0.3s, border 0.3s;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s,
+    border 0.3s;
 }
 
 .feature-card:hover {
@@ -113,7 +115,7 @@
 }
 
 .feature-card:hover .card-line {
-  transform: scaleX(1); 
+  transform: scaleX(1);
 }
 .feature-icon {
   font-size: 2.8rem !important;
@@ -147,9 +149,9 @@
     var(--primary-color) 0%,
     var(--hover) 100%
   );
-  
-  transform: scaleX(0);       /* hide the line initially*/
-  transform-origin: left;     /* grow the line from the left to the right */
+
+  transform: scaleX(0); /* hide the line initially*/
+  transform-origin: left; /* grow the line from the left to the right */
   transition: transform 0.5s ease; /* smooth animation */
 }
 /* ============ TEAM SECTION ============ */
@@ -179,8 +181,10 @@
   padding: 28px 24px;
   width: 180px;
   text-align: center;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-  transition: transform 0.3s, box-shadow 0.3s;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transition:
+    transform 0.3s,
+    box-shadow 0.3s;
 }
 
 .team-card .card-line {
@@ -192,7 +196,7 @@
 }
 
 .team-card:hover .card-line {
-  transform: scaleX(1); 
+  transform: scaleX(1);
 }
 
 .team-avatar {
@@ -206,6 +210,18 @@
   margin: 0 auto 1rem auto;
   overflow: hidden;
   flex-shrink: 0;
+  margin-bottom: 0;
+}
+
+.avatar-wrapper {
+  display: inline-flex;
+  border-radius: 50%;
+  width: 80px;
+  height: 80px;
+}
+
+.avatar-wrapper:focus-within {
+  box-shadow: 0 0 0 4px rgba(170, 124, 231, 0.8);
 }
 
 .avatar-img {
@@ -213,7 +229,6 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  display: block;
   transition: transform 0.25s ease;
 }
 
@@ -221,7 +236,9 @@
   display: inline-block;
   border-radius: 50%;
   overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .avatar-link:hover {
@@ -234,6 +251,9 @@
   transform: scale(1.05);
 }
 
+.avatar-link:focus-visible {
+  outline: none;
+}
 .avatar-icon {
   font-size: 2.2rem !important;
   color: #fff;
@@ -244,6 +264,7 @@
   font-weight: 700;
   color: var(--hover);
   margin: 0 0 0.4rem 0;
+  margin-top: 10px;
 }
 
 .team-card p {
@@ -320,7 +341,9 @@
   font-family: inherit;
   font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
+  transition:
+    background 0.2s,
+    transform 0.2s;
 }
 
 .cta-primary:hover {
@@ -378,15 +401,18 @@
   text-decoration: underline;
 }
 
-:root[data-theme="dark"] .feature-card, :root[data-theme="dark"] .team-card {
+:root[data-theme="dark"] .feature-card,
+:root[data-theme="dark"] .team-card {
   background-color: var(--text-color);
 }
 
-:root[data-theme="dark"] .feature-card h3, :root[data-theme="dark"] .team-card h3 {
+:root[data-theme="dark"] .feature-card h3,
+:root[data-theme="dark"] .team-card h3 {
   color: var(--background-color);
 }
 
-:root[data-theme="dark"] .feature-card p, :root[data-theme="dark"] .team-card p {
+:root[data-theme="dark"] .feature-card p,
+:root[data-theme="dark"] .team-card p {
   color: var(--background-color);
 }
 
@@ -423,7 +449,11 @@
 }
 
 :root[data-theme="dark"] .team-avatar {
-  background: linear-gradient(135deg, var(--primary-color) 0%, var(--image-color) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--image-color) 100%
+  );
 }
 /* ============================================
    RESPONSIVE DESIGN
@@ -523,7 +553,6 @@
   }
 
   .cta-buttons {
-    
     align-items: center;
   }
 
