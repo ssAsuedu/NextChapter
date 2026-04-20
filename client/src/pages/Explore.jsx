@@ -207,7 +207,10 @@ const Explore = () => {
   };
 
   const handleHideBook = async (volumeId) => {
-    if (!email) return;
+    if (!email) {
+    setLoginModal(true);
+    return;
+  }
 
     try {
       await addNotInterestedBook({ email, volumeId });

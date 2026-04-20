@@ -86,9 +86,12 @@
   border-radius: 999px;
 }
 
-:root[data-theme="dark"] .login-btn-display,
-.close-btn-display {
+:root[data-theme="dark"] 
+.login-btn-display{
   color: var(--background-color) !important;
+}
+.close-btn-display {
+  color: var(--primary-color) !important;
 }
 
 .login-btn-display:hover,
@@ -421,7 +424,7 @@
   color: var(--secondary-color);
 }
 
-@media (min-width: 768px) {
+ @media (min-width: 768px) {
   .category-scroll {
     scrollbar-width: none;
     -ms-overflow-style: none;
@@ -430,9 +433,11 @@
   .category-scroll::-webkit-scrollbar {
     display: none;
   }
-}
+} 
 
-@media (max-width: 600px) {
+
+
+@media (max-width: 767px) {
   .login-modal-content {
     margin: 15px;
   }
@@ -463,7 +468,7 @@
     width: 140px;
   }
 
-  .scroll-btn {
+   .scroll-btn {
     display: none;
-  }
+  } 
 }
