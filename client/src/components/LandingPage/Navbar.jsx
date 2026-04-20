@@ -152,6 +152,7 @@ const Navbar = () => {
             <Link
               className={`link ${scrolled ? "link-scrolled" : "not-scroll"}`}
               to="/"
+              onClick={() => setMenuOpen(false)}
             >
               Home
             </Link>
@@ -164,7 +165,10 @@ const Navbar = () => {
                 <Link
                   id="about-dropdown"
                   className={`link ${scrolled ? "link-scrolled" : "not-scroll"}`}
-                  onClick={() => scrollToSection()}
+                  onClick={() => {
+                    scrollToSection();
+                    setMenuOpen(false);
+                  }}
                   to="/about"
                 >
                   About
@@ -275,6 +279,7 @@ const Navbar = () => {
             <Link
               className={`link ${scrolled ? "link-scrolled" : "not-scroll"}`}
               to="/search"
+              onClick={() => setMenuOpen(false)}
             >
               Search
             </Link>
@@ -283,6 +288,7 @@ const Navbar = () => {
             <Link
               className={`link ${scrolled ? "link-scrolled" : "not-scroll"}`}
               to="/explore"
+              onClick={() => setMenuOpen(false)}
             >
               Explore
             </Link>
@@ -295,6 +301,7 @@ const Navbar = () => {
                     <Link
                       className={`link ${scrolled ? "link-scrolled" : "not-scroll"}`}
                       to="/profile"
+                      onClick={() => setMenuOpen(false)}
                     >
                       Profile
                     </Link>
@@ -431,6 +438,7 @@ const Navbar = () => {
                 <Link
                   className={`link ${scrolled ? "link-scrolled" : "not-scroll"}`}
                   to="/leaderboard"
+                  onClick={() => setMenuOpen(false)}
                 >
                   Leaderboard
                 </Link>
@@ -444,7 +452,10 @@ const Navbar = () => {
               <div className={`logged-in ${menuOpen ? "open" : ""}`}>
                 <div
                   className="nav-message-icon"
-                  onClick={() => navigate("/messages")}
+                  onClick={() => {
+                    navigate("/messages");
+                    setMenuOpen(false);
+                  }}
                 >
                   <div className="message-wrapper">
                     <svg width="33" height="33" viewBox="0 0 22 22" fill="none">
@@ -481,14 +492,14 @@ const Navbar = () => {
           ) : (
             //not logged in
             <div className={`new-user ${menuOpen ? "open" : ""}`}>
-              <Link to="/signup">
+              <Link to="/signup" onClick={() => setMenuOpen(false)}>
                 <button
                   className={`auth-signup ${scrolled ? "signup-nav" : "not-scroll"}`}
                 >
                   Sign Up
                 </button>
               </Link>
-              <Link to="/login">
+              <Link to="/login" onClick={() => setMenuOpen(false)}>
                 <button
                   className={`auth-login ${scrolled ? "login-nav" : "not-scroll"}`}
                 >
