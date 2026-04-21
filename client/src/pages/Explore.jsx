@@ -102,9 +102,9 @@ const Explore = () => {
           return;
         }
 
-        // Fetch book details in parallel (no more sequential 200ms delays)
+        // Fetch book details in parallel, skip null volumeIds
         const bookDetails = await Promise.all(
-          trendingData.map(async (item) => {
+          trendingData.filter((item) => item.volumeId).map(async (item) => {
             const cached = getBookFromCache(item.volumeId);
             if (cached) return { ...cached, readers: item.readers };
             try {
@@ -125,38 +125,41 @@ const Explore = () => {
     fetchTrending();
   }, []);
 
-  // Fetch books for each category
+  // Fetch books for each category (sequentially to avoid Google 503 rate limits)
   useEffect(() => {
-    categories.forEach(async (cat) => {
-      setLoading((prev) => ({ ...prev, [cat.label]: true }));
+    const fetchAllCategories = async () => {
+      for (const cat of categories) {
+        setLoading((prev) => ({ ...prev, [cat.label]: true }));
 
-      // Check cache first
-      const cached = getSearchFromCache(cat.query);
-      if (cached) {
-        setBooksByCategory((prev) => ({
-          ...prev,
-          [cat.label]: cached,
-        }));
+        // Check cache first
+        const cached = getSearchFromCache(cat.query);
+        if (cached) {
+          setBooksByCategory((prev) => ({
+            ...prev,
+            [cat.label]: cached,
+          }));
+          setLoading((prev) => ({ ...prev, [cat.label]: false }));
+          continue;
+        }
+
+        // If not cached, fetch from API
+        try {
+          const response = await searchGoogleVolumes(cat.query, 12);
+          setBooksByCategory((prev) => ({
+            ...prev,
+            [cat.label]: response.data.items || [],
+          }));
+          setSearchInCache(cat.query, response.data.items || []);
+        } catch {
+          setBooksByCategory((prev) => ({
+            ...prev,
+            [cat.label]: [],
+          }));
+        }
         setLoading((prev) => ({ ...prev, [cat.label]: false }));
-        return;
       }
-
-      // If not cached, fetch from API
-      try {
-        const response = await searchGoogleVolumes(cat.query, 12);
-        setBooksByCategory((prev) => ({
-          ...prev,
-          [cat.label]: response.data.items || [],
-        }));
-        setSearchInCache(cat.query, response.data.items || []);
-      } catch {
-        setBooksByCategory((prev) => ({
-          ...prev,
-          [cat.label]: [],
-        }));
-      }
-      setLoading((prev) => ({ ...prev, [cat.label]: false }));
-    });
+    };
+    fetchAllCategories();
   }, []);
 
   const handleScroll = (catLabel, direction) => {
