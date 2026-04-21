@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import BookCard from "../components/ExplorePage/ExploreCard";
 import "../styles/ExplorePage/Explore.css";
+import { getGoogleVolume, searchGoogleVolumes } from "../api";
 import {
   getBookshelf,
   addBookToBookshelf,
@@ -20,7 +21,7 @@ import {
 import { Link } from "react-router-dom";
 import BookRating from "../components/BookRating";
 
-const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+//const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 // Define categories and their search terms
 const categories = [
@@ -107,9 +108,12 @@ const Explore = () => {
             const cached = getBookFromCache(item.volumeId);
             if (cached) return { ...cached, readers: item.readers };
             try {
-              const bookRes = await axios.get(
-                `https://www.googleapis.com/books/v1/volumes/${item.volumeId}?key=${GOOGLE_BOOKS_API_KEY}`,
-              );
+              // const bookRes = await axios.get(
+              //   `https://www.googleapis.com/books/v1/volumes/${item.volumeId}?key=${GOOGLE_BOOKS_API_KEY}`,
+              // );
+              // setBookInCache(item.volumeId, bookRes.data);
+              // return { ...bookRes.data, readers: item.readers };
+              const bookRes = await getGoogleVolume(item.volumeId);
               setBookInCache(item.volumeId, bookRes.data);
               return { ...bookRes.data, readers: item.readers };
             } catch {
@@ -144,11 +148,12 @@ const Explore = () => {
 
       // If not cached, fetch from API
       try {
-        const response = await axios.get(
-          `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-            cat.query,
-          )}&maxResults=12&key=${GOOGLE_BOOKS_API_KEY}`,
-        );
+        // const response = await axios.get(
+        //   `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+        //     cat.query,
+        //   )}&maxResults=12&key=${GOOGLE_BOOKS_API_KEY}`,
+        // );
+        const response = await searchGoogleVolumes(cat.query, 12);
         setBooksByCategory((prev) => ({
           ...prev,
           [cat.label]: response.data.items || [],

@@ -3,8 +3,8 @@ import axios from "axios";
 import "../styles/SearchPage/Search.css";
 import BookCard from "../components/SearchPage/BookCard";
 import { getSearchFromCache, setSearchInCache } from "../../utils/apiCache";
-
-const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+import { searchGoogleVolumes } from "../api";
+//const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 const Search = () => {
   const [query, setQuery] = useState("");
@@ -36,12 +36,12 @@ const Search = () => {
       }
 
       // 2) fallback to Google Books
-      const response = await axios.get(
-        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-          query
-        )}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
-      );
-
+      // const response = await axios.get(
+      //   `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
+      //     query
+      //   )}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
+      // );
+      const response = await searchGoogleVolumes(query, 20);
       const fetchedBooks = response.data.items || [];
       setBooks(fetchedBooks);
       setSelectedGenre("");

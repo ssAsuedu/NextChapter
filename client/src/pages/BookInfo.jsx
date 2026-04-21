@@ -6,12 +6,14 @@ import { getBookFromCache, setBookInCache } from "../../utils/apiCache";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ArrowDropUpIcon from "@mui/icons-material/ArrowDropUp";
 import {
-  getBookReviews,
-  getBookshelf,
-  addBookToBookshelf,
-  deleteBookFromBookshelf,
-  sendMessage,
-  getFriends,
+getBookReviews,
+getBookshelf,
+addBookToBookshelf,
+deleteBookFromBookshelf,
+sendMessage,
+getFriends,
+getGoogleVolume,
+searchGoogleVolumes,
 } from "../api";
 import BookJournal from "../components/ExplorePage/BookJournal";
 import ReplyIcon from "@mui/icons-material/Reply";
@@ -19,7 +21,7 @@ import Stars from "../components/Stars";
 import BookRating from "../components/BookRating";
 import { Link } from "react-router-dom";
 
-const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+//const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 const GENRE_LIMIT = 3;
 
 const formatGenre = (genre) => {
@@ -70,10 +72,12 @@ const BookInfo = () => {
         return;
       }
       try {
-        const res = await fetch(
-          `https://www.googleapis.com/books/v1/volumes/${volumeId}?key=${GOOGLE_BOOKS_API_KEY}`,
-        );
-        const data = await res.json();
+        // const res = await fetch(
+        //   `https://www.googleapis.com/books/v1/volumes/${volumeId}?key=${GOOGLE_BOOKS_API_KEY}`,
+        // );
+        // const data = await res.json();
+        const res = await getGoogleVolume(volumeId);
+        const data = res.data;
         setBookInCache(volumeId, data);
         setBook(data);
       } catch {
@@ -132,10 +136,12 @@ const BookInfo = () => {
       try {
         let related = [];
         if (author) {
-          const authorRes = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=inauthor:${encodeURIComponent(author)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`,
-          );
-          const authorData = await authorRes.json();
+          // const authorRes = await fetch(
+          //   `https://www.googleapis.com/books/v1/volumes?q=inauthor:${encodeURIComponent(author)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`,
+          // );
+          // const authorData = await authorRes.json();
+          const authorRes = await searchGoogleVolumes(`inauthor:${author}`, 20);
+          const authorData = authorRes.data;
           const authorBooks = (authorData.items || []).filter(
             (b) =>
               b.id !== book.id &&
@@ -149,10 +155,13 @@ const BookInfo = () => {
         }
 
         if (related.length < 4 && simplifiedGenre) {
-          const genreRes = await fetch(
-            `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(simplifiedGenre)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`,
-          );
-          const genreData = await genreRes.json();
+          // const genreRes = await fetch(
+          //   `https://www.googleapis.com/books/v1/volumes?q=subject:${encodeURIComponent(simplifiedGenre)}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`,
+          // );
+          // const genreData = await genreRes.json();
+          const genreRes = await searchGoogleVolumes(
+          `subject:${simplifiedGenre}`,20,);
+          const genreData = genreRes.data;
           const genreBooks = (genreData.items || []).filter(
             (b) =>
               b.id !== book.id &&

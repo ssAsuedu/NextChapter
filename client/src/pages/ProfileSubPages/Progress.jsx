@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { getBookshelf, getProgress, updateProgress } from "../../api";
+import { getBookshelf, getProgress, updateProgress, getGoogleVolume } from "../../api";
 import axios from "axios";
 import "../../styles/ProfilePage/Progress.css";
 import ProfileNavbar from "../../components/ProfilePage/ProfileNavbar";
@@ -11,7 +11,7 @@ import ReadingStreak from "../../components/ProfilePage/ReadingStreak";
 import Confetti from "react-confetti";
 import BookCelebration from "../../assets/book_celebration.svg";
 
-const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+//const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 const Progress = () => {
   const email = localStorage.getItem("userEmail");
@@ -70,14 +70,30 @@ const Progress = () => {
 
   useEffect(() => {
     const fetchBookDetails = async () => {
-      if (bookshelf.length === 0) return;
-      const promises = bookshelf.map((id) =>
-        axios.get(
-          `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`
-        )
-      );
-      const results = await Promise.all(promises);
-      setBooks(results.map((r) => r.data));
+      // if (bookshelf.length === 0) return;
+      // const promises = bookshelf.map((id) =>
+      //   axios.get(
+      //     `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`
+      //   )
+      // );
+      // const results = await Promise.all(promises);
+      // setBooks(results.map((r) => r.data));
+      if (bookshelf.length === 0) {
+        setBooks([]);
+        return;
+        }
+      const results = await Promise.all(
+      bookshelf.map(async (id) => {
+          try {
+            const res = await getGoogleVolume(id);
+            return res.data;
+            } catch {
+              return null;
+            }
+        }),
+    );
+
+      setBooks(results.filter(Boolean));
     };
     fetchBookDetails();
   }, [bookshelf]);
