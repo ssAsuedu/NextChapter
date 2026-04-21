@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
+import ReactMarkdown from "react-markdown";
 import {
   getJournalEntries,
   createJournalEntry,
@@ -135,16 +136,15 @@ const BookJournal = ({ volumeId }) => {
           content.substring(end);
         break;
       case "italic":
+        if (start === end) return;
+
         newText =
-          content.substring(0, start) +
-          `*${selected}*` +
-          content.substring(end);
+          content.substring(0, start) + `*${content.substring(start, end)}*`;
+        content.substring(end);
         break;
       case "bullet":
         newText =
-          content.substring(0, start) +
-          `\n- ${selected}` +
-          content.substring(end);
+          content.substring(0, start) + `\n- ` + content.substring(start);
         break;
     }
 
@@ -251,7 +251,7 @@ const BookJournal = ({ volumeId }) => {
             value={title}
             onChange={(e) => handleTitleChange(e.target.value)}
             className="journal-editor-title"
-            maxLength={100}
+            maxLength={50}
           />
 
           <div
@@ -394,7 +394,9 @@ const BookJournal = ({ volumeId }) => {
                   )}
                 </div>
               </div>
-              <p className="journal-entry-content">{entry.content}</p>
+              <div className="journal-entry-content">
+                <ReactMarkdown>{entry.content}</ReactMarkdown>
+              </div>
             </div>
           ))
         )}
