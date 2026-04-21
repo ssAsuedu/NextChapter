@@ -147,7 +147,7 @@ const Navbar = () => {
         <ul className={`left ${menuOpen ? "open" : ""}`}>
           <li>
             <Link to="/">
-            <img className="logo" src={currentLogo}></img>
+              <img className="logo" src={currentLogo}></img>
             </Link>
           </li>
           <li className="">
@@ -219,23 +219,28 @@ const Navbar = () => {
                   </ul>
                 </div>
               </li>
-              {dropDown ? (
-                <KeyboardArrowUpIcon
-                  className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
-                  onClick={() => setDropDown(false)}
-                />
-              ) : (
-                <KeyboardArrowDownIcon
-                  className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
-                  onClick={() => setDropDown(!dropDown)}
-                />
-              )}
+              <button
+                className="carrot-btn"
+                onClick={() => setDropDown((prev) => !prev)}
+                aria-label="Toggle profile menu"
+                aria-expanded={profileDrop}
+              >
+                {dropDown ? (
+                  <KeyboardArrowUpIcon
+                    className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
+                  />
+                ) : (
+                  <KeyboardArrowDownIcon
+                    className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
+                  />
+                )}
+              </button>
             </div>
             {dropDown && (
               <div className="dropdown-links mobile-dropdown">
                 <ul>
                   <li className="about-links">
-                    <span
+                    <button
                       className="link-text"
                       onClick={() => {
                         scrollToSection("#mission");
@@ -245,10 +250,10 @@ const Navbar = () => {
                       }}
                     >
                       Our Mission
-                    </span>
+                    </button>
                   </li>
                   <li className="about-links">
-                    <span
+                    <button
                       className="link-text"
                       onClick={() => {
                         scrollToSection("#what-we-offer");
@@ -258,10 +263,10 @@ const Navbar = () => {
                       }}
                     >
                       What We Offer
-                    </span>
+                    </button>
                   </li>
                   <li className="about-links">
-                    <span
+                    <button
                       className="link-text"
                       onClick={() => {
                         scrollToSection("#team");
@@ -271,7 +276,7 @@ const Navbar = () => {
                       }}
                     >
                       Our Team
-                    </span>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -364,23 +369,28 @@ const Navbar = () => {
                       </ul>
                     </div>
                   </li>
-                  {profileDrop ? (
-                    <KeyboardArrowUpIcon
-                      className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
-                      onClick={() => setProfileDrop(false)}
-                    />
-                  ) : (
-                    <KeyboardArrowDownIcon
-                      className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
-                      onClick={() => setProfileDrop(!profileDrop)}
-                    />
-                  )}
+                  <button
+                    className="carrot-btn"
+                    onClick={() => setProfileDrop((prev) => !prev)}
+                    aria-label="Toggle profile menu"
+                    aria-expanded={profileDrop}
+                  >
+                    {profileDrop ? (
+                      <KeyboardArrowUpIcon
+                        className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
+                      />
+                    ) : (
+                      <KeyboardArrowDownIcon
+                        className={`carrot ${scrolled ? "nav-scrolled" : "carrot"}`}
+                      />
+                    )}
+                  </button>
                 </div>
                 {profileDrop && (
                   <div className="dropdown-links mobile-dropdown">
                     <ul>
                       <li className="profile-links">
-                        <span
+                        <button
                           className="link-text"
                           onClick={() => {
                             go("/progress");
@@ -390,10 +400,10 @@ const Navbar = () => {
                           }}
                         >
                           Progress
-                        </span>
+                        </button>
                       </li>
                       <li className="profile-links">
-                        <span
+                        <button
                           className="link-text"
                           onClick={() => {
                             go("/reviews");
@@ -403,10 +413,10 @@ const Navbar = () => {
                           }}
                         >
                           Reviews
-                        </span>
+                        </button>
                       </li>
                       <li className="profile-links">
-                        <span
+                        <button
                           className="link-text"
                           onClick={() => {
                             go("/friends");
@@ -416,10 +426,10 @@ const Navbar = () => {
                           }}
                         >
                           Friends
-                        </span>
+                        </button>
                       </li>
                       <li className="profile-links">
-                        <span
+                        <button
                           className="link-text"
                           onClick={() => {
                             go("/account");
@@ -429,7 +439,7 @@ const Navbar = () => {
                           }}
                         >
                           Account
-                        </span>
+                        </button>
                       </li>
                     </ul>
                   </div>
@@ -452,7 +462,7 @@ const Navbar = () => {
           {isAuthenticated ? ( //if logged in
             userInitial && (
               <div className={`logged-in ${menuOpen ? "open" : ""}`}>
-                <div
+                <button
                   className="nav-message-icon"
                   onClick={() => {
                     navigate("/messages");
@@ -468,7 +478,7 @@ const Navbar = () => {
                     )}
                   </div>
                   <span className="message-mobile-text">Messages</span>
-                </div>
+                </button>
                 <div
                   className={`user-initial ${scrolled ? "bg-scroll" : "not-scroll"}`}
                   title={userName}
@@ -494,19 +504,11 @@ const Navbar = () => {
           ) : (
             //not logged in
             <div className={`new-user ${menuOpen ? "open" : ""}`}>
-              <Link to="/signup" onClick={() => setMenuOpen(false)}>
-                <button
-                  className={`auth-signup ${scrolled ? "signup-nav" : "not-scroll"}`}
-                >
-                  Sign Up
-                </button>
+              <Link to="/signup" className={`auth-signup ${scrolled ? "signup-nav" : "not-scroll"}`} onClick={() => setMenuOpen(false)}>
+                Sign Up
               </Link>
-              <Link to="/login" onClick={() => setMenuOpen(false)}>
-                <button
-                  className={`auth-login ${scrolled ? "login-nav" : "not-scroll"}`}
-                >
-                  Login
-                </button>
+              <Link to="/login" className={`auth-login ${scrolled ? "login-nav" : "not-scroll"}`} onClick={() => setMenuOpen(false)}>
+                Login
               </Link>
             </div>
           )}
