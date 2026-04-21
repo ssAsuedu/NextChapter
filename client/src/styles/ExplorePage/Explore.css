@@ -34,9 +34,16 @@
   height: 400px;
   display: flex;
   flex-direction: column;
-
   border-radius: 12px;
   line-height: 1.1;
+}
+
+.login-modal-content .close-btn-display {
+  color: var(--secondary-color) !important;
+}
+
+.login-modal-content .close-btn-display:hover {
+  color: white !important;
 }
 
 :root[data-theme="dark"] .login-modal-content {
@@ -107,6 +114,7 @@
   padding: 12px 24px;
   border: 1px solid #ccc;
 }
+
 
 .close-btn-display:hover {
   color: white;
