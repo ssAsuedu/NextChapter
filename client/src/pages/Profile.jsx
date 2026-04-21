@@ -217,7 +217,7 @@ const Profile = () => {
       resetBadgeShareModal();
       setShowBadgeShareSuccess(true);
     } catch (err) {
-      console.error(err);
+      //console.error(err);
       alert("Failed to share badge.");
     }
   };
@@ -299,6 +299,12 @@ const Profile = () => {
     return () => stopAutoScroll();
   }, []);
 
+  useEffect(() => {
+  if (showBadgeShare && modalRef.current) {
+    modalRef.current.focus();
+  }
+  }, [showBadgeShare]);
+
   const fetchLists = async () => {
     if (!email) return;
     try {
@@ -350,7 +356,7 @@ const Profile = () => {
       fetchLists();
       closeCreateListModal();
     } catch (err) {
-      console.error("Error creating list:", err);
+      //console.error("Error creating list:", err);
     }
   };
 
@@ -366,7 +372,7 @@ const Profile = () => {
       setShowDeleteModal(false);
       setListToDelete(null);
     } catch (err) {
-      console.error("Error deleting list:", err);
+      //console.error("Error deleting list:", err);
     }
   };
 
@@ -392,7 +398,7 @@ const Profile = () => {
       }
       setShowEditListModal(false);
     } catch (err) {
-      console.error("Update list error:", err);
+      //console.error("Update list error:", err);
     }
   };
 
@@ -528,6 +534,27 @@ const Profile = () => {
     });
   };
 
+  const modalRef = useRef(null);
+
+  const handleKeyDown = (e) => {
+  if (e.key !== "Tab") return;
+
+    const focusable = modalRef.current.querySelectorAll(
+      'button, [tabindex="0"]'
+    );
+
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
+
   return (
     <div className="profile-page">
       {/* Top Profile Section */}
@@ -589,11 +616,14 @@ const Profile = () => {
                 else if (index === nextIndex) positionClass = "is-next";
 
                 return (
-                  <div
+                  <button
+                    type="button"
                     className={`profile-badge-slide ${positionClass}`}
                     key={type}
                     onClick={() => openBadgeShareModal(type, count)}
-                    style={{ cursor: "pointer" }}
+                    aria-label={`Share ${badgeDisplayNames[type]} badge`}
+                    tabIndex={index === current ? 0 : -1}
+                    aria-hidden={index === current ? "false" : "true"}
                   >
                     <img
                       src={badgeIcons[type]}
@@ -601,7 +631,7 @@ const Profile = () => {
                       alt={type}
                     />
                     <span className="profile-badge-count">×{count}</span>
-                  </div>
+                  </button>
                 );
               })}
             </div>
@@ -643,7 +673,16 @@ const Profile = () => {
                 <div
                   className="bookshelf-item"
                   key={`${book.id}-${index}`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open ${book.volumeInfo?.title || "book"}`}
                   onClick={() => navigate(`/book/${book.id}`)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate(`/book/${book.id}`);
+                    }
+                  }}
                 >
                   <BookCard info={book.volumeInfo} volumeId={book.id} />
                 </div>
@@ -1205,6 +1244,12 @@ const Profile = () => {
         <div className="badge-share-overlay" onClick={resetBadgeShareModal}>
           <div
             className="badge-share-modal"
+            ref={modalRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label="Share badge"
+            onKeyDown={handleKeyDown}
             onClick={(e) => e.stopPropagation()}
           >
             <h3 className="share-title">Share Badge</h3>
@@ -1228,6 +1273,9 @@ const Profile = () => {
                     <div
                       key={idx}
                       className="badge-selected-chip"
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Remove ${name}`}
                       onClick={() =>
                         setSelectedBadgeFriends((prev) =>
                           prev.filter(
@@ -1235,6 +1283,16 @@ const Profile = () => {
                           ),
                         )
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedBadgeFriends((prev) =>
+                            prev.filter(
+                              (f) => (f.email || f.friendEmail) !== email
+                            )
+                          );
+                        }
+                      }}
                     >
                       {name} ✕
                     </div>
@@ -1264,9 +1322,18 @@ const Profile = () => {
                     <div
                       key={idx}
                       className="badge-friend-chip"
+                      tabIndex={0}
+                      role="button"
+                      aria-label={`Select ${friendName}`}
                       onClick={() =>
                         setSelectedBadgeFriends((prev) => [...prev, friend])
                       }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedBadgeFriends((prev) => [...prev, friend]);
+                        }
+                      }}
                     >
                       {friendName}
                     </div>

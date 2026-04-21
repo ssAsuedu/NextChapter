@@ -131,7 +131,19 @@ body {
 }
 
 .leaderboard-toggle-checkbox {
-  display: none;
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+
+}
+
+.leaderboard-toggle-checkbox:focus + .leaderboard-toggle-label,
+.leaderboard-toggle-checkbox:focus-visible + .leaderboard-toggle-label {
+  outline: 4px auto -webkit-focus-ring-color;
+  outline-offset: 4px;
+  border-radius: 999px;
 }
 
 .leaderboard-toggle-label {
