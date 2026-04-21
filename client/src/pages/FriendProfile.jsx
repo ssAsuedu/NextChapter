@@ -357,21 +357,32 @@ const FriendProfile = () => {
                 This user has no public lists yet.
               </p>
             ) : (
-              <div className="lists-grid">
-                {sortedLists.map((list) => (
-                  <div
-                    key={list._id}
-                    className={`list-card ${list.pinned === true ? "list-card-pinned" : ""}`}
-                    onClick={() => {
-                      setSelectedList(list);
-                      setDetailSearch("");
-                      setDetailSort("custom");
-                    }}
-                  >
-                    {list.pinned && (
-                      <span className="pin-badge">
-                        <svg
-                          width="14"
+                <div className="lists-grid">
+                  {sortedLists.map((list) => (
+                    <div
+                      key={list._id}
+                      className={`list-card ${list.pinned === true ? "list-card-pinned" : ""}`}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Open list ${list.name}`}
+                      onClick={() => {
+                        setSelectedList(list);
+                        setDetailSearch("");
+                        setDetailSort("custom");
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault();
+                          setSelectedList(list);
+                          setDetailSearch("");
+                          setDetailSort("custom");
+                        }
+                      }}
+                    >
+                      {list.pinned && (
+                        <span className="pin-badge">
+                          <svg
+                            width="14"
                           height="14"
                           viewBox="0 0 24 24"
                           fill="#6c3fc5"

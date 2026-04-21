@@ -617,10 +617,13 @@ const Profile = () => {
 
                 return (
                   <button
+                    type="button"
                     className={`profile-badge-slide ${positionClass}`}
                     key={type}
                     onClick={() => openBadgeShareModal(type, count)}
                     aria-label={`Share ${badgeDisplayNames[type]} badge`}
+                    tabIndex={index === current ? 0 : -1}
+                    aria-hidden={index === current ? "false" : "true"}
                   >
                     <img
                       src={badgeIcons[type]}
@@ -670,7 +673,16 @@ const Profile = () => {
                 <div
                   className="bookshelf-item"
                   key={`${book.id}-${index}`}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Open ${book.volumeInfo?.title || "book"}`}
                   onClick={() => navigate(`/book/${book.id}`)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate(`/book/${book.id}`);
+                    }
+                  }}
                 >
                   <BookCard info={book.volumeInfo} volumeId={book.id} />
                 </div>
