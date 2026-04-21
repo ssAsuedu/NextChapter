@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import BookCard from "../components/ExplorePage/ExploreCard";
 import "../styles/ExplorePage/Explore.css";
+import { getGoogleVolume, searchGoogleVolumes } from "../api";
 import {
   getBookshelf,
   addBookToBookshelf,
@@ -20,7 +21,7 @@ import {
 import { Link } from "react-router-dom";
 import BookRating from "../components/BookRating";
 
-const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+//const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 // Define categories and their search terms
 const categories = [
@@ -101,15 +102,13 @@ const Explore = () => {
           return;
         }
 
-        // Fetch book details in parallel (no more sequential 200ms delays)
+        // Fetch book details in parallel, skip null volumeIds
         const bookDetails = await Promise.all(
-          trendingData.map(async (item) => {
+          trendingData.filter((item) => item.volumeId).map(async (item) => {
             const cached = getBookFromCache(item.volumeId);
             if (cached) return { ...cached, readers: item.readers };
             try {
-              const bookRes = await axios.get(
-                `https://www.googleapis.com/books/v1/volumes/${item.volumeId}?key=${GOOGLE_BOOKS_API_KEY}`,
-              );
+              const bookRes = await getGoogleVolume(item.volumeId);
               setBookInCache(item.volumeId, bookRes.data);
               return { ...bookRes.data, readers: item.readers };
             } catch {
@@ -126,50 +125,47 @@ const Explore = () => {
     fetchTrending();
   }, []);
 
-  // Fetch books for each category
+  // Fetch books for each category (sequentially to avoid Google 503 rate limits)
   useEffect(() => {
-    categories.forEach(async (cat) => {
-      setLoading((prev) => ({ ...prev, [cat.label]: true }));
+    const fetchAllCategories = async () => {
+      for (const cat of categories) {
+        setLoading((prev) => ({ ...prev, [cat.label]: true }));
 
-      // Check cache first
-      const cached = getSearchFromCache(cat.query);
-      if (cached) {
-        setBooksByCategory((prev) => ({
-          ...prev,
-          [cat.label]: cached,
-        }));
+        // Check cache first
+        const cached = getSearchFromCache(cat.query);
+        if (cached) {
+          setBooksByCategory((prev) => ({
+            ...prev,
+            [cat.label]: cached,
+          }));
+          setLoading((prev) => ({ ...prev, [cat.label]: false }));
+          continue;
+        }
+
+        // If not cached, fetch from API
+        try {
+          const response = await searchGoogleVolumes(cat.query, 12);
+          setBooksByCategory((prev) => ({
+            ...prev,
+            [cat.label]: response.data.items || [],
+          }));
+          setSearchInCache(cat.query, response.data.items || []);
+        } catch {
+          setBooksByCategory((prev) => ({
+            ...prev,
+            [cat.label]: [],
+          }));
+        }
         setLoading((prev) => ({ ...prev, [cat.label]: false }));
-        return;
       }
-
-      // If not cached, fetch from API
-      try {
-        const response = await axios.get(
-          `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-            cat.query,
-          )}&maxResults=12&key=${GOOGLE_BOOKS_API_KEY}`,
-        );
-        setBooksByCategory((prev) => ({
-          ...prev,
-          [cat.label]: response.data.items || [],
-        }));
-        setSearchInCache(cat.query, response.data.items || []);
-      } catch {
-        setBooksByCategory((prev) => ({
-          ...prev,
-          [cat.label]: [],
-        }));
-      }
-      setLoading((prev) => ({ ...prev, [cat.label]: false }));
-    });
+    };
+    fetchAllCategories();
   }, []);
 
   const handleScroll = (catLabel, direction) => {
     const container = scrollRefs.current[catLabel];
     if (container) {
-      // const scrollBy = direction === "right" ? SCROLL_AMOUNT : -SCROLL_AMOUNT;
-      const scrollBy = container.clientWidth * 0.8; //scrolls about 80% of the visible area
-      // container.scrollBy({ left: scrollBy, behavior: "smooth" });
+      const scrollBy = container.clientWidth * 0.8;
       container.scrollBy({
         left: direction === "right" ? scrollBy : -scrollBy,
         behavior: "smooth",
@@ -243,7 +239,7 @@ const Explore = () => {
         role="region"
         aria-labelledby="trending-heading"
       >
-        <h2 className="category-title trending-title" id="trending-heading">
+        <h2 className="trending-title" id="trending-heading">
           Trending with Readers
         </h2>
         <div
@@ -301,6 +297,7 @@ const Explore = () => {
                       volumeId={book.id}
                       showRatingValue={false}
                       showNoRatings={false}
+                      preloadedReviews={[]}
                     />
                   </div>
                 ))
@@ -389,6 +386,7 @@ const Explore = () => {
                         volumeId={book.id}
                         showRatingValue={false}
                         showNoRatings={false}
+                        preloadedReviews={[]}
                       />
                     </div>
                   ))

@@ -29,6 +29,8 @@ export default defineConfig([
   {
     rules: {
       // don't error on unused function args; allow underscore convention
+      "no-useless-escape": "off",
+      "no-empty": "off",
       "no-unused-vars": ["warn", { args: "none", argsIgnorePattern: "^_" }],
     },
   },

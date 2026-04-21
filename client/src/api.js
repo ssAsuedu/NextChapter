@@ -259,3 +259,15 @@ export const getNotInterestedBooks = async (email) => {
 export const addNotInterestedBook = async ({ email, volumeId }) => {
   return axios.post(`${API_BASE_URL}/users/not-interested/add`, { email, volumeId });
 };
+
+// cache routes
+
+export const getGoogleVolume = async (volumeId) => {
+  return axios.get(`${API_BASE_URL}/google/volumes/${volumeId}`);
+};
+
+export const searchGoogleVolumes = async (q, maxResults = 20) => {
+  return axios.get(`${API_BASE_URL}/google/search`, {
+  params: { q, maxResults },
+  });
+};

@@ -46,22 +46,135 @@ const awardBadge = (user, badgeType, volumeId = null) => {
 
 // Helper: fetch a book's categories (genres) from Google Books API
 // Used for GENRE_JUMPER (progress/finished) and EXPLORER (bookshelf) badges
+// const fetchBookGenres = async (volumeId) => {
+//   try {
+//     const key = process.env.VITE_GOOGLE_BOOKS_API || process.env.GOOGLE_BOOKS_API_KEY;
+//     const url = `https://www.googleapis.com/books/v1/volumes/${volumeId}${key ? `?key=${key}` : ""}`;
+//     const resp = await fetch(url);
+//     if (!resp.ok) return [];
+//     const data = await resp.json();
+//     const categories = data?.volumeInfo?.categories || [];
+//     // Normalize: take the first segment before "/" and lowercase it (e.g. "Fiction / Thrillers" → "fiction")
+//     return categories.map((c) => c.split("/")[0].trim().toLowerCase()).filter(Boolean);
+//   } catch (err) {
+//     console.error("Failed to fetch book genres:", err.message);
+//     return [];
+//   }
+// };
 const fetchBookGenres = async (volumeId) => {
   try {
-    const key = process.env.VITE_GOOGLE_BOOKS_API || process.env.GOOGLE_BOOKS_API_KEY;
-    const url = `https://www.googleapis.com/books/v1/volumes/${volumeId}${key ? `?key=${key}` : ""}`;
-    const resp = await fetch(url);
-    if (!resp.ok) return [];
-    const data = await resp.json();
+    const data = await getGoogleVolumeCached(volumeId);
     const categories = data?.volumeInfo?.categories || [];
-    // Normalize: take the first segment before "/" and lowercase it (e.g. "Fiction / Thrillers" → "fiction")
-    return categories.map((c) => c.split("/")[0].trim().toLowerCase()).filter(Boolean);
+    return categories
+  .map((c) => c.split("/")[0].trim().toLowerCase())
+  .filter(Boolean);
   } catch (err) {
     console.error("Failed to fetch book genres:", err.message);
     return [];
   }
 };
+// SERVER CACHING
+const GOOGLE_BOOKS_API_KEY =
+  process.env.GOOGLE_BOOKS_API_KEY || process.env.VITE_GOOGLE_BOOKS_API;
 
+const googleCache = new Map();
+const googleInFlight = new Map();
+
+const getCache = (key) => {
+  const entry = googleCache.get(key);
+  if (!entry) return null;
+  if (Date.now() > entry.expiresAt) {
+    googleCache.delete(key);
+    return null;
+  }
+  return entry.value;
+};
+
+const setCache = (key, value, ttlMs) => {
+  googleCache.set(key, {
+    value,
+    expiresAt: Date.now() + ttlMs,
+  });
+};
+
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const fetchGoogleJsonWithRetry = async (url, retries = 2) => {
+  const finalUrl = GOOGLE_BOOKS_API_KEY
+    ? `${url}${url.includes("?") ? "&" : "?"}key=${GOOGLE_BOOKS_API_KEY}`
+    : url;
+
+  const response = await fetch(finalUrl);
+
+  if (response.status === 429 && retries > 0) {
+    const retryAfter = Number(response.headers.get("retry-after") || 0);
+    const delay = retryAfter > 0 ? retryAfter * 1000 : 1000;
+    await wait(delay);
+    return fetchGoogleJsonWithRetry(url, retries - 1);
+  }
+
+  if (!response.ok) {
+    throw new Error(`Google Books API error: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+//   const response = await fetch(finalUrl);
+
+//   if (response.status === 429 && retries > 0) {
+//     const retryAfter = Number(response.headers.get("retry-after") || 0);
+//     const delay = retryAfter > 0 ? retryAfter * 1000 : 1000;
+//     await wait(delay);
+//     return fetchGoogleJsonWithRetry(url, retries - 1);
+//   }
+
+//   if (!response.ok) {
+//     throw new Error(`Google Books API error: ${response.status}`);
+//   }
+
+//   return response.json();
+// };
+
+const cachedGoogleRequest = async (cacheKey, url, ttlMs) => {
+  const cached = getCache(cacheKey);
+  if (cached) return cached;
+
+  if (googleInFlight.has(cacheKey)) {
+    return googleInFlight.get(cacheKey);
+  }
+
+  const promise = (async () => {
+    try {
+      const data = await fetchGoogleJsonWithRetry(url);
+      setCache(cacheKey, data, ttlMs);
+      return data;
+    } finally {
+      googleInFlight.delete(cacheKey);
+    }
+  })();
+
+  googleInFlight.set(cacheKey, promise);
+  return promise;
+};
+
+const getGoogleVolumeCached = async (volumeId) => {
+  const key = `volume:${volumeId}`;
+  const url = `https://www.googleapis.com/books/v1/volumes/${encodeURIComponent(volumeId)}`;
+  const ttlMs = 1000 * 60 * 60 * 12;
+  return cachedGoogleRequest(key, url, ttlMs);
+};
+
+const searchGoogleVolumesCached = async (q, maxResults = 20) => {
+  const safeMax = Math.min(Math.max(Number(maxResults) || 20, 1), 40);
+  const key = `search:${q}:${safeMax}`;
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(q)}&maxResults=${safeMax}`;
+  const ttlMs = 1000 * 60 * 10;
+  return cachedGoogleRequest(key, url, ttlMs);
+};
+
+
+//
 const allowedOrigins = (process.env.CORS_ORIGINS || process.env.CORS_ORIGIN || "")
   .split(",")
   .map(o => o.trim())
@@ -179,6 +292,37 @@ app.post("/api/resend-code", (req, res) => {
       console.log("Confirmation code resent successfully:", result);
     });
 });
+// cache routes
+
+app.get("/api/google/volumes/:volumeId", async (req, res) => {
+  try {
+    const { volumeId } = req.params;
+    const data = await getGoogleVolumeCached(volumeId);
+    res.json(data);
+  } catch (err) {
+    console.error("Google volume proxy error:", err.message);
+    res.status(502).json({ error: "Failed to fetch volume from Google Books" });
+  }
+});
+
+app.get("/api/google/search", async (req, res) => {
+  try {
+    const q = String(req.query.q || "").trim();
+    const maxResults = Number(req.query.maxResults || 20);
+
+    if (!q) {
+      return res.status(400).json({ error: "Missing q query parameter" });
+    }
+
+      const data = await searchGoogleVolumesCached(q, maxResults);
+      res.json(data);
+    } catch (err) {
+      console.error("Google search proxy error:", err.message);
+      res.status(502).json({ error: "Failed to search Google Books" });
+    }
+});
+
+
 // Login Route
 app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;

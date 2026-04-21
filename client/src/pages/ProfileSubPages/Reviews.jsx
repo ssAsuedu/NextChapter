@@ -7,12 +7,13 @@ import {
   getBookshelf,
   deleteReview,
   editReview,
+  getGoogleVolume
 } from "../../api";
 import Button from "@mui/material/Button";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 
-const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
+//const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 const Review = () => {
   const email = localStorage.getItem("userEmail");
@@ -65,18 +66,34 @@ const Review = () => {
       }
 
       setTitlesLoading(true);
-      const promises = [...volumeIds].map((id) =>
-        fetch(
-          `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`,
-        )
-          .then((res) => res.json())
-          .then((data) => ({
-            volumeId: id,
-            title: data.volumeInfo?.title || "Unknown Title",
-          })),
-      );
+      // const promises = [...volumeIds].map((id) =>
+      //   fetch(
+      //     `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`,
+      //   )
+      //     .then((res) => res.json())
+      //     .then((data) => ({
+      //       volumeId: id,
+      //       title: data.volumeInfo?.title || "Unknown Title",
+      //     })),
+      // );
 
-      const results = await Promise.all(promises);
+      // const results = await Promise.all(promises);
+      const results = await Promise.all(
+      [...volumeIds].map(async (id) => {
+        try {
+          const res = await getGoogleVolume(id);
+          return {
+            volumeId: id,
+            title: res.data?.volumeInfo?.title || "Unknown Title",
+          };
+        } catch {
+          return {
+            volumeId: id,
+            title: "Unknown Title",
+          };
+        }
+      }),
+    );
       setVolumeOptions(results);
       setTitlesLoading(false);
     };

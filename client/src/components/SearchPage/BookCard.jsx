@@ -1,13 +1,12 @@
 // filepath: /src/components/SearchPage/BookCard.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getBookshelf, addBookToBookshelf } from "../../api";
+import { addBookToBookshelf } from "../../api";
 import "../../styles/SearchPage/BookCard.css";
 
-const BookCard = ({ info, volumeId }) => {
+const BookCard = ({ info, volumeId, bookshelf = [] }) => {
   const [saved, setSaved] = useState(false);
   const [showFullTitle, setShowFullTitle] = useState(false);
-  const [bookshelf, setBookshelf] = useState([]);
 
   const cover = `https://books.google.com/books/content/images/frontcover/${volumeId}?fife=w400-h600&source=gbs_api`;
   const fallback = info.imageLinks?.thumbnail ||
@@ -25,6 +24,8 @@ const BookCard = ({ info, volumeId }) => {
     ? titleWords.slice(0, 8).join(" ") + "..."
     : title;
 
+  const isOnShelf = saved || bookshelf.includes(volumeId);
+
   const handleSave = async (e) => {
     e.stopPropagation();
     if (!email) {
@@ -34,7 +35,6 @@ const BookCard = ({ info, volumeId }) => {
     try {
       await addBookToBookshelf({ email, volumeId });
       setSaved(true);
-      setBookshelf((prev) => [...prev, volumeId]);
     } catch {
       alert("Failed to save book.");
     }
@@ -43,19 +43,6 @@ const BookCard = ({ info, volumeId }) => {
   const handleClick = () => {
     navigate(`/book/${volumeId}`);
   };
-
-  useEffect(() => {
-    const fetchBookshelf = async () => {
-      if (!email) return;
-      try {
-        const res = await getBookshelf(email);
-        setBookshelf(res.data.bookshelf || []);
-      } catch {
-        setBookshelf([]);
-      }
-    };
-    fetchBookshelf();
-  }, [email]);
 
   return (
     <div
@@ -97,9 +84,9 @@ const BookCard = ({ info, volumeId }) => {
       <button
         className="search-save-btn"
         onClick={handleSave}
-        disabled={bookshelf.includes(volumeId)}
+        disabled={isOnShelf}
       >
-        {bookshelf.includes(volumeId) ? "Saved" : "Save to Bookshelf"}
+        {isOnShelf ? "Saved" : "Save to Bookshelf"}
       </button>
     </div>
   );

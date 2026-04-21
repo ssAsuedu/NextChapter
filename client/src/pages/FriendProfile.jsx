@@ -7,6 +7,7 @@ import {
   getBadges,
   getBookshelf,
   addBookToBookshelf,
+  getGoogleVolume
 } from "../api";
 import axios from "axios";
 import Modal from "@mui/material/Modal";
@@ -145,13 +146,18 @@ const FriendProfile = () => {
         if (book) {
           results.push(book);
         } else {
-          try {
-            const res = await axios.get(
-              `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`,
-            );
+          // try {
+          //   const res = await axios.get(
+          //     `https://www.googleapis.com/books/v1/volumes/${id}?key=${GOOGLE_BOOKS_API_KEY}`,
+          //   );
+          //   setBookInCache(id, res.data);
+          //   results.push(res.data);
+          //   await new Promise((r) => setTimeout(r, 200));
+          // } catch (e) {}
+           try {
+            const res = await getGoogleVolume(id);
             setBookInCache(id, res.data);
             results.push(res.data);
-            await new Promise((r) => setTimeout(r, 200));
           } catch (e) {}
         }
       }
