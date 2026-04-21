@@ -73,7 +73,7 @@ const Leaderboard = () => {
         const response = await getFriends(currentUserEmail);
         setFriends(response.data || []);
       } catch (err) {
-        console.error("Error loading friends:", err);
+        //console.error("Error loading friends:", err);
       }
     };
 
