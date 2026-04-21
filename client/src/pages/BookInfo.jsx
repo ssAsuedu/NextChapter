@@ -48,6 +48,7 @@ const BookInfo = () => {
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [showSuccess, setShowSuccess] = useState(false);
   const [loginModal, setLoginModal] = useState(false);
+
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
 
@@ -56,11 +57,11 @@ const BookInfo = () => {
     setShowShare(false);
   };
   const handleOutsideClick = (e) => {
-  if (e.target.classList.contains("login-modal-wrapper")) {
-    setLoginModal(false);
-  }
-};
- 
+    if (e.target.classList.contains("login-modal-wrapper")) {
+      setLoginModal(false);
+    }
+  };
+
   useEffect(() => {
     const fetchBook = async () => {
       const cached = getBookFromCache(volumeId);
@@ -172,9 +173,7 @@ const BookInfo = () => {
           }
         }
         setRelatedBooks(uniqueRelated.slice(0, 4));
-      } catch (err) {
-        console.error("Error fetching related books:", err);
-      }
+      } catch (err) {}
     };
     fetchRelated();
   }, [book]);
@@ -209,9 +208,9 @@ const BookInfo = () => {
 
   const handleAddToBookshelf = async () => {
     if (!email) {
-    setLoginModal(true);
-    return;
-  }
+      setLoginModal(true);
+      return;
+    }
     try {
       await addBookToBookshelf({ email, volumeId });
       setBookshelf((prev) => [...prev, volumeId]);
@@ -223,7 +222,7 @@ const BookInfo = () => {
 
   const handleRemoveFromBookshelf = async () => {
     if (!email) {
-       setLoginModal(true);
+      setLoginModal(true);
       resetShareModal();
       return;
     }
@@ -265,7 +264,6 @@ const BookInfo = () => {
       setShowSuccess(true);
       resetShareModal();
     } catch (err) {
-      console.error(err);
       alert("Failed to send recommendation.");
     }
   };
@@ -440,7 +438,6 @@ const BookInfo = () => {
                     })}
                   </div>
                   <div className="bookinfo-review-content">
-                    {/* {renderStars(r.rating)} */}
                     <Stars rating={r.rating} />
                   </div>
                   <div className="bookinfo-review-content">{r.reviewText}</div>
@@ -495,17 +492,36 @@ const BookInfo = () => {
         <div className="share-modal-overlay" onClick={resetShareModal}>
           <div className="share-modal" onClick={(e) => e.stopPropagation()}>
             <h3 id="share-heading">Share this book</h3>
+
+            {friends.length === 0 && (
+              <h4 className="add-friends-text">
+                Add{" "}
+                <a href="/friends" className="link-to-friends">
+                  friends
+                </a>{" "}
+                to get started!
+              </h4>
+            )}
+
             {selectedFriends.length > 0 && (
               <div className="share-selected">
                 {selectedFriends.map((friend, idx) => (
                   <div
                     key={idx}
+                    tabIndex={0}
                     className="share-selected-chip"
                     onClick={() =>
                       setSelectedFriends((prev) =>
                         prev.filter((f) => f.email !== friend.email),
                       )
                     }
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        setSelectedFriends((prev) =>
+                          prev.filter((f) => f.email !== friend.email),
+                        );
+                      }
+                    }}
                   >
                     {friend.name || friend.email} ✕
                   </div>
@@ -582,28 +598,28 @@ const BookInfo = () => {
             </button>
           </div>
         </div>
-      )}      
+      )}
       {loginModal && (
-  <div className="login-modal-wrapper" onClick={handleOutsideClick}>
-    <div className="login-modal-content">
-      <div className="login-modal-title">
-        <h1>Login Required</h1>
-        <p>Please login to continue.</p>
-      </div>
-      <div className="button-display">
-        <Link to="/login" className="login-btn-display">
-          Login
-        </Link>
-        <button
-          className="close-btn-display"
-          onClick={() => setLoginModal(false)}
-        >
-          Cancel
-        </button>
-      </div>
-    </div>
-  </div>
-)}
+        <div className="login-modal-wrapper" onClick={handleOutsideClick}>
+          <div className="login-modal-content">
+            <div className="login-modal-title">
+              <h1>Login Required</h1>
+              <p>Please login to continue.</p>
+            </div>
+            <div className="button-display">
+              <Link to="/login" className="login-btn-display">
+                Login
+              </Link>
+              <button
+                className="close-btn-display"
+                onClick={() => setLoginModal(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -75,14 +75,6 @@
   flex: 1;
 }
 
-/* .bookinfo-details-text p {
-  margin: 0;          
-  line-height: 1.2;   
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 20px;
-} */
-
 .bookinfo-rating-row {
   display: flex;
   align-items: center;
@@ -224,7 +216,7 @@
 }
 
 .bookinfo-summary-expandable.expanded {
-  max-height: 1000px;
+  max-height: none;
   overflow: visible;
   padding-bottom: 0;
 }
@@ -285,9 +277,8 @@
 }
 
 .bookinfo-in-shelf {
-  background-color: #f2f2f2;
-  border: 1px solid #ccc;
-  color: var(--secondary-color);
+  background-color: var(--primary-color);
+  color: white;
   padding: 8px 24px;
   font-size: 1rem;
   transform: none;
@@ -631,9 +622,12 @@
   height: 400px;
   display: flex;
   flex-direction: column;
-
   border-radius: 12px;
   line-height: 1.1;
+}
+
+:root[data-theme="dark"] .share-modal .bookinfo-cancel {
+  color: var(--background-color) !important;
 }
 
 :root[data-theme="dark"] .login-modal-content {
@@ -683,8 +677,7 @@
   border-radius: 999px;
 }
 
-:root[data-theme="dark"] 
-.login-btn-display{
+:root[data-theme="dark"] .login-btn-display {
   color: var(--background-color) !important;
 }
 .close-btn-display {
@@ -729,6 +722,9 @@
 /* --- Responsive Styles --- */
 
 @media (max-width: 820px) {
+  .bookinfo-summary.expandable.expanded {
+    height: auto;
+  }
   .bookinfo-container {
     padding: 10px;
   }
@@ -943,7 +939,7 @@
   }
 
   .bookinfo-add-btn {
-    padding: 4px 8px;
+    padding: 4px 8px !important;
   }
 
   #author-heading,
@@ -1004,7 +1000,13 @@
 }
 
 .share-modal {
-  background: linear-gradient(145deg, #f7f5ff, #dccfff);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(170, 124, 231, 0.527) 0%,
+      rgba(171, 124, 231, 0.12) 100%
+    ),
+    white;
   padding: 24px;
   border-radius: 12px;
   width: 300px;
@@ -1014,8 +1016,9 @@
   border-radius: 20px;
   text-align: center;
   box-shadow:
-    0 0 60px rgba(108, 63, 197, 0.25),
-    0 20px 40px rgba(0, 0, 0, 0.3);
+    0 4px 20px rgba(171, 124, 231, 0.15),
+    0 8px 40px rgba(157, 172, 255, 0.12),
+    0 0 60px rgba(231, 192, 243, 0.1);
   overflow: hidden;
   transition:
     opacity 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
@@ -1070,9 +1073,10 @@
   border: 1px solid var(--text-color);
 }
 
-:root[data-theme="dark"] .share-actions:has(.share-confirm-btn:not(:disabled)) .bookinfo-cancel {
+:root[data-theme="dark"]
+  .share-actions:has(.share-confirm-btn:not(:disabled))
+  .bookinfo-cancel {
   background-color: var(--secondary-color);
-
 }
 
 .share-actions:has(.share-confirm-btn:not(:disabled)) .bookinfo-cancel {
@@ -1142,7 +1146,8 @@
 .share-friend-chip {
   padding: 8px 14px;
   border-radius: 999px;
-  background-color: var(--primary-color);
+  /* background-color: var(--primary-color); */
+  background-color: var(--hover);
   color: white;
   cursor: pointer;
   font-size: 0.9rem;
@@ -1150,11 +1155,9 @@
 }
 
 .share-friend-chip:hover {
-  background: linear-gradient(145deg, #f7f5ff, #dccfff);
-  color: var(--text-color);  
+  background-color: var(--text-color);
+  color: white;
 }
-
-
 
 .share-friend-chip.selected {
   background-color: #ab7ce7;
@@ -1207,7 +1210,6 @@
 }
 
 .share-confirm-btn:disabled {
-  
   cursor: not-allowed;
   background-color: #f2f2f2;
   border: 1px solid #ccc;
