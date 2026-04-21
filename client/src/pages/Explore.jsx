@@ -108,11 +108,6 @@ const Explore = () => {
             const cached = getBookFromCache(item.volumeId);
             if (cached) return { ...cached, readers: item.readers };
             try {
-              // const bookRes = await axios.get(
-              //   `https://www.googleapis.com/books/v1/volumes/${item.volumeId}?key=${GOOGLE_BOOKS_API_KEY}`,
-              // );
-              // setBookInCache(item.volumeId, bookRes.data);
-              // return { ...bookRes.data, readers: item.readers };
               const bookRes = await getGoogleVolume(item.volumeId);
               setBookInCache(item.volumeId, bookRes.data);
               return { ...bookRes.data, readers: item.readers };
@@ -148,11 +143,6 @@ const Explore = () => {
 
       // If not cached, fetch from API
       try {
-        // const response = await axios.get(
-        //   `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-        //     cat.query,
-        //   )}&maxResults=12&key=${GOOGLE_BOOKS_API_KEY}`,
-        // );
         const response = await searchGoogleVolumes(cat.query, 12);
         setBooksByCategory((prev) => ({
           ...prev,
@@ -172,9 +162,7 @@ const Explore = () => {
   const handleScroll = (catLabel, direction) => {
     const container = scrollRefs.current[catLabel];
     if (container) {
-      // const scrollBy = direction === "right" ? SCROLL_AMOUNT : -SCROLL_AMOUNT;
-      const scrollBy = container.clientWidth * 0.8; //scrolls about 80% of the visible area
-      // container.scrollBy({ left: scrollBy, behavior: "smooth" });
+      const scrollBy = container.clientWidth * 0.8;
       container.scrollBy({
         left: direction === "right" ? scrollBy : -scrollBy,
         behavior: "smooth",
@@ -248,7 +236,7 @@ const Explore = () => {
         role="region"
         aria-labelledby="trending-heading"
       >
-        <h2 className="category-title trending-title" id="trending-heading">
+        <h2 className="trending-title" id="trending-heading">
           Trending with Readers
         </h2>
         <div
@@ -306,6 +294,7 @@ const Explore = () => {
                       volumeId={book.id}
                       showRatingValue={false}
                       showNoRatings={false}
+                      preloadedReviews={[]}
                     />
                   </div>
                 ))
@@ -394,6 +383,7 @@ const Explore = () => {
                         volumeId={book.id}
                         showRatingValue={false}
                         showNoRatings={false}
+                        preloadedReviews={[]}
                       />
                     </div>
                   ))

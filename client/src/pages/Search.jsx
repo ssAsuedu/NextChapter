@@ -1,9 +1,9 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import axios from "axios";
 import "../styles/SearchPage/Search.css";
 import BookCard from "../components/SearchPage/BookCard";
 import { getSearchFromCache, setSearchInCache } from "../../utils/apiCache";
-import { searchGoogleVolumes } from "../api";
+import { searchGoogleVolumes, getBookshelf } from "../api";
 //const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 const Search = () => {
@@ -14,8 +14,18 @@ const Search = () => {
   const [genres, setGenres] = useState([]);
   const [sortBy, setSortBy] = useState("relevance");
   const [filtersOpen, setFiltersOpen] = useState(false);
-  // dropdown for more genre displays so that the pane and modal are not overwhelming
   const [showAllGenres, setShowAllGenres] = useState(false);
+  const [bookshelf, setBookshelf] = useState([]);
+
+  // Fetch bookshelf ONCE on mount
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (!email) return;
+    getBookshelf(email)
+      .then((res) => setBookshelf(res.data.bookshelf || []))
+      .catch(() => setBookshelf([]));
+  }, []);
+
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query) return;
@@ -36,11 +46,6 @@ const Search = () => {
       }
 
       // 2) fallback to Google Books
-      // const response = await axios.get(
-      //   `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(
-      //     query
-      //   )}&maxResults=20&key=${GOOGLE_BOOKS_API_KEY}`
-      // );
       const response = await searchGoogleVolumes(query, 20);
       const fetchedBooks = response.data.items || [];
       setBooks(fetchedBooks);
@@ -95,7 +100,6 @@ const Search = () => {
   const clearFilters = () => {
     setSelectedGenre("");
     setSortBy("relevance");
-    // reset all genres to false
     setShowAllGenres(false);
   };
 
@@ -257,7 +261,6 @@ const Search = () => {
                     </button>
                   ))}
                 </div>
-                {/* button to manage the genre output in the filter pane and modal */}
                 {hasMoreGenres && (
                   <button
                     type="button"
@@ -300,6 +303,7 @@ const Search = () => {
                     key={book.id}
                     info={book.volumeInfo}
                     volumeId={book.id}
+                    bookshelf={bookshelf}
                   />
                 ))}
               </div>

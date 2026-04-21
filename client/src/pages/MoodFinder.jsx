@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAvailableMoods, getBooksByMood, getSurpriseMoods } from "../api";
+import { getAvailableMoods, getBooksByMood, getSurpriseMoods, getBookshelf } from "../api";
 import BookCard from "../components/SearchPage/BookCard";
 import "../styles/ExplorePage/MoodFinder.css";
 
@@ -10,6 +10,7 @@ const MoodFinder = () => {
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
   const [error, setError] = useState(null);
+  const [bookshelf, setBookshelf] = useState([]);
 
   useEffect(() => {
     const fetchMoods = async () => {
@@ -22,6 +23,15 @@ const MoodFinder = () => {
       }
     };
     fetchMoods();
+  }, []);
+
+  // Fetch bookshelf ONCE on mount
+  useEffect(() => {
+    const email = localStorage.getItem("userEmail");
+    if (!email) return;
+    getBookshelf(email)
+      .then((res) => setBookshelf(res.data.bookshelf || []))
+      .catch(() => setBookshelf([]));
   }, []);
 
   const toggleMood = (moodId) => {
@@ -174,6 +184,7 @@ const MoodFinder = () => {
                 key={book.id}
                 info={book.volumeInfo}
                 volumeId={book.id}
+                bookshelf={bookshelf}
               />
             ))}
           </div>

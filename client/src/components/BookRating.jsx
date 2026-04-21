@@ -2,11 +2,27 @@ import { useState, useEffect } from "react";
 import Stars from "../components/Stars";
 import { getBookReviews } from "../api";
 
-function BookRating({ volumeId, showRatingValue, showNoRatings }) {
+function BookRating({ volumeId, showRatingValue, showNoRatings, preloadedReviews }) {
   const [averageRating, setAverageRating] = useState(null);
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
+    // If parent already fetched reviews for us, use those instead of firing a request
+    if (preloadedReviews !== undefined) {
+      const fetchedReviews = preloadedReviews || [];
+      setReviews(fetchedReviews);
+      if (fetchedReviews.length > 0) {
+        const avg =
+          fetchedReviews.reduce((sum, r) => sum + (r.rating || 0), 0) /
+          fetchedReviews.length;
+        setAverageRating(avg);
+      } else {
+        setAverageRating(null);
+      }
+      return;
+    }
+
+    // Fallback: fetch reviews ourselves (used on BookInfo page where only 1 card exists)
     const fetchReviews = async () => {
       try {
         const res = await getBookReviews(volumeId);
@@ -26,7 +42,7 @@ function BookRating({ volumeId, showRatingValue, showNoRatings }) {
       }
     };
     fetchReviews();
-  }, [volumeId]);
+  }, [volumeId, preloadedReviews]);
 
   return (
     <div
