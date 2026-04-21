@@ -33,6 +33,8 @@
   align-items: center;
   cursor: pointer;
   margin-right: 4px;
+  background: none;
+  padding: 0;
 }
 
 .nav-message-icon path {
@@ -128,8 +130,14 @@ li {
   cursor: pointer;
 }
 
-.link-text {
-  width: 100%;
+.link-text, .carrot-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
 }
 
 .navbar-content {
@@ -427,6 +435,9 @@ li {
 }
 
 @media (min-width: 300px) and (max-width: 860px) {
+  .link-text:hover {
+    text-decoration: underline;
+  }
   .nav-message-badge {
     right: 90px;
   }
@@ -461,7 +472,7 @@ li {
 
   .nav-message-icon {
     margin-top: 30px;
-    margin-bottom: 60px;
+    margin-bottom: 40px;
     display: flex;
     gap: 15px;
     align-items: center;
@@ -580,6 +591,16 @@ li {
     text-decoration: underline;
   }
 
+  .auth-signup.not-scroll, .auth-login.not-scroll {
+    text-decoration: none !important;
+    color: white !important;
+  }
+
+  .auth-signup.not-scroll:hover, .auth-login.not-scroll:hover {
+    text-decoration: underline !important;
+    transform: none;
+  }
+
   .auth-signup.not-scroll,
   .auth-login.not-scroll {
     background: transparent;
@@ -589,6 +610,9 @@ li {
     border: none;
   }
 
+  .auth-signup.not-scroll {
+    text-decoration: none !important;
+  }
   .auth-login.not-scroll {
     margin-bottom: 10px;
   }
