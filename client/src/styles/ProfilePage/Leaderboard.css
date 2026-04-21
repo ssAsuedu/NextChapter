@@ -141,7 +141,7 @@ body {
 
 .leaderboard-toggle-checkbox:focus + .leaderboard-toggle-label,
 .leaderboard-toggle-checkbox:focus-visible + .leaderboard-toggle-label {
-  outline: 2px solid #000000; 
+  outline: 4px auto -webkit-focus-ring-color;
   outline-offset: 4px;
   border-radius: 999px;
 }
