@@ -146,7 +146,9 @@ const Navbar = () => {
         </IconButton>
         <ul className={`left ${menuOpen ? "open" : ""}`}>
           <li>
+            <Link to="/">
             <img className="logo" src={currentLogo}></img>
+            </Link>
           </li>
           <li className="">
             <Link
