@@ -44,14 +44,18 @@ const Explore = () => {
   const [trendingBooks, setTrendingBooks] = useState([]);
   const [trendingLoading, setTrendingLoading] = useState(true);
   const [notInterestedBooks, setNotInterestedBooks] = useState([]);
+  const [showSheet, setShowSheet] = useState(false);
+  const [selectedBook, setSelectedBook] = useState(null);
 
   const hiddenBookIds = new Set(notInterestedBooks.map(String));
-  
+
   const [loginModal, setLoginModal] = useState(false);
 
   const scrollRefs = useRef({});
   const email = localStorage.getItem("userEmail");
   const navigate = useNavigate();
+
+  const isMobile = window.innerWidth <= 768;
 
   function Modal({ loginModal }) {
     if (!loginModal) return null;
@@ -60,6 +64,11 @@ const Explore = () => {
     if (e.target.classList.contains("login-modal-wrapper")) {
       setLoginModal(false);
     }
+  };
+
+  const handleOpenSheet = (book) => {
+    setSelectedBook(book);
+    setShowSheet(true);
   };
 
   // Fetch user's bookshelf once on mount
@@ -104,17 +113,19 @@ const Explore = () => {
 
         // Fetch book details in parallel, skip null volumeIds
         const bookDetails = await Promise.all(
-          trendingData.filter((item) => item.volumeId).map(async (item) => {
-            const cached = getBookFromCache(item.volumeId);
-            if (cached) return { ...cached, readers: item.readers };
-            try {
-              const bookRes = await getGoogleVolume(item.volumeId);
-              setBookInCache(item.volumeId, bookRes.data);
-              return { ...bookRes.data, readers: item.readers };
-            } catch {
-              return null;
-            }
-          }),
+          trendingData
+            .filter((item) => item.volumeId)
+            .map(async (item) => {
+              const cached = getBookFromCache(item.volumeId);
+              if (cached) return { ...cached, readers: item.readers };
+              try {
+                const bookRes = await getGoogleVolume(item.volumeId);
+                setBookInCache(item.volumeId, bookRes.data);
+                return { ...bookRes.data, readers: item.readers };
+              } catch {
+                return null;
+              }
+            }),
         );
         setTrendingBooks(bookDetails.filter(Boolean));
       } catch {
@@ -204,9 +215,9 @@ const Explore = () => {
 
   const handleHideBook = async (volumeId) => {
     if (!email) {
-    setLoginModal(true);
-    return;
-  }
+      setLoginModal(true);
+      return;
+    }
 
     try {
       await addNotInterestedBook({ email, volumeId });
@@ -281,6 +292,7 @@ const Explore = () => {
                       onMouseEnter={handleCardMouseEnter}
                       onMouseLeave={handleCardMouseLeave}
                       isHovered={hoveredCard?.volumeId === book.id}
+                      onOpenSheet={handleOpenSheet}
                     />
                     <span className="trending-reader-count">
                       {book.readers} {book.readers === 1 ? "reader" : "readers"}
@@ -373,6 +385,7 @@ const Explore = () => {
                         onMouseEnter={handleCardMouseEnter}
                         onMouseLeave={handleCardMouseLeave}
                         isHovered={hoveredCard?.volumeId === book.id}
+                        onOpenSheet={handleOpenSheet}
                       />
                       <p className="book-title-display">
                         {book.volumeInfo?.title}
@@ -413,7 +426,8 @@ const Explore = () => {
       ))}
 
       {/* Portal popup outside the scroll container */}
-      {hoveredCard &&
+      {!isMobile &&
+        hoveredCard &&
         createPortal(
           <div
             className="book-popup"
@@ -462,6 +476,51 @@ const Explore = () => {
           </div>,
           document.body,
         )}
+      {showSheet && selectedBook && (
+        <div className="mobile-overlay" onClick={() => setShowSheet(false)}>
+          <div className="bottom-sheet" onClick={(e) => e.stopPropagation()}>
+            <div className="bottom-content">
+              <h3>{selectedBook.info.title}</h3>
+              <p>
+                {selectedBook.info.authors
+                  ? selectedBook.info.authors.join(", ")
+                  : "Unknown Author"}
+              </p>
+            </div>
+
+            <div className="mobile-btn-options">
+              <button
+                id="mobile-save-btn"
+                onClick={() => {
+                  handleSaveBook(selectedBook.volumeId);
+                  setShowSheet(false);
+                }}
+                disabled={bookshelf.includes(selectedBook.volumeId)}
+              >
+                Save to Bookshelf
+              </button>
+              <button
+                id="mobile-navigate-btn"
+                onClick={() => {
+                  navigate(`/book/${selectedBook.volumeId}`);
+                  setShowSheet(false);
+                }}
+              >
+                View Details
+              </button>
+              <button
+                id="mobile-hide-btn"
+                onClick={() => {
+                  handleHideBook(selectedBook.volumeId);
+                  setShowSheet(false);
+                }}
+              >
+                Not Interested
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {loginModal && (
         <div className="login-modal-wrapper" onClick={handleOutsideClick}>
           <div className="login-modal-content">

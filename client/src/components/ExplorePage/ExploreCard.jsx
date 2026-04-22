@@ -11,6 +11,7 @@ const BookCard = ({
   onMouseEnter,
   onMouseLeave,
   isHovered,
+  onOpenSheet,
 }) => {
   const email = localStorage.getItem("userEmail");
   const [saved, setSaved] = useState(false);
@@ -18,6 +19,8 @@ const BookCard = ({
   const [coords, setCoords] = useState({ top: 0, left: 0 });
   const closeTimeout = useRef();
   const navigate = useNavigate();
+
+  const isMobile= window.innerWidth <= 768;
 
   const cover = `https://books.google.com/books/content/images/frontcover/${volumeId}?fife=w400-h600&source=gbs_api`;
   const fallback = info.imageLinks?.thumbnail ||
@@ -66,7 +69,12 @@ const BookCard = ({
   };
 
   const handleClick = () => {
-    navigate(`/book/${volumeId}`);
+    if(isMobile) {
+      onOpenSheet?.({volumeId, info})
+    }
+    else {
+      navigate(`/book/${volumeId}`);
+    } 
   };
 
   return (
