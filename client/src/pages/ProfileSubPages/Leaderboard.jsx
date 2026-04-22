@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { getLeaderboard, getFriends } from "../../api";
 import "../../styles/ProfilePage/Leaderboard.css";
 import ProfileNavbar from "../../components/ProfilePage/ProfileNavbar";
@@ -43,14 +43,26 @@ const badgeIconMap = {
 
 const Leaderboard = () => {
   const [rows, setRows] = useState([]);
-  const [limit, setLimit] = useState(50);
+  const limit = 50;
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = useState(false);
   const currentUserEmail = localStorage.getItem("userEmail") || "";
   // add states to show friends only in the leaderboard upon toggle 
   const [activeBadgeIndex, setActiveBadgeIndex] = useState({});
   const [showFriendsOnly, setShowFriendsOnly] = useState(false);
   const [friends, setFriends] = useState([]);
+  const [loadedBadgeSrcs, setLoadedBadgeSrcs] = useState({});
+
+  const markBadgeSrcLoaded = (src) => {
+    if (!src) return;
+
+    setLoadedBadgeSrcs((prev) => {
+      if (prev[src]) return prev;
+      return {
+        ...prev,
+        [src]: true,
+      };
+    });
+  };
 
   useEffect(() => {
     const load = async () => {
@@ -72,13 +84,24 @@ const Leaderboard = () => {
 
         const response = await getFriends(currentUserEmail);
         setFriends(response.data || []);
-      } catch (err) {
+      } catch {
         //console.error("Error loading friends:", err);
       }
     };
 
     loadFriends();
   }, [currentUserEmail]);
+
+  useEffect(() => {
+    const allBadgeSrcs = Array.from(new Set(Object.values(badgeIconMap)));
+
+    allBadgeSrcs.forEach((src) => {
+      const img = new Image();
+      img.onload = () => markBadgeSrcLoaded(src);
+      img.onerror = () => markBadgeSrcLoaded(src);
+      img.src = src;
+    });
+  }, []);
 
   const filteredRows = showFriendsOnly
     ? rows.filter((u) =>
@@ -227,12 +250,24 @@ const Leaderboard = () => {
                                 key={type}
                               >
                                 {badgeSrc ? (
-                                  <img
-                                    src={badgeSrc}
-                                    alt={type}
-                                    className="leaderboard-badge-icon"
-                                    title={`${type.replaceAll("_", " ")} ×${count}`}
-                                  />
+                                  <div className="leaderboard-badge-icon-wrap">
+                                    {!loadedBadgeSrcs[badgeSrc] && (
+                                      <span
+                                        className="leaderboard-badge-spinner"
+                                        aria-label="Loading badge icon"
+                                      />
+                                    )}
+                                    <img
+                                      src={badgeSrc}
+                                      alt={type}
+                                      className={`leaderboard-badge-icon ${loadedBadgeSrcs[badgeSrc] ? "is-loaded" : "is-loading"}`}
+                                      title={`${type.replaceAll("_", " ")} ×${count}`}
+                                      loading="lazy"
+                                      decoding="async"
+                                      onLoad={() => markBadgeSrcLoaded(badgeSrc)}
+                                      onError={() => markBadgeSrcLoaded(badgeSrc)}
+                                    />
+                                  </div>
                                 ) : (
                                   <span className="leaderboard-badge-oval-fallback">
                                     {type.replaceAll("_", " ")}

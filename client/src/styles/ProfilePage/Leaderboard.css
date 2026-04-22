@@ -244,6 +244,38 @@ body {
   display: block;
 }
 
+.leaderboard-badge-icon-wrap {
+  width: 100px;
+  height: 100px;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.leaderboard-badge-icon.is-loading {
+  opacity: 0;
+}
+
+.leaderboard-badge-icon.is-loaded {
+  opacity: 1;
+  transition: opacity 180ms ease;
+}
+
+.leaderboard-badge-spinner {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 2.5px solid rgba(133, 97, 180, 0.2);
+  border-top-color: #8561b4;
+  animation: leaderboard-spin 0.8s linear infinite;
+}
+
+@keyframes leaderboard-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 .leaderboard-badge-count {
   margin-top: 1px;
   font-size: 0.9rem;
