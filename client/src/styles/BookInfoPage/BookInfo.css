@@ -277,8 +277,11 @@
 }
 
 .bookinfo-in-shelf {
-  background-color: var(--primary-color);
-  color: white;
+  border: 1px solid #ccc !important;
+  background-color: #f2f2f2;
+  color: var(--secondary-color);
+  border: none;
+  border-radius: 999px;
   padding: 8px 24px;
   font-size: 1rem;
   transform: none;
@@ -966,9 +969,9 @@
 }
 
 .bookinfo-share-btn {
-  border: 1px solid #ccc !important;
-  background-color: #f2f2f2;
-  color: var(--secondary-color);
+  border: 1px solid #d6cef0 !important;
+  background-color: #faf8ff;
+  color: #6c3fc5;
   border: none;
   border-radius: 999px;
   padding: 8px 20px;
