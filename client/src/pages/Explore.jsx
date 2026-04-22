@@ -200,6 +200,43 @@ const Explore = () => {
     setHoveredCard(null);
   };
 
+  useEffect(() => {
+    if (!hoveredCard) return;
+
+    const closePopupOnScroll = () => {
+      setHoveredCard(null);
+    };
+
+    const closePopupOnScrollKeys = (e) => {
+      const scrollKeys = [
+        "ArrowUp",
+        "ArrowDown",
+        "PageUp",
+        "PageDown",
+        "Home",
+        "End",
+        " ",
+        "Escape",
+      ];
+
+      if (scrollKeys.includes(e.key)) {
+        setHoveredCard(null);
+      }
+    };
+
+    window.addEventListener("wheel", closePopupOnScroll, { passive: true });
+    window.addEventListener("scroll", closePopupOnScroll, { passive: true });
+    window.addEventListener("touchmove", closePopupOnScroll, { passive: true });
+    window.addEventListener("keydown", closePopupOnScrollKeys);
+
+    return () => {
+      window.removeEventListener("wheel", closePopupOnScroll);
+      window.removeEventListener("scroll", closePopupOnScroll);
+      window.removeEventListener("touchmove", closePopupOnScroll);
+      window.removeEventListener("keydown", closePopupOnScrollKeys);
+    };
+  }, [hoveredCard]);
+
   const handleSaveBook = async (volumeId) => {
     if (!email) {
       setLoginModal(true);
