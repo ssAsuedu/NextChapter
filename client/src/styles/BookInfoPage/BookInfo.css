@@ -1045,6 +1045,7 @@
 }
 
 .bookinfo-cancel {
+  color: white !important;
   background-color: var(--primary-color);
 }
 
