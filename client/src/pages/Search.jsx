@@ -28,7 +28,7 @@ const Search = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault();
-    if (!query) return;
+    if (!query || loading) return;
     setLoading(true);
 
     try {
