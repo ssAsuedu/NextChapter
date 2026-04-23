@@ -189,7 +189,7 @@
 }
 
 :root[data-theme="dark"] .bookshelf-item {
-  background-color: var(--filter-pane);
+  background-color: var(--background-color);
 }
 .bookshelf-item:hover {
   transform: translateY(-4px);
@@ -1672,7 +1672,7 @@
     padding: 0;
     min-height: auto;
     box-shadow: none;
-    height: auto;
+    
   }
 
   .lists-grid {

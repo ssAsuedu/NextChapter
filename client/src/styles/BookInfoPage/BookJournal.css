@@ -256,6 +256,9 @@
   color: #555555;
 }
 
+:root[data-theme="dark"] .journal-char-count {
+  color: var(--secondary-color);
+}
 .journal-editor-actions {
   display: flex;
   align-items: center;
