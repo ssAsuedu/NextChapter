@@ -11,7 +11,30 @@
   border-radius: 12px;
   color: #333;
 }
+.journal-section,
+.tiptap-editor,
+.tiptap-editor .ProseMirror,
+.journal-entry-content {
+  font-synthesis: style;
+}
+.journal-fmt-btn.active {
+  background: #6c3fc5;
+  color: #fff;
+  border-color: #6c3fc5;
+}
 
+:root[data-theme="dark"] .journal-fmt-btn.active {
+  background: var(--text-color);
+  color: var(--background-color);
+  border-color: var(--text-color);
+}
+/* Force italic appearance in editor and saved output */
+.tiptap-editor .ProseMirror em,
+.tiptap-editor .ProseMirror i,
+.journal-entry-content em,
+.journal-entry-content i {
+  font-style: italic !important;
+}
 :root[data-theme="dark"] .journal-section {
   box-shadow:
     0 6px 25px rgba(0, 0, 0, 0.5),
