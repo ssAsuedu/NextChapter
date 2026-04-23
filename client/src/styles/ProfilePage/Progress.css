@@ -129,11 +129,13 @@
   margin: 0 auto;
   background-color: var(--hover);
   transition: background 0.2s, color 0.2s, transform 0.2s;
+  color: white !important;
 }
 
 .keep-reading-btn:hover {
   background-color: var(--text-color);
   transform: scale(1.07);
+  color: white !important;
 }
 
 .progress-stats {
@@ -465,7 +467,7 @@
 
 :root[data-theme="dark"] .keep-reading-btn {
   background-color: var(--primary-color);
-  color: var(--background-color);
+  color: var(--background-color) !important;
 }
 
 :root[data-theme="dark"] .keep-reading-btn:hover {

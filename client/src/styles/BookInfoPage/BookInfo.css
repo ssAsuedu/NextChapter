@@ -1081,17 +1081,18 @@
   .share-actions:has(.share-confirm-btn:not(:disabled))
   .bookinfo-cancel {
   background-color: var(--secondary-color);
+  color: var(--background-color) !important;
 }
 
 .share-actions:has(.share-confirm-btn:not(:disabled)) .bookinfo-cancel {
   background-color: #f2f2f2;
   border: 1px solid #ccc;
-  color: var(--secondary-color);
+  color: var(--secondary-color) !important;
 }
 
 .share-actions:has(.share-confirm-btn:not(:disabled)) .bookinfo-cancel:hover {
   background-color: var(--text-color);
-  color: white;
+  color: white !important;
 }
 
 :root[data-theme="dark"] #recommendation-sent {
