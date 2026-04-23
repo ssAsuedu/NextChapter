@@ -29,6 +29,7 @@ const Search = () => {
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!query || loading) return;
+    setHasSearched(true);
     setLoading(true);
 
     try {
@@ -107,6 +108,7 @@ const Search = () => {
 
   const visibleGenres = showAllGenres ? genres : genres.slice(0, 3);
   const hasMoreGenres = genres.length > 3;
+  const [hasSearched, setHasSearched] = useState(false);
 
   return (
     <div className="search-page" aria-label="Book search page">
@@ -326,7 +328,7 @@ const Search = () => {
       )}
 
       {/* Empty / initial state */}
-      {books.length === 0 && !loading && (
+      {books.length === 0 && !loading && hasSearched && (
         <p
           className="no-results"
           aria-label="No search results or initial search state message"
