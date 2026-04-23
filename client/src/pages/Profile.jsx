@@ -1062,7 +1062,7 @@ const Profile = () => {
       <Modal
         open={showEditListModal}
         onClose={closeEditListModal}
-        className="review-modal"
+        disableScrollLock
         sx={{
           display: "flex",
           alignItems: "center",
@@ -1071,6 +1071,7 @@ const Profile = () => {
         }}
       >
         <Box
+          className="review-modal-box"
           sx={{
             position: "absolute",
             top: "50%",
