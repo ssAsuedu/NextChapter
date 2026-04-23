@@ -104,7 +104,7 @@ function Messages() {
         const res = await getMessages(email);
         setMessages(res.data.messages);
       } catch (err) {
-        console.error(err);
+        // console.error(err);
       }
     };
   
@@ -142,7 +142,7 @@ function Messages() {
       ).size;
       window.dispatchEvent(new CustomEvent("messagesRead", { detail: { newCount } }));
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 
@@ -178,7 +178,7 @@ function Messages() {
         return updated;
       });
     } catch (err) {
-      console.error(err);
+      // console.error(err);
     }
   };
 

@@ -35,7 +35,7 @@ const Login = () => {
     try {
       setSuccessfulLogin(true);
       const response = await login({ email, password });
-      console.log(response.data)
+      
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("accessToken", response.data.token); // keep a canonical key
       if (response.data.idToken) {
@@ -48,7 +48,7 @@ const Login = () => {
       navigate("/profile");
     } catch (err) {
       const errorMessage = err.response?.data?.error || "Email and password do not match.";
-      console.log(err.response?.data?.error);
+      
       if(err.response?.data?.error === "User is not confirmed.") {
         
         navigate("/confirm", {state: {email}});

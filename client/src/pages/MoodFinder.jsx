@@ -18,7 +18,7 @@ const MoodFinder = () => {
         const res = await getAvailableMoods();
         setMoods(res.data.moods || []);
       } catch (err) {
-        console.error("Failed to fetch moods:", err);
+        // console.error("Failed to fetch moods:", err);
         setError("Failed to load moods. Make sure the server is running.");
       }
     };
@@ -53,7 +53,7 @@ const MoodFinder = () => {
       const res = await getBooksByMood(selectedMoods);
       setBooks(res.data.books || []);
     } catch (err) {
-      console.error("Failed to fetch mood books:", err);
+      // console.error("Failed to fetch mood books:", err);
       setBooks([]);
       setError("Something went wrong fetching books. Please try again.");
     } finally {

@@ -36,7 +36,7 @@ const BookJournal = ({ volumeId }) => {
       const res = await getJournalEntries(email, volumeId);
       setEntries(res.data.entries || []);
     } catch (err) {
-      console.error("Failed to fetch journal:", err);
+      // console.error("Failed to fetch journal:", err);
     } finally {
       setLoading(false);
     }
@@ -177,7 +177,7 @@ const BookJournal = ({ volumeId }) => {
       if (editingId === entryId) closeEditor();
       fetchEntries();
     } catch (err) {
-      console.error("Failed to delete:", err);
+      // console.error("Failed to delete:", err);
     }
   };
 
