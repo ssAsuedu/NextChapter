@@ -63,7 +63,7 @@ const ConfirmEmail = () => {
         }, 8000);
       }
       catch (err) {
-        console.error(err);
+        // console.error(err);
       }
       setResending(false);
     }

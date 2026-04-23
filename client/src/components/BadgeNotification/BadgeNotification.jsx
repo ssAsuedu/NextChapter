@@ -168,7 +168,7 @@ const BadgeProvider = ({ children }) => {
         badges.forEach((b) => { map[b.type] = (map[b.type] || 0) + 1; });
         knownBadgesRef.current = map;
       } catch (err) {
-        console.error("Badge init failed:", err);
+        // console.error("Badge init failed:", err);
       }
     };
     init();
@@ -203,7 +203,7 @@ const BadgeProvider = ({ children }) => {
         setNotification(newBadges);
       }
     } catch (err) {
-      console.error("Badge check failed:", err);
+      // console.error("Badge check failed:", err);
     }
   }, []);
 

@@ -282,7 +282,7 @@ const Review = () => {
       const reviewsRes = await getReviews(email);
       setReviews(reviewsRes.data.reviews || []);
     } catch (error) {
-      console.error("Error deleting review:", error);
+      // console.error("Error deleting review:", error);
       alert("Failed to delete review.");
     }
 

@@ -36,7 +36,7 @@ const ReadingStreak = () => {
         const res = await getStreak(email);
         setStreakData(res.data);
       } catch (err) {
-        console.error("Failed to fetch streak:", err);
+        // console.error("Failed to fetch streak:", err);
       } finally {
         setLoading(false);
       }
@@ -52,7 +52,7 @@ const ReadingStreak = () => {
       const res = await getStreak(email);
       setStreakData(res.data);
     } catch (err) {
-      console.error("Failed to use freeze:", err);
+      // console.error("Failed to use freeze:", err);
     } finally {
       setFreezeLoading(false);
     }
