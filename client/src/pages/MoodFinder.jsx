@@ -45,7 +45,7 @@ const MoodFinder = () => {
   };
 
   const handleFindBooks = async () => {
-    if (selectedMoods.length === 0) return;
+    if (selectedMoods.length === 0 || loading) return;
     setLoading(true);
     setSearched(true);
     setError(null);
@@ -62,6 +62,7 @@ const MoodFinder = () => {
   };
 
   const handleSurprise = async () => {
+    if (loading) return;
     setLoading(true);
     setSearched(true);
     setError(null);
@@ -148,17 +149,17 @@ const MoodFinder = () => {
           {selectedMoods.map((id) => {
             const mood = moods.find((m) => m.id === id);
             return (
-              <div className="mood-tag-wrapper">
-              <span key={id} className="mood-tag">
-                {mood?.label}
-                <button
-                  className="mood-tag-remove"
-                  onClick={() => toggleMood(id)}
-                  aria-label={`Remove ${mood?.label}`}
-                >
-                  x
-                </button>
-              </span>
+              <div key={id} className="mood-tag-wrapper">
+                <span className="mood-tag">
+                  {mood?.label}
+                  <button
+                    className="mood-tag-remove"
+                    onClick={() => toggleMood(id)}
+                    aria-label={`Remove ${mood?.label}`}
+                  >
+                    x
+                  </button>
+                </span>
               </div>
             );
           })}
