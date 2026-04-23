@@ -10,7 +10,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import ReadingStreak from "../../components/ProfilePage/ReadingStreak";
 import Confetti from "react-confetti";
 import BookCelebration from "../../assets/book_celebration.svg";
-
+import { useNavigate } from "react-router-dom";
 //const GOOGLE_BOOKS_API_KEY = import.meta.env.VITE_GOOGLE_BOOKS_API;
 
 const Progress = () => {
@@ -31,6 +31,8 @@ const Progress = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
+
 
   // for react confetti so it can take up the whole width and height of the screen, no matter the size
   useEffect(() => {
@@ -293,8 +295,16 @@ const Progress = () => {
                 <div
                   className="progress-book-card"
                   key={volumeId}
-                  role="listitem"
+                  role="button"
+                  tabIndex={0}
                   aria-label={`${book.volumeInfo.title}, ${percent}% complete`}
+                  onClick={() => navigate(`/book/${volumeId}`)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      navigate(`/book/${volumeId}`);
+                    }
+                  }}
                 >
                   <div className="left-side">
                     <img
@@ -322,7 +332,10 @@ const Progress = () => {
                         />
                       </div>
 
-                      <div className="progress-inputs">
+                      <div className="progress-inputs"
+                      onClick={(e) => e.stopPropagation()}
+                      onKeyDown={(e) => e.stopPropagation()}
+                      >
                         {editIdx === idx ? (
                           <>
                             <div className="progress-input-wrapper">
@@ -373,7 +386,10 @@ const Progress = () => {
                             <div className="progress-buttons">
                               <IconButton
                                 className="progress-cancel-btn"
-                                onClick={() => setEditIdx(null)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setEditIdx(null);
+                                }}
                                 size="small"
                                 aria-label="Cancel editing"
                                 sx={{
@@ -388,7 +404,10 @@ const Progress = () => {
                               </IconButton>
                               <IconButton
                                 className="progress-save-btn"
-                                onClick={() => handleSave(volumeId, totalPages)}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  handleSave(volumeId, totalPages);
+                                }}
                                 size="small"
                                 aria-label={`Save progress for ${book.volumeInfo.title}`}
                                 sx={{
@@ -419,7 +438,14 @@ const Progress = () => {
                       </div>
                       <button
                         className="progress-edit-btn"
-                        onClick={() => {
+                        onClick={async (e) => {
+                          e.stopPropagation();
+
+                          if (editIdx === idx) {
+                            await handleSave(volumeId, totalPages);
+                            return;
+                          }
+
                           handleEditClick(idx, p.currentPage);
                           setErrors((prev) => ({
                             ...prev,
