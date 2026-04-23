@@ -533,6 +533,7 @@
   font-weight: 500;
   color: var(--text-color);
   font-family: "Sen", sans-serif;
+  text-align: left;
 }
 
 .modal-back {
