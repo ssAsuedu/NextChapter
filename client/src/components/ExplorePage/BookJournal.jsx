@@ -1,5 +1,8 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import ReactMarkdown from "react-markdown";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
+import DOMPurify from "dompurify";
+import { EditorContent, useEditor, useEditorState } from "@tiptap/react";
+import StarterKit from "@tiptap/starter-kit";
+import Placeholder from "@tiptap/extension-placeholder";
 import {
   getJournalEntries,
   createJournalEntry,
@@ -9,6 +12,9 @@ import {
 import "../../styles/BookInfoPage/BookJournal.css";
 
 const MAX_CHARS = 5000;
+
+const stripHtml = (html = "") =>
+  html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 
 const BookJournal = ({ volumeId }) => {
   const email = localStorage.getItem("userEmail");
@@ -21,7 +27,7 @@ const BookJournal = ({ volumeId }) => {
   const [saveStatus, setSaveStatus] = useState(null);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const autoSaveTimer = useRef(null);
+  const [editorSeed, setEditorSeed] = useState("");
   const hasUnsavedChanges = useRef(false);
 
   const fetchEntries = useCallback(async () => {
@@ -51,67 +57,76 @@ const BookJournal = ({ volumeId }) => {
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
   }, []);
 
-  const triggerAutoSave = useCallback(() => {
-    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
-    hasUnsavedChanges.current = true;
-    setSaveStatus(null);
-
-    autoSaveTimer.current = setTimeout(async () => {
-      if (!content.trim()) return;
-      setSaveStatus("saving");
-      try {
-        if (editingId) {
-          await updateJournalEntry({
-            email,
-            entryId: editingId,
-            title,
-            content,
-          });
-        } else {
-          const res = await createJournalEntry({
-            email,
-            volumeId,
-            title,
-            content,
-          });
-          setEditingId(res.data.entry._id);
-        }
-        setSaveStatus("saved");
-        hasUnsavedChanges.current = false;
-        fetchEntries();
-      } catch {
-        setSaveStatus("error");
+  const editor = useEditor({
+    extensions: [
+      StarterKit,
+      Placeholder.configure({
+        placeholder: "Write your thoughts, favorite quotes, reflections...",
+      }),
+    ],
+    content: "",
+    editorProps: {
+      attributes: {
+        class: "journal-editor-content tiptap-editor",
+        "aria-label": "Journal entry content",
+      },
+    },
+    onUpdate: ({ editor }) => {
+      const plain = editor.getText();
+      if (plain.length > MAX_CHARS) {
+        editor.commands.undo();
+        return;
       }
-    }, 5000);
-  }, [content, title, editingId, email, volumeId, fetchEntries]);
 
-  const handleContentChange = (value) => {
-    if (value.length > MAX_CHARS) return;
-    setContent(value);
-    triggerAutoSave();
-  };
+      setContent(editor.getHTML());
+      hasUnsavedChanges.current = true;
+      setSaveStatus(null);
+    },
+  });
+  const { isBoldActive, isItalicActive } = useEditorState({
+      editor,
+      selector: ({ editor }) => ({
+        isBoldActive: editor?.isActive("bold") || false,
+        isItalicActive: editor?.isActive("italic") || false,
+      }),
+  });
+  useEffect(() => {
+    if (!showEditor || !editor) return;
+    editor.commands.setContent(editorSeed || "", false);
+    editor.commands.focus("end");
+  }, [showEditor, editor, editorSeed]);
 
   const handleTitleChange = (value) => {
     setTitle(value);
-    triggerAutoSave();
+    hasUnsavedChanges.current = true;
+    setSaveStatus(null);
   };
 
   const handleSave = async () => {
-    if (!content.trim()) return;
-    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+    const htmlContent = editor?.getHTML() || content;
+    const plainText = stripHtml(htmlContent);
+
+    if (!plainText) return;
     setSaveStatus("saving");
+
     try {
       if (editingId) {
-        await updateJournalEntry({ email, entryId: editingId, title, content });
+        await updateJournalEntry({
+          email,
+          entryId: editingId,
+          title,
+          content: htmlContent,
+        });
       } else {
         const res = await createJournalEntry({
           email,
           volumeId,
           title,
-          content,
+          content: htmlContent,
         });
         setEditingId(res.data.entry._id);
       }
+
       setSaveStatus("saved");
       hasUnsavedChanges.current = false;
       await fetchEntries();
@@ -121,44 +136,11 @@ const BookJournal = ({ volumeId }) => {
     }
   };
 
-  const insertFormatting = (type) => {
-    const textarea = document.getElementById("journal-content");
-    if (!textarea) return;
-    const start = textarea.selectionStart;
-    const end = textarea.selectionEnd;
-    const selected = content.substring(start, end);
-    let newText = content;
-
-    switch (type) {
-      case "bold":
-        newText =
-          content.substring(0, start) +
-          `**${selected}**` +
-          content.substring(end);
-        break;
-      case "italic":
-        if (start === end) return;
-
-        newText =
-          content.substring(0, start) + `*${content.substring(start, end)}*`;
-        content.substring(end);
-        break;
-      case "bullet":
-        newText =
-          content.substring(0, start) + `\n- ` + content.substring(start);
-        break;
-    }
-
-    if (newText.length <= MAX_CHARS) {
-      setContent(newText);
-      triggerAutoSave();
-    }
-  };
-
   const startNewEntry = () => {
     setEditingId(null);
     setTitle("");
     setContent("");
+    setEditorSeed("");
     setSaveStatus(null);
     setShowEditor(true);
     hasUnsavedChanges.current = false;
@@ -167,7 +149,8 @@ const BookJournal = ({ volumeId }) => {
   const startEditEntry = (entry) => {
     setEditingId(entry._id);
     setTitle(entry.title || "");
-    setContent(entry.content);
+    setContent(entry.content || "");
+    setEditorSeed(entry.content || "");
     setSaveStatus(null);
     setShowEditor(true);
     hasUnsavedChanges.current = false;
@@ -177,11 +160,12 @@ const BookJournal = ({ volumeId }) => {
     if (hasUnsavedChanges.current) {
       if (!window.confirm("You have unsaved changes. Discard them?")) return;
     }
-    if (autoSaveTimer.current) clearTimeout(autoSaveTimer.current);
+
     setShowEditor(false);
     setEditingId(null);
     setTitle("");
     setContent("");
+    setEditorSeed("");
     setSaveStatus(null);
     hasUnsavedChanges.current = false;
   };
@@ -197,28 +181,30 @@ const BookJournal = ({ volumeId }) => {
     }
   };
 
-  const filteredEntries = searchQuery
-    ? entries.filter(
-        (e) =>
-          (e.content || "").toLowerCase().includes(searchQuery.toLowerCase()) ||
-          (e.title || "").toLowerCase().includes(searchQuery.toLowerCase()),
-      )
-    : entries;
+  const plainCharCount = useMemo(
+    () => stripHtml(editor?.getHTML() || content).length,
+    [editor, content]
+  );
+
+  const filteredEntries = useMemo(() => {
+    if (!searchQuery) return entries;
+    const q = searchQuery.toLowerCase();
+
+    return entries.filter((e) => {
+      const plainContent = stripHtml(e.content || "").toLowerCase();
+      const plainTitle = (e.title || "").toLowerCase();
+      return plainContent.includes(q) || plainTitle.includes(q);
+    });
+  }, [entries, searchQuery]);
 
   if (!email) return null;
 
   return (
-    <section
-      className="journal-section"
-      aria-label="Book journal - private notes"
-    >
+    <section className="journal-section" aria-label="Book journal - private notes">
       <div className="journal-header">
         <div className="journal-header-left">
           <h3 className="journal-title">My Notes</h3>
-          <span
-            className="journal-private-badge"
-            aria-label="Only you can see this"
-          >
+          <span className="journal-private-badge" aria-label="Only you can see this">
             Private -- only you can see this
           </span>
         </div>
@@ -241,11 +227,7 @@ const BookJournal = ({ volumeId }) => {
       )}
 
       {showEditor && (
-        <div
-          className="journal-editor"
-          role="form"
-          aria-label="Journal entry editor"
-        >
+        <div className="journal-editor" role="form" aria-label="Journal entry editor">
           <input
             type="text"
             placeholder="Entry title (optional)"
@@ -255,33 +237,31 @@ const BookJournal = ({ volumeId }) => {
             maxLength={50}
           />
 
-          <div
-            className="journal-toolbar"
-            role="toolbar"
-            aria-label="Text formatting"
-          >
+          <div className="journal-toolbar" role="toolbar" aria-label="Text formatting">
             <button
               type="button"
-              className="journal-fmt-btn"
-              onClick={() => insertFormatting("bold")}
+              className={`journal-fmt-btn ${isBoldActive ? "active" : ""}`}
+              onClick={() => editor?.chain().focus().toggleBold().run()}
               title="Bold"
               aria-label="Bold"
+              aria-pressed={isBoldActive}
             >
               <strong>B</strong>
             </button>
             <button
               type="button"
-              className="journal-fmt-btn"
-              onClick={() => insertFormatting("italic")}
+               className={`journal-fmt-btn ${isItalicActive ? "active" : ""}`}
+              onClick={() => editor?.chain().focus().toggleItalic().run()}
               title="Italic"
               aria-label="Italic"
+              aria-pressed={isItalicActive}
             >
               <em>I</em>
             </button>
             <button
               type="button"
               className="journal-fmt-btn"
-              onClick={() => insertFormatting("bullet")}
+              onClick={() => editor?.chain().focus().toggleBulletList().run()}
               title="Bullet point"
               aria-label="Bullet point"
             >
@@ -289,27 +269,14 @@ const BookJournal = ({ volumeId }) => {
             </button>
           </div>
 
-          <textarea
-            id="journal-content"
-            className="journal-editor-content"
-            placeholder="Write your thoughts, favorite quotes, reflections..."
-            value={content}
-            onChange={(e) => handleContentChange(e.target.value)}
-            rows={8}
-            maxLength={MAX_CHARS}
-            aria-label="Journal entry content"
-          />
+          <EditorContent editor={editor} />
 
           <div className="journal-editor-footer">
             <span className="journal-char-count">
-              {content.length}/{MAX_CHARS}
+              {plainCharCount}/{MAX_CHARS}
             </span>
             <div className="journal-editor-actions">
-              <span
-                className={`journal-save-status ${saveStatus || ""}`}
-                role="status"
-                aria-live="polite"
-              >
+              <span className={`journal-save-status ${saveStatus || ""}`} role="status" aria-live="polite">
                 {saveStatus === "saving" && "Saving..."}
                 {saveStatus === "saved" && "Saved"}
                 {saveStatus === "error" && "Save failed"}
@@ -320,7 +287,7 @@ const BookJournal = ({ volumeId }) => {
               <button
                 className="journal-save-btn"
                 onClick={handleSave}
-                disabled={!content.trim() || saveStatus === "saving"}
+                disabled={!stripHtml(editor?.getHTML() || content) || saveStatus === "saving"}
               >
                 Save Now
               </button>
@@ -343,9 +310,7 @@ const BookJournal = ({ volumeId }) => {
             <div key={entry._id} className="journal-entry-card">
               <div className="journal-entry-header">
                 <div>
-                  {entry.title && (
-                    <h4 className="journal-entry-title">{entry.title}</h4>
-                  )}
+                  {entry.title && <h4 className="journal-entry-title">{entry.title}</h4>}
                   <time className="journal-entry-date">
                     {new Date(entry.createdAt).toLocaleDateString(undefined, {
                       month: "short",
@@ -395,9 +360,13 @@ const BookJournal = ({ volumeId }) => {
                   )}
                 </div>
               </div>
-              <div className="journal-entry-content">
-                <ReactMarkdown>{entry.content}</ReactMarkdown>
-              </div>
+
+              <div
+                className="journal-entry-content"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(entry.content || ""),
+                }}
+              />
             </div>
           ))
         )}
