@@ -114,7 +114,8 @@ const BookJournal = ({ volumeId }) => {
       }
       setSaveStatus("saved");
       hasUnsavedChanges.current = false;
-      fetchEntries();
+      await fetchEntries();
+      closeEditor();
     } catch {
       setSaveStatus("error");
     }
