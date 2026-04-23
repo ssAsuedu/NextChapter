@@ -909,8 +909,11 @@
     transition:
       transform 0.2s ease,
       box-shadow 0.2s ease;
-    min-width: 200px;
+    width: 200px;
+    height: auto;
+
     flex-shrink: 0;
+    overflow: hidden;
   }
 
   .bookinfo-related-card:hover {
@@ -959,6 +962,10 @@
 
   .book-description-text {
     font-size: 13px;
+  }
+
+  .bookinfo-related-card {
+    height: auto;
   }
 }
 .bookinfo-rating-share-row {
