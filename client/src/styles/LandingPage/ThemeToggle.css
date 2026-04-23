@@ -3,6 +3,7 @@
     margin-top: 25px;
     background-color: var(--hover);
     margin-bottom: 25px;
+    color: white !important;
 }
 
 .toggle-button:hover {
@@ -12,7 +13,7 @@
 
 :root[data-theme="dark"] .toggle-button {
     background-color: var(--primary-color);
-    color: var(--background-color);
+    color: var(--background-color) !important;
 }
 
 :root[data-theme="dark"] .toggle-button:hover {
